@@ -861,6 +861,62 @@
     text-align: center;
   }
 
+  /* === AUDIO CONTROLS === */
+  .audio-controls {
+    position: fixed; top: 1rem; right: 1rem;
+    z-index: 600;
+    display: flex; gap: 0.5rem; align-items: center;
+  }
+  .audio-btn {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.3s;
+  }
+  .audio-btn:hover {
+    background: rgba(255,255,255,0.12);
+    border-color: rgba(0,212,255,0.3);
+    transform: scale(1.1);
+  }
+  .audio-btn.muted { opacity: 0.4; }
+  .vol-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 80px; height: 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 2px;
+    outline: none;
+    opacity: 0;
+    transition: opacity 0.3s, width 0.3s;
+    width: 0;
+    pointer-events: none;
+  }
+  .audio-controls:hover .vol-slider,
+  .audio-controls:focus-within .vol-slider {
+    opacity: 1; width: 80px; pointer-events: auto;
+  }
+  .vol-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--neon-blue);
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(0,212,255,0.4);
+  }
+  .vol-slider::-moz-range-thumb {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--neon-blue);
+    cursor: pointer;
+    border: none;
+  }
+
   /* === RESPONSIVE === */
   @media (max-width: 600px) {
     .kb-key { width: 30px; height: 34px; font-size: 0.65rem; }
@@ -896,6 +952,14 @@
 <body>
 
 <canvas id="bg-canvas"></canvas>
+
+<!-- AUDIO CONTROLS -->
+<div class="audio-controls">
+  <button class="audio-btn" id="btn-music" onclick="toggleMusic()" title="Toggle Music">🎵</button>
+  <button class="audio-btn" id="btn-sfx" onclick="toggleSFX()" title="Toggle Sound Effects">🔊</button>
+  <input type="range" class="vol-slider" id="vol-slider" min="0" max="100" value="50" oninput="setVolume(this.value)">
+</div>
+
 <div id="combo-popup" class="combo-popup"></div>
 <div id="level-up-overlay" class="level-up-overlay">
   <div class="level-up-box">
@@ -1392,29 +1456,316 @@ const KB_ROWS = [
 ];
 
 // ============================================================
-//  AUDIO
+//  AUDIO ENGINE - Music + Sound Effects
 // ============================================================
 const AudioCtx = window.AudioContext || window.webkitAudioContext;
 let audioCtx;
-function ensureAudio() { if (!audioCtx) audioCtx = new AudioCtx(); }
+let masterGain, sfxGain, musicGain;
+let musicEnabled = true, sfxEnabled = true;
+let masterVolume = 0.5;
+let musicPlaying = false;
+let musicNodes = [];
 
+function ensureAudio() {
+  if (!audioCtx) {
+    audioCtx = new AudioCtx();
+    masterGain = audioCtx.createGain();
+    masterGain.gain.value = masterVolume;
+    masterGain.connect(audioCtx.destination);
+    sfxGain = audioCtx.createGain();
+    sfxGain.gain.value = 1.0;
+    sfxGain.connect(masterGain);
+    musicGain = audioCtx.createGain();
+    musicGain.gain.value = 0.35;
+    musicGain.connect(masterGain);
+  }
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+// --- Volume / Mute Controls ---
+function toggleMusic() {
+  musicEnabled = !musicEnabled;
+  const btn = document.getElementById('btn-music');
+  btn.textContent = musicEnabled ? '🎵' : '🚫';
+  btn.classList.toggle('muted', !musicEnabled);
+  if (musicEnabled && musicPlaying) {
+    musicGain.gain.setTargetAtTime(0.35, audioCtx.currentTime, 0.1);
+  } else {
+    ensureAudio();
+    musicGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.1);
+  }
+}
+
+function toggleSFX() {
+  sfxEnabled = !sfxEnabled;
+  const btn = document.getElementById('btn-sfx');
+  btn.textContent = sfxEnabled ? '🔊' : '🔇';
+  btn.classList.toggle('muted', !sfxEnabled);
+}
+
+function setVolume(val) {
+  masterVolume = val / 100;
+  if (masterGain) masterGain.gain.setTargetAtTime(masterVolume, audioCtx.currentTime, 0.05);
+}
+
+// --- Core tone player ---
 function playTone(freq, duration, type = 'sine', vol = 0.06) {
+  if (!sfxEnabled) return;
   ensureAudio();
   const o = audioCtx.createOscillator();
   const g = audioCtx.createGain();
   o.type = type; o.frequency.value = freq;
   g.gain.setValueAtTime(vol, audioCtx.currentTime);
   g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-  o.connect(g); g.connect(audioCtx.destination);
+  o.connect(g); g.connect(sfxGain);
   o.start(); o.stop(audioCtx.currentTime + duration);
 }
 
-function sfxCorrect() { playTone(880, 0.06, 'sine', 0.04); }
-function sfxWrong() { playTone(200, 0.12, 'sawtooth', 0.03); }
-function sfxCombo() { playTone(660, 0.08); setTimeout(() => playTone(880, 0.08), 60); setTimeout(() => playTone(1100, 0.12), 120); }
-function sfxLevelUp() { [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => playTone(f, 0.18, 'sine', 0.05), i * 90)); }
-function sfxComplete() { [523, 659, 784, 1047, 1319].forEach((f, i) => setTimeout(() => playTone(f, 0.22, 'triangle', 0.05), i * 110)); }
-function sfxPerfect() { [784, 988, 1175, 1319, 1568].forEach((f, i) => setTimeout(() => playTone(f, 0.15, 'sine', 0.04), i * 70)); }
+// --- Noise generator for percussive sounds ---
+function playNoise(duration, vol = 0.03) {
+  if (!sfxEnabled) return;
+  ensureAudio();
+  const bufferSize = audioCtx.sampleRate * duration;
+  const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+  const source = audioCtx.createBufferSource();
+  source.buffer = buffer;
+  const g = audioCtx.createGain();
+  g.gain.setValueAtTime(vol, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+  // Bandpass for click feel
+  const filter = audioCtx.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.value = 4000;
+  filter.Q.value = 1;
+  source.connect(filter); filter.connect(g); g.connect(sfxGain);
+  source.start(); source.stop(audioCtx.currentTime + duration);
+}
+
+// --- Enhanced Sound Effects ---
+function sfxCorrect() {
+  // Satisfying click + high tone
+  playNoise(0.03, 0.025);
+  playTone(1200, 0.05, 'sine', 0.035);
+}
+
+function sfxWrong() {
+  // Buzzy error
+  playTone(150, 0.1, 'sawtooth', 0.03);
+  playTone(120, 0.15, 'square', 0.02);
+  playNoise(0.06, 0.02);
+}
+
+function sfxCombo() {
+  // Ascending arpeggio
+  [660, 830, 990, 1320].forEach((f, i) =>
+    setTimeout(() => playTone(f, 0.1, 'sine', 0.04), i * 50)
+  );
+}
+
+function sfxLevelUp() {
+  // Fanfare
+  const notes = [523, 659, 784, 880, 1047, 1319];
+  notes.forEach((f, i) => setTimeout(() => {
+    playTone(f, 0.22, 'sine', 0.04);
+    playTone(f * 1.5, 0.18, 'triangle', 0.02);
+  }, i * 100));
+  setTimeout(() => playNoise(0.15, 0.03), notes.length * 100);
+}
+
+function sfxComplete() {
+  // Victory jingle
+  const melody = [523, 523, 659, 784, 659, 784, 1047];
+  melody.forEach((f, i) => setTimeout(() => {
+    playTone(f, 0.2, 'triangle', 0.04);
+    if (i >= 4) playTone(f * 0.5, 0.25, 'sine', 0.025);
+  }, i * 120));
+}
+
+function sfxPerfect() {
+  // Sparkly perfect sound
+  const notes = [784, 988, 1175, 1319, 1568, 1760];
+  notes.forEach((f, i) => setTimeout(() => {
+    playTone(f, 0.12, 'sine', 0.03);
+    playTone(f * 2, 0.08, 'sine', 0.015);
+  }, i * 60));
+}
+
+function sfxClick() {
+  // UI click
+  playNoise(0.02, 0.02);
+  playTone(800, 0.03, 'sine', 0.025);
+}
+
+function sfxMenuSelect() {
+  // Deeper menu selection
+  playTone(440, 0.06, 'sine', 0.03);
+  setTimeout(() => playTone(660, 0.08, 'sine', 0.03), 50);
+}
+
+function sfxCountdown() {
+  // Timer warning tick
+  playTone(1000, 0.08, 'square', 0.03);
+  playNoise(0.03, 0.02);
+}
+
+function sfxGameStart() {
+  // Game start whoosh + chime
+  const notes = [330, 440, 554, 660, 880];
+  notes.forEach((f, i) => setTimeout(() => {
+    playTone(f, 0.15, 'sine', 0.035);
+  }, i * 70));
+  setTimeout(() => playNoise(0.1, 0.025), 350);
+}
+
+// ============================================================
+//  BACKGROUND MUSIC - Procedural Synthwave/Chiptune
+// ============================================================
+
+// Musical scales for procedural generation
+const SCALE_NOTES = {
+  // C major pentatonic frequencies across octaves
+  bass: [130.81, 146.83, 164.81, 196.00, 220.00, 261.63, 293.66],
+  melody: [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50, 1174.66],
+  high: [1046.50, 1174.66, 1318.51, 1567.98, 1760.00],
+  chord: [
+    [261.63, 329.63, 392.00],  // C major
+    [220.00, 277.18, 329.63],  // A minor
+    [293.66, 369.99, 440.00],  // D minor
+    [349.23, 440.00, 523.25],  // F major
+    [392.00, 493.88, 587.33],  // G major
+    [261.63, 329.63, 392.00],  // C major
+  ],
+};
+
+let musicBeat = 0;
+let musicInterval = null;
+let currentPattern = 0;
+const BPM = 110;
+const BEAT_MS = 60000 / BPM / 4; // 16th note
+
+function startMusic() {
+  ensureAudio();
+  musicPlaying = true;
+  musicBeat = 0;
+  currentPattern = 0;
+
+  if (musicInterval) clearInterval(musicInterval);
+  musicInterval = setInterval(musicTick, BEAT_MS);
+
+  if (musicEnabled) {
+    musicGain.gain.setTargetAtTime(0.35, audioCtx.currentTime, 0.3);
+  }
+}
+
+function stopMusic() {
+  musicPlaying = false;
+  if (musicInterval) { clearInterval(musicInterval); musicInterval = null; }
+  if (musicGain) musicGain.gain.setTargetAtTime(0, audioCtx.currentTime, 0.3);
+}
+
+function musicNote(freq, duration, type = 'sine', vol = 0.04) {
+  if (!musicEnabled) return;
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = type;
+  o.frequency.value = freq;
+  g.gain.setValueAtTime(vol, audioCtx.currentTime);
+  g.gain.setTargetAtTime(vol * 0.7, audioCtx.currentTime + duration * 0.3, duration * 0.2);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+  o.connect(g); g.connect(musicGain);
+  o.start(); o.stop(audioCtx.currentTime + duration);
+}
+
+function musicTick() {
+  if (!musicEnabled || !musicPlaying) { musicBeat++; return; }
+
+  const bar = Math.floor(musicBeat / 16) % 8;
+  const beat = musicBeat % 16;
+  const chordIdx = Math.floor(bar / 1.5) % SCALE_NOTES.chord.length;
+  const chord = SCALE_NOTES.chord[chordIdx];
+
+  // --- KICK DRUM (beat 0, 4, 8, 12) ---
+  if (beat % 4 === 0) {
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.frequency.setValueAtTime(150, audioCtx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.12);
+    g.gain.setValueAtTime(0.06, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+    o.connect(g); g.connect(musicGain);
+    o.start(); o.stop(audioCtx.currentTime + 0.15);
+  }
+
+  // --- HI-HAT (8th notes, quieter on off-beats) ---
+  if (beat % 2 === 0) {
+    const vol = beat % 4 === 0 ? 0.02 : 0.012;
+    const bufLen = audioCtx.sampleRate * 0.04;
+    const buf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < bufLen; i++) d[i] = Math.random() * 2 - 1;
+    const src = audioCtx.createBufferSource();
+    src.buffer = buf;
+    const gn = audioCtx.createGain();
+    gn.gain.setValueAtTime(vol, audioCtx.currentTime);
+    gn.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+    const hp = audioCtx.createBiquadFilter();
+    hp.type = 'highpass'; hp.frequency.value = 7000;
+    src.connect(hp); hp.connect(gn); gn.connect(musicGain);
+    src.start(); src.stop(audioCtx.currentTime + 0.05);
+  }
+
+  // --- BASS LINE (every 4 beats, follows chord root) ---
+  if (beat % 4 === 0) {
+    const bassNote = chord[0] / 2;
+    musicNote(bassNote, 0.3, 'sawtooth', 0.035);
+  }
+  // Syncopated bass hit
+  if (beat === 6 || beat === 14) {
+    const bassNote = chord[0] / 2 * 1.25;
+    musicNote(bassNote, 0.15, 'sawtooth', 0.025);
+  }
+
+  // --- CHORDS (sustained pad, changes each bar) ---
+  if (beat === 0) {
+    chord.forEach(f => {
+      musicNote(f, BEAT_MS * 14 / 1000, 'triangle', 0.015);
+    });
+  }
+
+  // --- MELODY (procedural pattern based on bar/beat) ---
+  const melodyPatterns = [
+    [0, null, 4, null, 2, null, 3, null, 1, null, null, null, 4, null, 2, null],
+    [2, null, null, 3, null, 1, null, null, 4, null, 0, null, null, 2, null, null],
+    [null, null, 3, null, 4, null, null, 2, null, null, 1, null, 3, null, null, null],
+    [0, null, 2, null, null, null, 4, null, 3, null, null, 1, null, null, 2, null],
+    [4, null, null, null, 3, null, 2, null, null, null, 1, null, null, 0, null, null],
+    [null, 2, null, 3, null, null, 4, null, null, 2, null, null, 1, null, 0, null],
+    [3, null, 4, null, 2, null, null, null, 0, null, 1, null, null, 3, null, null],
+    [null, null, null, 4, null, 3, null, 2, null, 1, null, null, 0, null, null, null],
+  ];
+  const melPattern = melodyPatterns[bar % melodyPatterns.length];
+  const melIdx = melPattern[beat];
+  if (melIdx !== null && melIdx !== undefined) {
+    const noteFreq = SCALE_NOTES.melody[melIdx % SCALE_NOTES.melody.length];
+    musicNote(noteFreq, 0.18, 'square', 0.02);
+    // Add shimmer octave up occasionally
+    if (bar >= 4 && beat % 4 === 0) {
+      musicNote(noteFreq * 2, 0.12, 'sine', 0.008);
+    }
+  }
+
+  // --- ARPEGGIOS (bars 2-3 and 6-7 for variation) ---
+  if ((bar >= 2 && bar <= 3) || (bar >= 6 && bar <= 7)) {
+    if (beat % 2 === 0) {
+      const arpNote = chord[beat % chord.length] * 2;
+      musicNote(arpNote, 0.1, 'sine', 0.015);
+    }
+  }
+
+  musicBeat++;
+}
 
 // ============================================================
 //  UI HELPERS
@@ -1433,6 +1784,7 @@ function selectPlayer(el) {
   el.classList.add('selected');
   currentPlayer = el.dataset.player;
   document.getElementById('btn-start').disabled = false;
+  sfxMenuSelect();
 }
 
 function showModeSelect() {
@@ -1443,6 +1795,7 @@ function showModeSelect() {
     `${currentPlayer} said bet, let's go!`,
   ];
   document.getElementById('mode-greeting').textContent = greetings[Math.floor(Math.random() * greetings.length)];
+  sfxClick();
   showScreen('screen-modes');
 }
 
@@ -1624,21 +1977,21 @@ function getAllVocab() {
 function generatePrompts(mode) {
   switch(mode) {
     case 'vocab': {
-      const all = shuffle(getAllVocab()).slice(0, 15);
+      const all = shuffle(getAllVocab()).slice(0, 25);
       return all.map(w => ({
         text: w.es, hintSpanish: w.es, hintEnglish: w.en,
         hintCategory: w.category, spanishWords: [{ es: w.es, en: w.en }],
       }));
     }
     case 'phrases': {
-      const all = shuffle(PHRASES).slice(0, 12);
+      const all = shuffle(PHRASES).slice(0, 20);
       return all.map(p => ({
         text: p.text, hintSpanish: p.text, hintEnglish: p.en,
         hintCategory: 'Spanish phrase', spanishWords: p.text.split(' ').map(w => ({ es: w, en: '' })),
       }));
     }
     case 'spanglish': {
-      const all = shuffle(SPANGLISH).slice(0, 12);
+      const all = shuffle(SPANGLISH).slice(0, 20);
       return all.map(s => ({
         text: s.text, hintSpanish: s.spanish.map(w => w.es).join(', '),
         hintEnglish: s.spanish.map(w => `${w.es} = ${w.en}`).join(' | '),
@@ -1646,7 +1999,7 @@ function generatePrompts(mode) {
       }));
     }
     case 'boss': {
-      const all = shuffle(BOSS_SENTENCES).slice(0, 8);
+      const all = shuffle(BOSS_SENTENCES).slice(0, 10);
       return all.map(s => ({
         text: s.text, hintSpanish: s.text.slice(0, 40) + '...',
         hintEnglish: s.en, hintCategory: 'Boss level - full Spanish!', spanishWords: [],
@@ -1683,14 +2036,16 @@ function startGame(mode) {
     score: 0, streak: 0, bestStreak: 0,
     totalCorrect: 0, totalTyped: 0,
     promptCorrect: 0, promptTyped: 0,
-    level: 1, xp: 0, xpNeeded: 50,
+    level: 1, xp: 0, xpNeeded: 200,
     startTime: null, wordsCompleted: 0,
     allSpanishWords: [], timerInterval: null,
     timeLeft: 60, raceActive: mode === 'race',
     charResults: {},
   };
 
+  sfxGameStart();
   showScreen('screen-game');
+  startMusic();
   setMascot('idle');
   updateHUD();
   updateProgressDots();
@@ -1804,7 +2159,7 @@ function addXP(amount) {
   while (gameState.xp >= gameState.xpNeeded) {
     gameState.xp -= gameState.xpNeeded;
     gameState.level++;
-    gameState.xpNeeded = Math.floor(gameState.xpNeeded * 1.4);
+    gameState.xpNeeded = Math.floor(gameState.xpNeeded * 1.6);
     showLevelUp(gameState.level);
   }
 }
@@ -1841,7 +2196,7 @@ document.getElementById('hidden-input').addEventListener('input', function(e) {
     const multiplier = Math.min(5, 1 + Math.floor(gameState.streak / 5));
     points *= multiplier;
     gameState.score += points;
-    addXP(points / 2);
+    addXP(Math.floor(points / 5));
 
     sfxCorrect();
     highlightKey(expected, true);
@@ -1909,6 +2264,7 @@ document.getElementById('hidden-input').addEventListener('keydown', function(e) 
   if (e.key === 'Escape') {
     if (confirm('Quit this round?')) {
       if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+      stopMusic();
       showModeSelect();
     }
   }
@@ -1923,7 +2279,7 @@ function completePrompt() {
   const isPerfect = gameState.promptCorrect === gameState.promptTyped && gameState.promptTyped > 0;
   if (isPerfect && prompt.text.length > 3) {
     gameState.score += 50;
-    addXP(30);
+    addXP(15);
     showPerfect();
     setMascot('perfect');
   } else {
@@ -1952,6 +2308,7 @@ function startRaceTimer() {
     if (gameState.timeLeft <= 10) {
       timerEl.style.color = gameState.timeLeft % 2 === 0 ? 'var(--neon-pink)' : '#fff';
       timerEl.style.transform = gameState.timeLeft % 2 === 0 ? 'scale(1.2)' : 'scale(1)';
+      sfxCountdown();
     }
     if (gameState.timeLeft <= 0) {
       clearInterval(gameState.timerInterval);
@@ -1962,6 +2319,7 @@ function startRaceTimer() {
 
 function endGame() {
   if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+  stopMusic();
 
   sfxComplete();
   setTimeout(() => launchConfetti(), 300);
