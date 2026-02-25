@@ -1119,11 +1119,338 @@
     margin-top: 1rem;
     font-style: italic;
   }
+
+  /* === SCREEN FADE TRANSITION === */
+  .screen-fade-out {
+    animation: screenFadeOut 0.3s ease forwards !important;
+  }
+  @keyframes screenFadeOut {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* === THEME OVERLAY === */
+  #theme-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 2; pointer-events: none;
+  }
+  #theme-overlay > * { pointer-events: auto; }
+
+  /* === MOM DANCE FLOOR GAME === */
+  [data-theme="mom"] { --accent: var(--neon-pink); }
+
+  .dance-screen { text-align: center; }
+  .dance-stage {
+    position: relative;
+    width: 340px; height: 500px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 24px;
+    background: radial-gradient(ellipse at 50% 80%, rgba(255,45,149,0.12) 0%, transparent 70%),
+                linear-gradient(180deg, rgba(10,10,46,0.95) 0%, rgba(20,10,40,0.98) 100%);
+    border: 1px solid rgba(255,45,149,0.15);
+  }
+  .dance-hit-zone {
+    position: absolute; top: 60px; left: 0; right: 0; height: 56px;
+    border-top: 3px solid rgba(255,45,149,0.5);
+    border-bottom: 3px solid rgba(255,45,149,0.5);
+    background: rgba(255,45,149,0.06);
+    display: flex; justify-content: center; gap: 36px; align-items: center;
+    z-index: 5;
+  }
+  .dance-hit-zone .hit-slot {
+    width: 50px; height: 50px; border-radius: 12px;
+    border: 2px solid rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem; color: rgba(255,255,255,0.2);
+  }
+  .dance-arrow {
+    position: absolute; width: 50px; height: 50px;
+    border-radius: 12px; font-size: 1.8rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: none; z-index: 4;
+    text-shadow: 0 0 12px currentColor;
+  }
+  .dance-arrow.left { color: var(--neon-green); background: rgba(57,255,20,0.12); border: 1px solid rgba(57,255,20,0.3); }
+  .dance-arrow.up { color: var(--neon-blue); background: rgba(0,212,255,0.12); border: 1px solid rgba(0,212,255,0.3); }
+  .dance-arrow.down { color: var(--neon-purple); background: rgba(176,38,255,0.12); border: 1px solid rgba(176,38,255,0.3); }
+  .dance-arrow.right { color: var(--neon-orange); background: rgba(255,110,0,0.12); border: 1px solid rgba(255,110,0,0.3); }
+  .dance-arrow.hit-perfect { animation: arrowPerfect 0.3s ease forwards; }
+  .dance-arrow.hit-good { animation: arrowGood 0.3s ease forwards; }
+  .dance-arrow.hit-miss { animation: arrowMiss 0.3s ease forwards; }
+  @keyframes arrowPerfect { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }
+  @keyframes arrowGood { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(1.3); opacity: 0; } }
+  @keyframes arrowMiss { 0% { opacity: 0.5; } 100% { opacity: 0; transform: translateY(-20px); } }
+
+  .dance-score-hud {
+    display: flex; justify-content: space-around; align-items: center;
+    max-width: 400px; margin: 1rem auto; padding: 0.6rem 1rem;
+    background: rgba(255,255,255,0.03); border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.06);
+  }
+  .dance-lyrics {
+    max-width: 500px; margin: 0.8rem auto 0;
+    font-style: italic; color: rgba(255,45,149,0.5);
+    font-size: 0.85rem; min-height: 1.2em;
+    transition: opacity 0.3s;
+  }
+  .dance-judgment {
+    position: absolute; top: 30%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-family: 'Fredoka One', cursive; font-size: 2rem;
+    pointer-events: none; z-index: 10;
+    animation: judgmentPop 0.6s ease forwards;
+  }
+  @keyframes judgmentPop {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    30% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+    100% { transform: translate(-50%, -70%) scale(0.8); opacity: 0; }
+  }
+  .rose-particle {
+    position: fixed; pointer-events: none; z-index: 200;
+    font-size: 1.2rem;
+    animation: roseFloat 1.5s ease-out forwards;
+  }
+  @keyframes roseFloat {
+    0% { opacity: 1; transform: translate(0,0) rotate(0deg) scale(1); }
+    100% { opacity: 0; transform: translate(var(--rx), var(--ry)) rotate(180deg) scale(0.3); }
+  }
+
+  /* === BRYSON/ANGELINA LESSON SYSTEM === */
+  .lesson-screen { text-align: center; max-width: 700px; margin: 0 auto; }
+  .lesson-progress-bar {
+    width: 100%; max-width: 500px; height: 10px;
+    background: rgba(255,255,255,0.06); border-radius: 5px;
+    margin: 1rem auto; overflow: hidden;
+  }
+  .lesson-progress-fill {
+    height: 100%; border-radius: 5px;
+    background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+    transition: width 0.5s ease;
+  }
+  .lesson-badge {
+    display: inline-block; padding: 4px 14px; border-radius: 20px;
+    font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 1.5px; margin-bottom: 1rem;
+    background: rgba(0,212,255,0.1); color: var(--neon-blue);
+    border: 1px solid rgba(0,212,255,0.2);
+  }
+  .mystery-narrative {
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px; padding: 2rem; margin: 1rem 0;
+    text-align: left; position: relative; overflow: hidden;
+  }
+  .mystery-narrative::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(176,38,255,0.4), transparent);
+  }
+  .mystery-text {
+    font-size: 1.05rem; line-height: 1.7;
+    color: rgba(255,255,255,0.8); margin-bottom: 1.2rem;
+  }
+  .mystery-choice-prompt {
+    font-family: 'Fredoka One', cursive; color: var(--neon-purple);
+    margin-bottom: 0.8rem; font-size: 0.9rem;
+  }
+  .mystery-typing-area {
+    background: rgba(176,38,255,0.06); border: 1px solid rgba(176,38,255,0.2);
+    border-radius: 14px; padding: 1rem 1.5rem;
+    font-size: 1.1rem; color: var(--neon-purple);
+    min-height: 44px; text-align: center;
+    font-family: 'Fredoka One', cursive;
+  }
+  .mystery-particle {
+    position: fixed; pointer-events: none; z-index: 150;
+    font-size: 1.5rem; opacity: 0.15;
+    animation: mysteryFloat 8s ease-in-out infinite;
+  }
+  @keyframes mysteryFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.1; }
+    50% { transform: translateY(-30px) rotate(180deg); opacity: 0.25; }
+  }
+
+  /* === DAD BRIEFCASE GAME === */
+  [data-theme="dad"] { --accent: var(--neon-green); }
+  .dad-screen { text-align: center; max-width: 800px; margin: 0 auto; }
+  .dad-money-counter {
+    font-family: 'Fredoka One', cursive; font-size: 2.5rem;
+    color: var(--neon-green); text-shadow: 0 0 30px rgba(57,255,20,0.3);
+    margin-bottom: 0.5rem;
+  }
+  .dad-briefcase-meter {
+    width: 100%; max-width: 500px; height: 24px;
+    background: rgba(255,255,255,0.06); border-radius: 12px;
+    margin: 0.5rem auto 1rem; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08); position: relative;
+  }
+  .dad-briefcase-fill {
+    height: 100%; border-radius: 12px;
+    background: linear-gradient(90deg, rgba(57,255,20,0.3), var(--neon-green));
+    transition: width 0.4s ease; position: relative;
+  }
+  .dad-briefcase-fill::after {
+    content: '💼'; position: absolute; right: -8px; top: -2px; font-size: 1.3rem;
+  }
+  .dad-news-ticker {
+    width: 100%; overflow: hidden; height: 32px;
+    background: rgba(255,45,149,0.08); border-radius: 8px;
+    margin-top: 1rem; position: relative;
+    border: 1px solid rgba(255,45,149,0.15);
+  }
+  .dad-news-ticker-label {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: var(--neon-pink); color: #fff;
+    font-family: 'Fredoka One', cursive; font-size: 0.65rem;
+    padding: 0 10px; display: flex; align-items: center;
+    z-index: 2; letter-spacing: 1px;
+  }
+  .dad-news-ticker-text {
+    white-space: nowrap; position: absolute; top: 50%;
+    transform: translateY(-50%); font-size: 0.8rem;
+    color: rgba(255,255,255,0.6); font-weight: 600;
+    animation: tickerScroll 20s linear infinite;
+  }
+  @keyframes tickerScroll {
+    0% { left: 100%; }
+    100% { left: -200%; }
+  }
+  .dad-breaking-news {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255,45,149,0.15); backdrop-filter: blur(20px);
+    border: 2px solid var(--neon-pink); border-radius: 24px;
+    padding: 2rem 3rem; text-align: center; z-index: 500;
+    animation: breakingPulse 0.5s ease;
+    display: none;
+  }
+  .dad-breaking-news.show { display: block; }
+  @keyframes breakingPulse {
+    0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  }
+
+  /* === ALICE BATTLE SYSTEM === */
+  [data-theme="alice"] { --accent: var(--neon-purple); }
+  .alice-screen { text-align: center; }
+  .alice-demon {
+    font-size: 6rem; margin: 1rem 0;
+    transition: transform 0.1s, filter 0.1s;
+    filter: drop-shadow(0 0 20px rgba(255,45,149,0.3));
+  }
+  .alice-demon.hit {
+    animation: demonHit 0.3s ease;
+    filter: drop-shadow(0 0 30px rgba(255,45,149,0.6)) brightness(1.5);
+  }
+  .alice-demon.defeated {
+    animation: demonDefeat 0.8s ease forwards;
+  }
+  @keyframes demonHit {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-10px) rotate(-5deg); }
+    40% { transform: translateX(10px) rotate(5deg); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+  }
+  @keyframes demonDefeat {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3) rotate(15deg); opacity: 0.5; filter: brightness(3); }
+    100% { transform: scale(0) rotate(360deg); opacity: 0; }
+  }
+  .alice-hp-bar {
+    width: 250px; height: 18px; margin: 0 auto 0.5rem;
+    background: rgba(255,255,255,0.08); border-radius: 9px;
+    overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
+  }
+  .alice-hp-fill {
+    height: 100%; border-radius: 9px;
+    background: linear-gradient(90deg, var(--neon-pink), #ff4444);
+    transition: width 0.3s ease;
+  }
+  .alice-hp-text {
+    font-family: 'Fredoka One', cursive; font-size: 0.8rem;
+    color: var(--neon-pink); margin-bottom: 0.5rem;
+  }
+  .alice-prompt-display {
+    font-family: 'Fredoka One', cursive; font-size: 3rem;
+    letter-spacing: 8px; margin: 1.5rem 0;
+    min-height: 80px;
+  }
+  .alice-prompt-display .char { display: inline-block; transition: all 0.15s; padding: 0 4px; }
+  .alice-prompt-display .char.correct { color: var(--neon-green); text-shadow: 0 0 12px rgba(57,255,20,0.4); }
+  .alice-prompt-display .char.incorrect { color: var(--neon-pink); }
+  .alice-prompt-display .char.current { color: #fff; background: rgba(176,38,255,0.25); border-radius: 6px; }
+  .alice-prompt-display .char.upcoming { color: rgba(255,255,255,0.2); }
+  .alice-prize-screen {
+    text-align: center; padding: 2rem;
+  }
+  .alice-toy-reveal {
+    font-size: 5rem; margin: 1rem 0;
+    animation: mascotBounce 1.5s ease-in-out infinite;
+  }
+  .alice-wave-counter {
+    font-family: 'Fredoka One', cursive; font-size: 0.9rem;
+    color: rgba(255,255,255,0.4); margin-bottom: 0.5rem;
+  }
+
+  /* === COPPER YARD GRID === */
+  [data-theme="copper"] { --accent: var(--neon-yellow); }
+  .copper-screen { text-align: center; }
+  .yard-grid {
+    display: grid; grid-template-columns: repeat(3, 100px);
+    gap: 8px; justify-content: center; margin: 1rem auto;
+  }
+  .yard-spot {
+    width: 100px; height: 100px; border-radius: 16px;
+    background: linear-gradient(135deg, rgba(57,255,20,0.08), rgba(57,255,20,0.03));
+    border: 2px solid rgba(57,255,20,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.5rem; cursor: pointer; transition: all 0.3s;
+    position: relative;
+  }
+  .yard-spot:hover {
+    border-color: rgba(57,255,20,0.4);
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(57,255,20,0.1);
+  }
+  .yard-spot.dug {
+    background: linear-gradient(135deg, rgba(139,90,43,0.2), rgba(101,67,33,0.15));
+    border-color: rgba(139,90,43,0.3);
+  }
+  .yard-spot.found-bone {
+    animation: boneReveal 0.6s ease;
+    border-color: rgba(255,247,0,0.5);
+    box-shadow: 0 0 30px rgba(255,247,0,0.2);
+  }
+  @keyframes boneReveal {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2) rotate(10deg); }
+    100% { transform: scale(1); }
+  }
+  .yard-spot .spot-number {
+    position: absolute; top: 4px; right: 8px;
+    font-size: 0.6rem; color: rgba(255,255,255,0.2);
+    font-weight: 800;
+  }
+  .copper-hint-display {
+    font-family: 'Fredoka One', cursive; font-size: 1.3rem;
+    margin: 0.8rem 0; min-height: 2em;
+    color: var(--neon-yellow);
+  }
+  .copper-sniff-prompt {
+    background: rgba(255,247,0,0.06); border: 1px solid rgba(255,247,0,0.15);
+    border-radius: 16px; padding: 1rem 2rem;
+    max-width: 500px; margin: 0.8rem auto;
+  }
+  .copper-round-info {
+    font-family: 'Fredoka One', cursive; font-size: 0.85rem;
+    color: rgba(255,255,255,0.35); margin-bottom: 0.5rem;
+  }
 </style>
 </head>
 <body>
 
 <canvas id="bg-canvas"></canvas>
+<div id="theme-overlay"></div>
 
 <!-- AUDIO CONTROLS -->
 <div class="audio-controls">
@@ -1181,7 +1508,7 @@
       <div class="player-tag">The Boss</div>
     </div>
     <div class="player-card" data-player="Mom" onclick="selectPlayer(this)">
-      <div class="avatar">💃🏽</div>
+      <div class="avatar">🌹</div>
       <div class="name">Mom</div>
       <div class="player-tag">Reggaeton Queen</div>
     </div>
@@ -1322,6 +1649,190 @@
       <button class="btn btn-play" onclick="startRiddleGame()">Another Riddle!</button>
       <button class="btn btn-secondary" onclick="closePrize()">Back to Typing</button>
       <button class="btn btn-secondary" onclick="showScreen('screen-title')">Home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MOM DANCE GAME ==================== -->
+<div id="screen-mom" class="screen">
+  <div class="dance-screen">
+    <div class="screen-title" style="margin-bottom:0.3rem;">🌹 Dance Floor 🌹</div>
+    <div class="subtitle" style="margin-bottom:0.5rem;">Hit the arrows on beat!</div>
+    <div class="dance-score-hud">
+      <div class="hud-item">
+        <div class="hud-label">Score</div>
+        <div class="hud-value score" id="dance-score">0</div>
+      </div>
+      <div class="hud-item">
+        <div class="hud-label">Combo</div>
+        <div class="hud-value streak" id="dance-combo">0</div>
+      </div>
+      <div class="hud-item">
+        <div class="hud-label">Rating</div>
+        <div class="hud-value" id="dance-rating" style="color:var(--neon-yellow);">—</div>
+      </div>
+    </div>
+    <div class="dance-stage" id="dance-stage">
+      <div class="dance-hit-zone" id="dance-hit-zone">
+        <div class="hit-slot">←</div>
+        <div class="hit-slot">↑</div>
+        <div class="hit-slot">↓</div>
+        <div class="hit-slot">→</div>
+      </div>
+    </div>
+    <div class="dance-lyrics" id="dance-lyrics"></div>
+  </div>
+</div>
+
+<!-- ==================== BRYSON/ANGELINA LESSON SCREEN ==================== -->
+<div id="screen-lesson" class="screen">
+  <div class="lesson-screen">
+    <div class="screen-title" id="lesson-title">Lesson 1</div>
+    <div class="lesson-badge" id="lesson-badge">HOME ROW</div>
+    <div class="lesson-progress-bar">
+      <div class="lesson-progress-fill" id="lesson-progress-fill" style="width:0%"></div>
+    </div>
+    <div class="subtitle" id="lesson-subtitle" style="margin-bottom:1rem;">Type the letters below</div>
+    <div class="typing-area" id="lesson-typing-area" tabindex="0">
+      <div class="prompt-text" id="lesson-prompt-text"></div>
+    </div>
+    <input type="text" class="hidden-input" id="lesson-hidden-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <div class="keyboard" id="lesson-keyboard"></div>
+    <div style="margin-top:1rem;">
+      <div class="hud-item" style="display:inline-block; margin: 0 1rem;">
+        <div class="hud-label">Accuracy</div>
+        <div class="hud-value" id="lesson-accuracy" style="color:var(--neon-green);">100%</div>
+      </div>
+      <div class="hud-item" style="display:inline-block; margin: 0 1rem;">
+        <div class="hud-label">Progress</div>
+        <div class="hud-value" id="lesson-progress-text" style="color:var(--neon-blue);">0/10</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MYSTERY NARRATIVE SCREEN ==================== -->
+<div id="screen-mystery" class="screen">
+  <div class="lesson-screen">
+    <div class="screen-title" id="mystery-title">🔮 Mystery Unfolds...</div>
+    <div class="mystery-narrative">
+      <div class="mystery-text" id="mystery-text"></div>
+      <div class="mystery-choice-prompt" id="mystery-choice-prompt"></div>
+      <div class="mystery-typing-area" id="mystery-typing-area"></div>
+    </div>
+    <input type="text" class="hidden-input" id="mystery-hidden-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <div style="margin-top:1rem;">
+      <button class="btn btn-secondary" id="mystery-continue-btn" onclick="continueFromMystery()" style="display:none;">Continue to Next Lesson</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== DAD BRIEFCASE GAME ==================== -->
+<div id="screen-dad" class="screen">
+  <div class="dad-screen">
+    <div class="screen-title" style="margin-bottom:0.3rem;">💼 Briefcase Collector 💼</div>
+    <div class="dad-money-counter" id="dad-money">$0.00</div>
+    <div class="dad-briefcase-meter">
+      <div class="dad-briefcase-fill" id="dad-briefcase-fill" style="width:0%"></div>
+    </div>
+    <div class="dance-score-hud" style="max-width:500px;">
+      <div class="hud-item">
+        <div class="hud-label">Briefcases</div>
+        <div class="hud-value" id="dad-briefcases" style="color:var(--neon-yellow);">0</div>
+      </div>
+      <div class="hud-item">
+        <div class="hud-label">Streak</div>
+        <div class="hud-value streak" id="dad-streak">0</div>
+      </div>
+      <div class="hud-item">
+        <div class="hud-label">WPM</div>
+        <div class="hud-value wpm" id="dad-wpm">0</div>
+      </div>
+    </div>
+    <div class="spanish-hint" id="dad-hint-box" style="max-width:600px;">
+      <div class="hint-spanish" id="dad-hint" style="font-size:1.2rem;"></div>
+      <div class="hint-category" id="dad-category"></div>
+    </div>
+    <div class="typing-area" id="dad-typing-area" style="max-width:600px;" tabindex="0">
+      <div class="prompt-text" id="dad-prompt-text"></div>
+    </div>
+    <input type="text" class="hidden-input" id="dad-hidden-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <div class="dad-news-ticker">
+      <div class="dad-news-ticker-label">BREAKING</div>
+      <div class="dad-news-ticker-text" id="dad-ticker-text" style="left:100%;">
+        Markets rally on strong earnings... Fed holds rates steady... Local attorney wins landmark case... Kumon enrollment up 200%...
+      </div>
+    </div>
+  </div>
+  <div class="dad-breaking-news" id="dad-breaking-news">
+    <div style="font-family:'Fredoka One',cursive; color:var(--neon-pink); font-size:1.5rem;">⚡ BREAKING NEWS ⚡</div>
+    <div id="dad-breaking-text" style="margin:0.8rem 0; font-size:1rem; color:rgba(255,255,255,0.8);"></div>
+    <div style="font-size:0.8rem; color:var(--neon-yellow);">Type it fast for 2x bonus!</div>
+  </div>
+</div>
+
+<!-- ==================== ALICE BATTLE SCREEN ==================== -->
+<div id="screen-alice" class="screen">
+  <div class="alice-screen">
+    <div class="screen-title" style="margin-bottom:0.2rem;">⚔️ K-Pop Demon Hunters ⚔️</div>
+    <div class="alice-wave-counter" id="alice-wave">Wave 1 / 3</div>
+    <div class="alice-demon" id="alice-demon">👾</div>
+    <div class="alice-hp-text" id="alice-hp-text">HP: 100 / 100</div>
+    <div class="alice-hp-bar">
+      <div class="alice-hp-fill" id="alice-hp-fill" style="width:100%"></div>
+    </div>
+    <div class="alice-prompt-display" id="alice-prompt-text"></div>
+    <input type="text" class="hidden-input" id="alice-hidden-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <div style="margin-top:0.5rem;">
+      <div class="hud-item" style="display:inline-block; margin:0 1rem;">
+        <div class="hud-label">Damage</div>
+        <div class="hud-value" id="alice-damage" style="color:var(--neon-pink);">0</div>
+      </div>
+      <div class="hud-item" style="display:inline-block; margin:0 1rem;">
+        <div class="hud-label">Combo</div>
+        <div class="hud-value streak" id="alice-combo">0</div>
+      </div>
+    </div>
+    <div class="keyboard" id="alice-keyboard" style="margin-top:1rem;"></div>
+  </div>
+</div>
+
+<!-- ==================== ALICE PRIZE SCREEN ==================== -->
+<div id="screen-alice-prize" class="screen">
+  <div class="alice-prize-screen">
+    <div class="alice-toy-reveal" id="alice-toy-emoji">🎁</div>
+    <div class="screen-title" style="background:linear-gradient(135deg,var(--neon-pink),var(--neon-purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+      Prize Unlocked!
+    </div>
+    <div id="alice-toy-name" style="font-family:'Fredoka One',cursive; font-size:1.5rem; color:var(--neon-yellow); margin:0.5rem 0;"></div>
+    <div id="alice-toy-desc" style="color:rgba(255,255,255,0.5); margin-bottom:1.5rem;"></div>
+    <div style="display:flex; gap:0.8rem; justify-content:center; flex-wrap:wrap;">
+      <button class="btn btn-play" onclick="startAliceGame()">Fight More Demons!</button>
+      <button class="btn btn-secondary" onclick="showScreen('screen-title')">Home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== COPPER YARD GRID SCREEN ==================== -->
+<div id="screen-copper" class="screen">
+  <div class="copper-screen">
+    <div class="screen-title" style="margin-bottom:0.3rem;">🐕 Find the Bone! 🦴</div>
+    <div class="copper-round-info" id="copper-round">Round 1 of 3</div>
+    <div class="copper-hint-display" id="copper-hint">Type the sniff prompt to start searching!</div>
+    <div class="copper-sniff-prompt" id="copper-sniff-area">
+      <div class="prompt-text" id="copper-prompt-text" style="font-size:1.2rem;"></div>
+    </div>
+    <input type="text" class="hidden-input" id="copper-hidden-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <div class="yard-grid" id="yard-grid"></div>
+    <div style="margin-top:1rem;">
+      <div class="hud-item" style="display:inline-block; margin:0 1rem;">
+        <div class="hud-label">Bones Found</div>
+        <div class="hud-value" id="copper-bones" style="color:var(--neon-yellow);">0</div>
+      </div>
+      <div class="hud-item" style="display:inline-block; margin:0 1rem;">
+        <div class="hud-label">Digs</div>
+        <div class="hud-value" id="copper-digs" style="color:var(--neon-orange);">0</div>
+      </div>
     </div>
   </div>
 </div>
@@ -3202,6 +3713,1334 @@ function showPrize() {
 function closePrize() {
   // Return to Copper's game
   startGame('special');
+}
+
+// ============================================================
+//  THEME SYSTEM
+// ============================================================
+function setTheme(theme) {
+  if (theme) {
+    document.body.setAttribute('data-theme', theme);
+  } else {
+    document.body.removeAttribute('data-theme');
+  }
+}
+
+// Override showScreen with fade transition
+const _origShowScreen = showScreen;
+function showScreenFade(id) {
+  const current = document.querySelector('.screen.active');
+  if (current && current.id !== id) {
+    current.classList.add('screen-fade-out');
+    setTimeout(() => {
+      current.classList.remove('screen-fade-out');
+      _origShowScreen(id);
+    }, 280);
+  } else {
+    _origShowScreen(id);
+  }
+}
+
+// Override selectPlayer to route special profiles to their custom games
+const _origShowModeSelect = showModeSelect;
+showModeSelect = function() {
+  sfxClick();
+  switch (currentPlayer) {
+    case 'Mom': setTheme('mom'); startMomGame(); return;
+    case 'Dad': setTheme('dad'); startDadGame(); return;
+    case 'Alice': setTheme('alice'); startAliceGame(); return;
+    case 'Copper': setTheme('copper'); startCopperGame(); return;
+    case 'Bryson':
+    case 'Angelina':
+      setTheme(null); startLessonGame(); return;
+    default:
+      setTheme(null); _origShowModeSelect();
+  }
+};
+
+// ============================================================
+//  MOM - DANCE FLOOR GAME 🌹
+// ============================================================
+const DANCE_ARROWS = ['left', 'up', 'down', 'right'];
+const DANCE_KEYS = { ArrowLeft: 'left', ArrowUp: 'up', ArrowDown: 'down', ArrowRight: 'right' };
+const DANCE_SYMBOLS = { left: '←', up: '↑', down: '↓', right: '→' };
+const DANCE_LANES = { left: 0, up: 1, down: 2, right: 3 };
+
+const REGGAETON_LYRICS = [
+  "Dale dale dale no te detengas...",
+  "Gasolina! Dame mas gasolina!",
+  "Despacito... quiero respirar tu cuello...",
+  "Yo perreo sola, yo perreo sola...",
+  "Vivir mi vida, la la la la!",
+  "Suavemente, besame...",
+  "Danza kuduro, danza kuduro!",
+  "Azucar! Azucar!",
+  "Shakira, Shakira! Las caderas no mienten!",
+  "Bailando, yo la vi bailando...",
+  "Calma, calma, vamos a la playa...",
+  "Mi gente! Todo el mundo!",
+  "Taki taki rumba!",
+  "Waka waka eh eh!",
+  "Bonita, bonita como las flores...",
+  "Me porto bonito, bonito pa ti...",
+];
+
+let danceState = null;
+
+function startMomGame() {
+  ensureAudio();
+  danceState = {
+    score: 0, combo: 0, maxCombo: 0,
+    perfect: 0, good: 0, miss: 0,
+    arrows: [], arrowId: 0,
+    active: true, startTime: Date.now(),
+    spawnInterval: null, animFrame: null,
+    totalArrows: 60, spawned: 0,
+    lyricsIdx: 0,
+  };
+
+  document.getElementById('dance-score').textContent = '0';
+  document.getElementById('dance-combo').textContent = '0';
+  document.getElementById('dance-rating').textContent = '—';
+  document.getElementById('dance-lyrics').textContent = REGGAETON_LYRICS[0];
+
+  // Clear old arrows
+  document.querySelectorAll('.dance-arrow').forEach(a => a.remove());
+
+  showScreen('screen-mom');
+  startMusic();
+
+  // Spawn arrows synced to beat
+  const beatInterval = 60000 / BPM; // quarter note
+  danceState.spawnInterval = setInterval(() => {
+    if (!danceState.active) return;
+    if (danceState.spawned >= danceState.totalArrows) {
+      clearInterval(danceState.spawnInterval);
+      setTimeout(() => endMomGame(), 3000);
+      return;
+    }
+    spawnDanceArrow();
+    danceState.spawned++;
+    // Cycle lyrics
+    if (danceState.spawned % 8 === 0) {
+      danceState.lyricsIdx = (danceState.lyricsIdx + 1) % REGGAETON_LYRICS.length;
+      document.getElementById('dance-lyrics').textContent = REGGAETON_LYRICS[danceState.lyricsIdx];
+    }
+  }, beatInterval);
+
+  // Animation loop
+  function animateDance() {
+    if (!danceState || !danceState.active) return;
+    const stage = document.getElementById('dance-stage');
+    const stageH = stage.offsetHeight;
+    const hitY = 60; // hit zone top position
+    const now = Date.now();
+
+    danceState.arrows.forEach(arrow => {
+      if (arrow.hit) return;
+      const elapsed = now - arrow.spawnTime;
+      const travelTime = 2500; // ms to travel full stage
+      const y = stageH + 30 - (elapsed / travelTime) * (stageH + 80);
+      arrow.el.style.top = y + 'px';
+
+      // Miss detection - arrow passed above hit zone
+      if (y < hitY - 60 && !arrow.hit) {
+        arrow.hit = true;
+        arrow.el.classList.add('hit-miss');
+        danceState.miss++;
+        danceState.combo = 0;
+        showDanceJudgment('Miss!', 'var(--neon-pink)');
+        document.getElementById('dance-combo').textContent = '0';
+        setTimeout(() => arrow.el.remove(), 300);
+      }
+    });
+
+    danceState.arrows = danceState.arrows.filter(a => !a.hit || a.el.parentNode);
+    danceState.animFrame = requestAnimationFrame(animateDance);
+  }
+  danceState.animFrame = requestAnimationFrame(animateDance);
+}
+
+function spawnDanceArrow() {
+  const dir = DANCE_ARROWS[Math.floor(Math.random() * DANCE_ARROWS.length)];
+  const stage = document.getElementById('dance-stage');
+  const el = document.createElement('div');
+  el.className = `dance-arrow ${dir}`;
+  el.textContent = DANCE_SYMBOLS[dir];
+
+  const laneX = 42 + DANCE_LANES[dir] * 72;
+  el.style.left = laneX + 'px';
+  el.style.top = (stage.offsetHeight + 30) + 'px';
+
+  stage.appendChild(el);
+  danceState.arrows.push({
+    id: danceState.arrowId++, dir, el,
+    spawnTime: Date.now(), hit: false,
+  });
+}
+
+function showDanceJudgment(text, color) {
+  const stage = document.getElementById('dance-stage');
+  const j = document.createElement('div');
+  j.className = 'dance-judgment';
+  j.textContent = text;
+  j.style.color = color;
+  stage.appendChild(j);
+  setTimeout(() => j.remove(), 600);
+}
+
+function spawnRoseParticles(x, y) {
+  for (let i = 0; i < 6; i++) {
+    const r = document.createElement('div');
+    r.className = 'rose-particle';
+    r.textContent = '🌹';
+    const rx = (Math.random() - 0.5) * 120;
+    const ry = -40 - Math.random() * 80;
+    r.style.cssText = `left:${x}px;top:${y}px;--rx:${rx}px;--ry:${ry}px;`;
+    document.body.appendChild(r);
+    setTimeout(() => r.remove(), 1500);
+  }
+}
+
+// Dance key handler
+document.addEventListener('keydown', function(e) {
+  if (!danceState || !danceState.active) return;
+  const dir = DANCE_KEYS[e.key];
+  if (!dir) return;
+  e.preventDefault();
+
+  const hitY = 60;
+  const hitRange = 50;
+  let bestArrow = null;
+  let bestDist = Infinity;
+
+  danceState.arrows.forEach(arrow => {
+    if (arrow.hit || arrow.dir !== dir) return;
+    const top = parseInt(arrow.el.style.top);
+    const dist = Math.abs(top - hitY);
+    if (dist < bestDist) { bestDist = dist; bestArrow = arrow; }
+  });
+
+  if (bestArrow && bestDist < hitRange * 2) {
+    bestArrow.hit = true;
+    let points = 0;
+    if (bestDist < 15) {
+      points = 100;
+      danceState.perfect++;
+      bestArrow.el.classList.add('hit-perfect');
+      showDanceJudgment('Perfecto! ✨', 'var(--neon-green)');
+      sfxPerfect();
+      const rect = bestArrow.el.getBoundingClientRect();
+      spawnRoseParticles(rect.left + 25, rect.top + 25);
+    } else if (bestDist < hitRange) {
+      points = 50;
+      danceState.good++;
+      bestArrow.el.classList.add('hit-good');
+      showDanceJudgment('Bueno!', 'var(--neon-yellow)');
+      sfxCorrect();
+    } else {
+      points = 20;
+      danceState.good++;
+      bestArrow.el.classList.add('hit-good');
+      showDanceJudgment('OK', 'var(--neon-blue)');
+      sfxCorrect();
+    }
+
+    danceState.combo++;
+    if (danceState.combo > danceState.maxCombo) danceState.maxCombo = danceState.combo;
+    const multiplier = Math.min(4, 1 + Math.floor(danceState.combo / 5));
+    points *= multiplier;
+    danceState.score += points;
+
+    document.getElementById('dance-score').textContent = danceState.score;
+    document.getElementById('dance-combo').textContent = danceState.combo;
+
+    // Rose particles on combos
+    if (danceState.combo > 0 && danceState.combo % 5 === 0) {
+      const stageRect = document.getElementById('dance-stage').getBoundingClientRect();
+      spawnRoseParticles(stageRect.left + stageRect.width / 2, stageRect.top + 100);
+    }
+
+    setTimeout(() => bestArrow.el.remove(), 300);
+  }
+});
+
+function endMomGame() {
+  if (!danceState) return;
+  danceState.active = false;
+  if (danceState.spawnInterval) clearInterval(danceState.spawnInterval);
+  if (danceState.animFrame) cancelAnimationFrame(danceState.animFrame);
+  stopMusic();
+
+  const total = danceState.perfect + danceState.good + danceState.miss;
+  const pct = total > 0 ? ((danceState.perfect + danceState.good) / total * 100) : 0;
+  let rating = 'Bronze';
+  let stars = 2;
+  if (pct >= 95 && danceState.perfect > danceState.good) { rating = 'Platinum'; stars = 5; }
+  else if (pct >= 85) { rating = 'Gold'; stars = 4; }
+  else if (pct >= 70) { rating = 'Silver'; stars = 3; }
+
+  document.getElementById('dance-rating').textContent = rating;
+
+  // Show results via main results screen
+  const wpm = Math.round(danceState.score / 100);
+  document.getElementById('results-rank').textContent = '🌹';
+  document.getElementById('results-title').textContent = rating + ' Dance Rating!';
+  document.getElementById('results-subtitle').textContent = `${danceState.perfect} Perfecto / ${danceState.good} Bueno / ${danceState.miss} Miss — Mom`;
+
+  const starContainer = document.getElementById('star-rating');
+  starContainer.innerHTML = '';
+  for (let i = 0; i < 5; i++) {
+    const s = document.createElement('span');
+    s.className = `star ${i < stars ? 'filled' : 'empty'}`;
+    s.textContent = i < stars ? '⭐' : '☆';
+    s.style.animationDelay = `${i * 0.15}s`;
+    starContainer.appendChild(s);
+  }
+
+  document.getElementById('res-score').textContent = danceState.score;
+  document.getElementById('res-wpm').textContent = danceState.maxCombo;
+  document.getElementById('res-accuracy').textContent = Math.round(pct) + '%';
+  document.getElementById('res-streak').textContent = danceState.maxCombo;
+
+  document.getElementById('achievements').innerHTML = '';
+  document.getElementById('spanish-learned').style.display = 'none';
+
+  sfxComplete();
+  showScreen('screen-results');
+  setTimeout(() => launchConfetti(), 300);
+  setTimeout(() => launchConfetti(), 1500);
+}
+
+// ============================================================
+//  BRYSON / ANGELINA - PROGRESSIVE LESSONS + MYSTERY
+// ============================================================
+const LESSON_DEFS = [
+  { name: 'Home Row Basics', keys: 'asdf jkl;', desc: 'Home row keys: A S D F J K L ;' },
+  { name: 'Home Row Practice', keys: 'asdf jkl;', desc: 'Get comfortable with home row' },
+  { name: 'Home Row Speed', keys: 'asdf jkl;', desc: 'Speed up those home row fingers!' },
+  { name: 'Adding Top Row', keys: 'asdf jkl; qwer uiop', desc: 'Now adding Q W E R U I O P' },
+  { name: 'Top + Home Mix', keys: 'asdf jkl; qwer uiop', desc: 'Mix top row with home row' },
+  { name: 'Two Row Master', keys: 'asdf jkl; qwer uiop', desc: 'Master two rows!' },
+  { name: 'Full Keyboard', keys: 'asdf jkl; qwer uiop zxcv bnm', desc: 'All three rows!' },
+  { name: 'Full Speed', keys: 'asdf jkl; qwer uiop zxcv bnm', desc: 'Type with all keys!' },
+  { name: 'Keyboard Master', keys: 'asdf jkl; qwer uiop zxcv bnm', desc: 'Prove your mastery!' },
+  { name: 'Spanish Vocabulary', keys: 'spanish', desc: 'Spanish words mixed in!' },
+  { name: 'Spanish Sentences', keys: 'spanish', desc: 'Full Spanish phrases!' },
+  { name: 'Bilingual Master', keys: 'spanish', desc: 'English + Spanish mix!' },
+];
+
+const MYSTERY_STORIES = [
+  {
+    text: "You stand at the entrance of a dark, ancient cave. Strange glowing symbols cover the walls. A faint breeze carries whispers from deep inside...",
+    prompt: "Type your choice:",
+    choices: [
+      { word: "ENTER", next: "You step inside. The symbols glow brighter as you pass, revealing a hidden passage to the LEFT and a staircase going DOWN." },
+      { word: "SEARCH", next: "You search around the entrance and find an old map scratched into the rock. It shows a treasure deep within!" },
+      { word: "LISTEN", next: "You listen carefully. The whispers seem to say 'follow the light...' A golden glow appears ahead." },
+    ]
+  },
+  {
+    text: "Deep in the enchanted forest, you find a crossroads. A wise owl watches from above. Three paths stretch before you: one covered in flowers, one shrouded in mist, and one lit by fireflies.",
+    prompt: "Which path? Type your choice:",
+    choices: [
+      { word: "FLOWERS", next: "The flower path leads to a garden where a friendly fairy offers you a magic key! 'This opens the treasure room,' she says." },
+      { word: "MIST", next: "Through the mist you find a sleeping dragon guarding a chest. Maybe you can sneak past..." },
+      { word: "FIREFLIES", next: "The fireflies guide you to a hidden waterfall. Behind it, a secret door with a golden lock!" },
+    ]
+  },
+  {
+    text: "You've found the treasure room! But there are three chests: one gold, one silver, and one wooden. The inscription reads: 'Only one holds the real treasure. Choose wisely!'",
+    prompt: "Which chest? Type your choice:",
+    choices: [
+      { word: "GOLD", next: "The gold chest opens to reveal... a mirror! It shows your reflection and reads: 'The real treasure is knowledge!' You've leveled up!" },
+      { word: "SILVER", next: "The silver chest contains a glowing crystal that hums with energy. It grants you the power of fast typing!" },
+      { word: "WOODEN", next: "The simple wooden chest holds a beautiful journal full of stories from ancient explorers. Wisdom is the greatest treasure!" },
+    ]
+  },
+];
+
+let lessonState = null;
+
+function getLessonProgress(player) {
+  try {
+    const data = JSON.parse(localStorage.getItem(`typingFiesta_lessons_${player}`) || '{}');
+    return { currentLesson: data.currentLesson || 1, ...data };
+  } catch { return { currentLesson: 1 }; }
+}
+
+function saveLessonProgress(player, lesson) {
+  const data = getLessonProgress(player);
+  data.currentLesson = Math.max(data.currentLesson, lesson);
+  localStorage.setItem(`typingFiesta_lessons_${player}`, JSON.stringify(data));
+}
+
+function generateLessonPrompts(lessonNum) {
+  const def = LESSON_DEFS[Math.min(lessonNum - 1, LESSON_DEFS.length - 1)];
+  if (def.keys === 'spanish') {
+    // Spanish lessons use vocab
+    const words = shuffle(getAllVocab()).slice(0, 12);
+    return words.map(w => w.es);
+  }
+  const chars = def.keys.replace(/\s/g, '');
+  const prompts = [];
+  for (let i = 0; i < 12; i++) {
+    let word = '';
+    const len = 3 + Math.floor(Math.random() * 4);
+    for (let j = 0; j < len; j++) {
+      word += chars[Math.floor(Math.random() * chars.length)];
+    }
+    prompts.push(word);
+  }
+  return prompts;
+}
+
+function startLessonGame() {
+  const progress = getLessonProgress(currentPlayer);
+  const lessonNum = progress.currentLesson;
+  const def = LESSON_DEFS[Math.min(lessonNum - 1, LESSON_DEFS.length - 1)];
+  const prompts = generateLessonPrompts(lessonNum);
+
+  lessonState = {
+    player: currentPlayer, lessonNum, prompts,
+    currentIndex: 0, charIndex: 0,
+    totalCorrect: 0, totalTyped: 0,
+    charResults: {},
+    completed: false,
+  };
+
+  document.getElementById('lesson-title').textContent = `Lesson ${lessonNum}: ${def.name}`;
+  document.getElementById('lesson-badge').textContent = def.desc;
+  document.getElementById('lesson-progress-fill').style.width =
+    ((lessonNum - 1) / LESSON_DEFS.length * 100) + '%';
+  document.getElementById('lesson-accuracy').textContent = '100%';
+  document.getElementById('lesson-progress-text').textContent = `0/${prompts.length}`;
+
+  showScreen('screen-lesson');
+  ensureAudio();
+  startMusic();
+  loadLessonPrompt();
+
+  const input = document.getElementById('lesson-hidden-input');
+  input.value = '';
+  input.focus();
+  document.getElementById('lesson-typing-area').onclick = () => input.focus();
+
+  // Spawn mystery particles for Bryson/Angelina
+  spawnMysteryParticles();
+}
+
+function loadLessonPrompt() {
+  if (!lessonState || lessonState.currentIndex >= lessonState.prompts.length) {
+    endLesson();
+    return;
+  }
+  lessonState.charIndex = 0;
+  lessonState.charResults = {};
+  renderLessonChars();
+}
+
+function renderLessonChars() {
+  const text = lessonState.prompts[lessonState.currentIndex];
+  const container = document.getElementById('lesson-prompt-text');
+  container.innerHTML = '';
+  for (let i = 0; i < text.length; i++) {
+    const span = document.createElement('span');
+    span.className = 'char';
+    if (text[i] === ' ') span.classList.add('space-char');
+    span.textContent = text[i] === ' ' ? '\u00A0' : text[i];
+    if (i < lessonState.charIndex) {
+      span.classList.add(lessonState.charResults[i] ? 'correct' : 'incorrect');
+    } else if (i === lessonState.charIndex) {
+      span.classList.add('current');
+    } else {
+      span.classList.add('upcoming');
+    }
+    container.appendChild(span);
+  }
+}
+
+document.getElementById('lesson-hidden-input').addEventListener('input', function(e) {
+  if (!lessonState || lessonState.completed) return;
+  const typed = e.data;
+  if (!typed) return;
+  const text = lessonState.prompts[lessonState.currentIndex];
+  const expected = text[lessonState.charIndex];
+  if (expected === undefined) return;
+
+  lessonState.totalTyped++;
+  if (typed === expected) {
+    lessonState.charResults[lessonState.charIndex] = true;
+    lessonState.totalCorrect++;
+    sfxCorrect();
+  } else {
+    lessonState.charResults[lessonState.charIndex] = false;
+    sfxWrong();
+  }
+  lessonState.charIndex++;
+
+  if (lessonState.charIndex >= text.length) {
+    lessonState.currentIndex++;
+    document.getElementById('lesson-progress-text').textContent =
+      `${lessonState.currentIndex}/${lessonState.prompts.length}`;
+    loadLessonPrompt();
+  } else {
+    renderLessonChars();
+  }
+
+  const acc = lessonState.totalTyped > 0
+    ? Math.round(lessonState.totalCorrect / lessonState.totalTyped * 100) : 100;
+  document.getElementById('lesson-accuracy').textContent = acc + '%';
+  this.value = '';
+});
+
+document.getElementById('lesson-hidden-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    if (lessonState && lessonState.charIndex > 0) {
+      lessonState.charIndex--;
+      delete lessonState.charResults[lessonState.charIndex];
+      renderLessonChars();
+    }
+  }
+  if (e.key === 'Escape') {
+    stopMusic();
+    clearMysteryParticles();
+    showScreen('screen-title');
+  }
+});
+
+function endLesson() {
+  lessonState.completed = true;
+  stopMusic();
+  const acc = lessonState.totalTyped > 0
+    ? Math.round(lessonState.totalCorrect / lessonState.totalTyped * 100) : 0;
+
+  if (acc >= 90) {
+    saveLessonProgress(lessonState.player, lessonState.lessonNum + 1);
+    sfxLevelUp();
+    // Show mystery narrative between lessons
+    showMysteryNarrative();
+  } else {
+    sfxComplete();
+    // Didn't pass - show results and let them retry
+    document.getElementById('results-rank').textContent = '📝';
+    document.getElementById('results-title').textContent = 'Keep Practicing!';
+    document.getElementById('results-subtitle').textContent = `Need 90%+ to advance. You got ${acc}% — ${currentPlayer}`;
+    const starContainer = document.getElementById('star-rating');
+    starContainer.innerHTML = '';
+    for (let i = 0; i < 5; i++) {
+      const s = document.createElement('span');
+      s.className = `star ${i < 2 ? 'filled' : 'empty'}`;
+      s.textContent = i < 2 ? '⭐' : '☆';
+      s.style.animationDelay = `${i * 0.15}s`;
+      starContainer.appendChild(s);
+    }
+    document.getElementById('res-score').textContent = acc + '%';
+    document.getElementById('res-wpm').textContent = '—';
+    document.getElementById('res-accuracy').textContent = acc + '%';
+    document.getElementById('res-streak').textContent = '—';
+    document.getElementById('achievements').innerHTML = '';
+    document.getElementById('spanish-learned').style.display = 'none';
+    clearMysteryParticles();
+    showScreen('screen-results');
+  }
+}
+
+let mysteryParticleEls = [];
+function spawnMysteryParticles() {
+  clearMysteryParticles();
+  for (let i = 0; i < 8; i++) {
+    const p = document.createElement('div');
+    p.className = 'mystery-particle';
+    p.textContent = '❓';
+    p.style.left = (Math.random() * 90 + 5) + '%';
+    p.style.top = (Math.random() * 80 + 10) + '%';
+    p.style.animationDelay = (Math.random() * 5) + 's';
+    document.body.appendChild(p);
+    mysteryParticleEls.push(p);
+  }
+}
+
+function clearMysteryParticles() {
+  mysteryParticleEls.forEach(p => p.remove());
+  mysteryParticleEls = [];
+}
+
+let mysteryState = null;
+
+function showMysteryNarrative() {
+  const story = MYSTERY_STORIES[Math.floor(Math.random() * MYSTERY_STORIES.length)];
+  mysteryState = {
+    story, choiceMade: false, typed: '',
+    choices: story.choices,
+  };
+
+  document.getElementById('mystery-text').textContent = story.text;
+  document.getElementById('mystery-choice-prompt').textContent =
+    story.prompt + ' ' + story.choices.map(c => c.word).join(' / ');
+  document.getElementById('mystery-typing-area').textContent = '';
+  document.getElementById('mystery-continue-btn').style.display = 'none';
+
+  showScreen('screen-mystery');
+  const input = document.getElementById('mystery-hidden-input');
+  input.value = '';
+  input.focus();
+}
+
+document.getElementById('mystery-hidden-input').addEventListener('input', function(e) {
+  if (!mysteryState || mysteryState.choiceMade) return;
+  const typed = e.data;
+  if (!typed) return;
+  mysteryState.typed += typed.toUpperCase();
+  document.getElementById('mystery-typing-area').textContent = mysteryState.typed;
+
+  // Check if any choice matches
+  for (const choice of mysteryState.choices) {
+    if (mysteryState.typed === choice.word) {
+      mysteryState.choiceMade = true;
+      sfxPerfect();
+      document.getElementById('mystery-text').textContent = choice.next;
+      document.getElementById('mystery-choice-prompt').textContent = '';
+      document.getElementById('mystery-typing-area').textContent = '✨ ' + choice.word + ' ✨';
+      document.getElementById('mystery-continue-btn').style.display = 'inline-block';
+      launchConfetti();
+      break;
+    }
+  }
+  this.value = '';
+});
+
+document.getElementById('mystery-hidden-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    if (mysteryState && !mysteryState.choiceMade) {
+      mysteryState.typed = mysteryState.typed.slice(0, -1);
+      document.getElementById('mystery-typing-area').textContent = mysteryState.typed;
+    }
+  }
+  if (e.key === 'Escape') {
+    clearMysteryParticles();
+    showScreen('screen-title');
+  }
+});
+
+function continueFromMystery() {
+  sfxClick();
+  clearMysteryParticles();
+  startLessonGame(); // Start next lesson
+}
+
+// ============================================================
+//  DAD - BRIEFCASE COLLECTOR / NEWS GAME 💼
+// ============================================================
+const DAD_NEWS_HEADLINES = [
+  "the federal reserve announced rate decision today",
+  "supreme court rules on landmark property case",
+  "local firm wins record settlement for client",
+  "stock market reaches new all time high today",
+  "florida bar announces new ethics requirements",
+  "commercial real estate market shows strong growth",
+  "billable hour rates increase across major firms",
+  "new legislation affects contract law provisions",
+  "mergers and acquisitions activity surges this quarter",
+  "cryptocurrency regulations face legal challenges",
+];
+
+const DAD_BREAKING = [
+  "dow jones surges five hundred points on earnings",
+  "breaking supreme court issues major ruling today",
+  "flash florida governor signs new business law",
+  "alert interest rates cut by fifty basis points",
+];
+
+let dadState = null;
+
+function startDadGame() {
+  const prompts = shuffle([...DAD_PROMPTS]).slice(0, 20);
+  dadState = {
+    prompts, currentIndex: 0, charIndex: 0,
+    charResults: {},
+    money: 0, briefcases: 0, briefcaseMeter: 0,
+    streak: 0, totalCorrect: 0, totalTyped: 0,
+    startTime: null, wordsCompleted: 0,
+    breakingActive: false, breakingTimeout: null,
+  };
+
+  document.getElementById('dad-money').textContent = '$0.00';
+  document.getElementById('dad-briefcases').textContent = '0';
+  document.getElementById('dad-streak').textContent = '0';
+  document.getElementById('dad-wpm').textContent = '0';
+  document.getElementById('dad-briefcase-fill').style.width = '0%';
+  document.getElementById('dad-breaking-news').classList.remove('show');
+
+  showScreen('screen-dad');
+  ensureAudio();
+  startMusic();
+  loadDadPrompt();
+
+  const input = document.getElementById('dad-hidden-input');
+  input.value = '';
+  input.focus();
+  document.getElementById('dad-typing-area').onclick = () => input.focus();
+
+  // Schedule random breaking news
+  scheduleDadBreaking();
+}
+
+function loadDadPrompt() {
+  if (!dadState || dadState.currentIndex >= dadState.prompts.length) {
+    endDadGame();
+    return;
+  }
+  const p = dadState.prompts[dadState.currentIndex];
+  dadState.charIndex = 0;
+  dadState.charResults = {};
+  document.getElementById('dad-hint').textContent = p.hint;
+  document.getElementById('dad-category').textContent = p.category;
+  renderDadChars();
+}
+
+function renderDadChars() {
+  const text = dadState.prompts[dadState.currentIndex].text;
+  const container = document.getElementById('dad-prompt-text');
+  container.innerHTML = '';
+  for (let i = 0; i < text.length; i++) {
+    const span = document.createElement('span');
+    span.className = 'char';
+    if (text[i] === ' ') span.classList.add('space-char');
+    span.textContent = text[i] === ' ' ? '\u00A0' : text[i];
+    if (i < dadState.charIndex) {
+      span.classList.add(dadState.charResults[i] ? 'correct' : 'incorrect');
+    } else if (i === dadState.charIndex) {
+      span.classList.add('current');
+    } else {
+      span.classList.add('upcoming');
+    }
+    container.appendChild(span);
+  }
+}
+
+document.getElementById('dad-hidden-input').addEventListener('input', function(e) {
+  if (!dadState) return;
+  const typed = e.data;
+  if (!typed) return;
+
+  if (!dadState.startTime) dadState.startTime = Date.now();
+
+  const text = dadState.prompts[dadState.currentIndex].text;
+  const expected = text[dadState.charIndex];
+  if (expected === undefined) return;
+
+  dadState.totalTyped++;
+  if (typed === expected) {
+    dadState.charResults[dadState.charIndex] = true;
+    dadState.totalCorrect++;
+    dadState.streak++;
+    const multiplier = dadState.breakingActive ? 2 : 1;
+    const earned = (0.50 + dadState.streak * 0.10) * multiplier;
+    dadState.money += earned;
+    dadState.briefcaseMeter += 2;
+    sfxCorrect();
+  } else {
+    dadState.charResults[dadState.charIndex] = false;
+    dadState.streak = 0;
+    dadState.money = Math.max(0, dadState.money - 0.25);
+    sfxWrong();
+  }
+
+  document.getElementById('dad-money').textContent = '$' + dadState.money.toFixed(2);
+  document.getElementById('dad-streak').textContent = dadState.streak;
+
+  // Briefcase meter
+  if (dadState.briefcaseMeter >= 100) {
+    dadState.briefcaseMeter = 0;
+    dadState.briefcases++;
+    document.getElementById('dad-briefcases').textContent = dadState.briefcases;
+    sfxCombo();
+    showCombo('BRIEFCASE FILLED! 💼', 'var(--neon-green)');
+  }
+  document.getElementById('dad-briefcase-fill').style.width = dadState.briefcaseMeter + '%';
+
+  // WPM
+  if (dadState.startTime) {
+    const elapsed = (Date.now() - dadState.startTime) / 60000;
+    if (elapsed > 0) document.getElementById('dad-wpm').textContent = Math.round(dadState.wordsCompleted / elapsed);
+  }
+
+  dadState.charIndex++;
+  if (dadState.charIndex >= text.length) {
+    dadState.wordsCompleted += text.split(' ').length;
+    dadState.currentIndex++;
+    if (dadState.breakingActive) {
+      dadState.breakingActive = false;
+      document.getElementById('dad-breaking-news').classList.remove('show');
+    }
+    loadDadPrompt();
+  } else {
+    renderDadChars();
+  }
+  this.value = '';
+});
+
+document.getElementById('dad-hidden-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    if (dadState && dadState.charIndex > 0) {
+      dadState.charIndex--;
+      delete dadState.charResults[dadState.charIndex];
+      renderDadChars();
+    }
+  }
+  if (e.key === 'Escape') {
+    if (dadState && dadState.breakingTimeout) clearTimeout(dadState.breakingTimeout);
+    stopMusic();
+    showScreen('screen-title');
+  }
+});
+
+function scheduleDadBreaking() {
+  if (!dadState) return;
+  const delay = 15000 + Math.random() * 20000;
+  dadState.breakingTimeout = setTimeout(() => {
+    if (!dadState || dadState.currentIndex >= dadState.prompts.length) return;
+    // Insert a breaking news prompt
+    const headline = DAD_BREAKING[Math.floor(Math.random() * DAD_BREAKING.length)];
+    dadState.breakingActive = true;
+    document.getElementById('dad-breaking-text').textContent = headline;
+    document.getElementById('dad-breaking-news').classList.add('show');
+    // Replace current prompt with breaking news
+    dadState.prompts[dadState.currentIndex] = {
+      text: headline, hint: '⚡ BREAKING NEWS - 2x BONUS! ⚡', category: 'BREAKING NEWS'
+    };
+    dadState.charIndex = 0;
+    dadState.charResults = {};
+    loadDadPrompt();
+    sfxLevelUp();
+    // Auto-dismiss if not typed in time
+    setTimeout(() => {
+      if (dadState && dadState.breakingActive) {
+        dadState.breakingActive = false;
+        document.getElementById('dad-breaking-news').classList.remove('show');
+      }
+    }, 15000);
+    // Schedule next
+    scheduleDadBreaking();
+  }, delay);
+}
+
+function endDadGame() {
+  if (dadState && dadState.breakingTimeout) clearTimeout(dadState.breakingTimeout);
+  stopMusic();
+  sfxComplete();
+
+  const ceoRatings = ['Intern', 'Analyst', 'Associate', 'VP', 'Director', 'CFO', 'CEO'];
+  const ratingIdx = Math.min(ceoRatings.length - 1, Math.floor(dadState.briefcases / 2));
+  const rating = ceoRatings[ratingIdx];
+  const stars = Math.min(5, Math.max(1, Math.floor(ratingIdx * 5 / ceoRatings.length) + 1));
+
+  document.getElementById('results-rank').textContent = '💼';
+  document.getElementById('results-title').textContent = rating + ' Rating!';
+  document.getElementById('results-subtitle').textContent =
+    `$${dadState.money.toFixed(2)} earned, ${dadState.briefcases} briefcases — Dad`;
+
+  const starContainer = document.getElementById('star-rating');
+  starContainer.innerHTML = '';
+  for (let i = 0; i < 5; i++) {
+    const s = document.createElement('span');
+    s.className = `star ${i < stars ? 'filled' : 'empty'}`;
+    s.textContent = i < stars ? '⭐' : '☆';
+    s.style.animationDelay = `${i * 0.15}s`;
+    starContainer.appendChild(s);
+  }
+
+  document.getElementById('res-score').textContent = '$' + dadState.money.toFixed(2);
+  document.getElementById('res-wpm').textContent = document.getElementById('dad-wpm').textContent;
+  const acc = dadState.totalTyped > 0 ? Math.round(dadState.totalCorrect / dadState.totalTyped * 100) : 0;
+  document.getElementById('res-accuracy').textContent = acc + '%';
+  document.getElementById('res-streak').textContent = dadState.briefcases + ' 💼';
+  document.getElementById('achievements').innerHTML = '';
+  document.getElementById('spanish-learned').style.display = 'none';
+
+  showScreen('screen-results');
+  setTimeout(() => launchConfetti(), 300);
+}
+
+// ============================================================
+//  ALICE - K-POP DEMON HUNTERS BATTLE 👾
+// ============================================================
+const DEMON_EMOJIS = ['👾', '👹', '🧟', '💀', '🦇', '🐉', '👻', '🕷️'];
+const ALICE_BATTLE_PROMPTS = [
+  'a b', 'go', 'hi', 'pow', 'kick', 'zap', 'run', 'hit',
+  'yay', 'pop', 'bam', 'yes', 'no no', 'la la', 'star',
+  'sing', 'up up', 'big', 'fun', 'win', 'bow', 'jump',
+  'fast', 'cool', 'fire', 'ice', 'moon',
+];
+const ALICE_TOYS = [
+  { emoji: '🧸', name: 'Giant Teddy Bear', desc: 'A huge fluffy teddy bear to cuddle!' },
+  { emoji: '🎨', name: 'Art Supply Kit', desc: 'Crayons, markers, and sparkly stickers!' },
+  { emoji: '👑', name: 'Princess Crown Set', desc: 'A sparkly crown with matching jewelry!' },
+  { emoji: '🦄', name: 'Unicorn Plushie', desc: 'A magical rainbow unicorn!' },
+  { emoji: '🎪', name: 'Play-Doh Mega Set', desc: 'All the colors of Play-Doh!' },
+  { emoji: '🧩', name: 'Puzzle Adventure Box', desc: 'Fun puzzles with sparkly pieces!' },
+  { emoji: '🎤', name: 'K-Pop Microphone', desc: 'A real working karaoke mic!' },
+  { emoji: '🌈', name: 'Rainbow Slime Kit', desc: 'Make your own glitter slime!' },
+];
+
+let aliceState = null;
+
+function startAliceGame() {
+  aliceState = {
+    wave: 1, totalWaves: 3, demonsDefeated: 0,
+    demonHp: 100, demonMaxHp: 100,
+    prompts: shuffle([...ALICE_BATTLE_PROMPTS]),
+    promptIndex: 0, charIndex: 0, charResults: {},
+    combo: 0, totalDamage: 0,
+    active: true,
+  };
+
+  showScreen('screen-alice');
+  ensureAudio();
+  startMusic();
+  loadAliceDemon();
+
+  // Build keyboard for Alice (bigger display)
+  buildAliceKeyboard();
+
+  const input = document.getElementById('alice-hidden-input');
+  input.value = '';
+  input.focus();
+}
+
+function buildAliceKeyboard() {
+  const kb = document.getElementById('alice-keyboard');
+  kb.innerHTML = '';
+  // Simplified keyboard for Alice - just letters
+  const rows = [
+    'QWERTYUIOP'.split(''),
+    'ASDFGHJKL'.split(''),
+    'ZXCVBNM'.split(''),
+  ];
+  rows.forEach(row => {
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'kb-row';
+    row.forEach(k => {
+      const keyDiv = document.createElement('div');
+      keyDiv.className = 'kb-key';
+      keyDiv.textContent = k;
+      keyDiv.dataset.key = k;
+      keyDiv.style.fontSize = '1rem';
+      keyDiv.style.fontWeight = '900';
+      rowDiv.appendChild(keyDiv);
+    });
+    kb.appendChild(rowDiv);
+  });
+  // Space bar
+  const spaceRow = document.createElement('div');
+  spaceRow.className = 'kb-row';
+  const spaceKey = document.createElement('div');
+  spaceKey.className = 'kb-key space';
+  spaceKey.textContent = 'SPACE';
+  spaceKey.dataset.key = 'SPACE';
+  spaceRow.appendChild(spaceKey);
+  kb.appendChild(spaceRow);
+}
+
+function loadAliceDemon() {
+  const hp = 60 + aliceState.wave * 20;
+  aliceState.demonMaxHp = hp;
+  aliceState.demonHp = hp;
+  aliceState.promptIndex = 0;
+  aliceState.prompts = shuffle([...ALICE_BATTLE_PROMPTS]);
+
+  const demonEl = document.getElementById('alice-demon');
+  demonEl.textContent = DEMON_EMOJIS[Math.floor(Math.random() * DEMON_EMOJIS.length)];
+  demonEl.classList.remove('hit', 'defeated');
+
+  document.getElementById('alice-wave').textContent = `Wave ${aliceState.wave} / ${aliceState.totalWaves}`;
+  updateAliceHp();
+  loadAlicePrompt();
+}
+
+function loadAlicePrompt() {
+  if (aliceState.promptIndex >= aliceState.prompts.length) {
+    aliceState.prompts = shuffle([...ALICE_BATTLE_PROMPTS]);
+    aliceState.promptIndex = 0;
+  }
+  aliceState.charIndex = 0;
+  aliceState.charResults = {};
+  renderAliceChars();
+}
+
+function renderAliceChars() {
+  const text = aliceState.prompts[aliceState.promptIndex];
+  const container = document.getElementById('alice-prompt-text');
+  container.innerHTML = '';
+  for (let i = 0; i < text.length; i++) {
+    const span = document.createElement('span');
+    span.className = 'char';
+    span.textContent = text[i] === ' ' ? '\u00A0' : text[i];
+    if (i < aliceState.charIndex) {
+      span.classList.add(aliceState.charResults[i] ? 'correct' : 'incorrect');
+    } else if (i === aliceState.charIndex) {
+      span.classList.add('current');
+    } else {
+      span.classList.add('upcoming');
+    }
+    container.appendChild(span);
+  }
+}
+
+function updateAliceHp() {
+  const pct = Math.max(0, aliceState.demonHp / aliceState.demonMaxHp * 100);
+  document.getElementById('alice-hp-fill').style.width = pct + '%';
+  document.getElementById('alice-hp-text').textContent =
+    `HP: ${Math.max(0, Math.round(aliceState.demonHp))} / ${aliceState.demonMaxHp}`;
+}
+
+function aliceHitDemon() {
+  const el = document.getElementById('alice-demon');
+  el.classList.remove('hit');
+  void el.offsetWidth;
+  el.classList.add('hit');
+  setTimeout(() => el.classList.remove('hit'), 300);
+}
+
+document.getElementById('alice-hidden-input').addEventListener('input', function(e) {
+  if (!aliceState || !aliceState.active) return;
+  const typed = e.data;
+  if (!typed) return;
+
+  const text = aliceState.prompts[aliceState.promptIndex];
+  const expected = text[aliceState.charIndex];
+  if (expected === undefined) return;
+
+  if (typed === expected) {
+    aliceState.charResults[aliceState.charIndex] = true;
+    aliceState.combo++;
+    sfxCorrect();
+
+    // Highlight key on Alice keyboard
+    const keyStr = expected === ' ' ? 'SPACE' : expected.toUpperCase();
+    const keyEl = document.querySelector('#alice-keyboard .kb-key[data-key="' + keyStr + '"]');
+    if (keyEl) {
+      keyEl.classList.add('pressed-correct');
+      setTimeout(() => keyEl.classList.remove('pressed-correct'), 180);
+    }
+  } else {
+    aliceState.charResults[aliceState.charIndex] = false;
+    aliceState.combo = 0;
+    sfxWrong();
+  }
+
+  document.getElementById('alice-combo').textContent = aliceState.combo;
+  aliceState.charIndex++;
+
+  if (aliceState.charIndex >= text.length) {
+    // Prompt complete - deal damage!
+    const baseDamage = 15 + Math.floor(Math.random() * 10);
+    const comboBonus = Math.min(20, aliceState.combo * 2);
+    const damage = baseDamage + comboBonus;
+    aliceState.demonHp -= damage;
+    aliceState.totalDamage += damage;
+    document.getElementById('alice-damage').textContent = aliceState.totalDamage;
+
+    aliceHitDemon();
+    updateAliceHp();
+    showCombo(`-${damage} HP! ⚔️`, 'var(--neon-pink)');
+
+    if (aliceState.demonHp <= 0) {
+      // Demon defeated!
+      aliceState.demonsDefeated++;
+      document.getElementById('alice-demon').classList.add('defeated');
+      sfxLevelUp();
+      launchConfetti();
+
+      if (aliceState.demonsDefeated >= aliceState.totalWaves) {
+        // All demons defeated - show toy prize!
+        setTimeout(() => showAlicePrize(), 1000);
+      } else {
+        // Next wave
+        aliceState.wave++;
+        setTimeout(() => loadAliceDemon(), 1200);
+      }
+    } else {
+      aliceState.promptIndex++;
+      loadAlicePrompt();
+    }
+  } else {
+    renderAliceChars();
+  }
+  this.value = '';
+});
+
+document.getElementById('alice-hidden-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    if (aliceState && aliceState.charIndex > 0) {
+      aliceState.charIndex--;
+      delete aliceState.charResults[aliceState.charIndex];
+      renderAliceChars();
+    }
+  }
+  if (e.key === 'Escape') {
+    stopMusic();
+    showScreen('screen-title');
+  }
+});
+
+function showAlicePrize() {
+  stopMusic();
+  const toy = ALICE_TOYS[Math.floor(Math.random() * ALICE_TOYS.length)];
+  document.getElementById('alice-toy-emoji').textContent = toy.emoji;
+  document.getElementById('alice-toy-name').textContent = toy.name;
+  document.getElementById('alice-toy-desc').textContent = toy.desc;
+
+  showScreen('screen-alice-prize');
+  sfxComplete();
+  launchConfetti();
+  setTimeout(() => launchConfetti(), 1500);
+}
+
+// ============================================================
+//  COPPER - FIND THE BONE YARD GRID 🦴
+// ============================================================
+const COPPER_SNIFF_PROMPTS = [
+  'snif snif snif', 'bork bork snif', 'woof woof dig',
+  'snif bnoe snif', 'wher iz bnoe', 'dig dig dig',
+  'i smel somthin', 'bnoe detekted', 'snif the yrad',
+];
+
+let copperState = null;
+
+function startCopperGame() {
+  copperState = {
+    round: 1, totalRounds: 3, bonesFound: 0, totalDigs: 0,
+    bonePos: Math.floor(Math.random() * 9),
+    phase: 'sniff', // 'sniff' -> 'dig'
+    charIndex: 0, charResults: {},
+    currentPrompt: '',
+    gridRevealed: [],
+    active: true,
+  };
+
+  document.getElementById('copper-round').textContent = 'Round 1 of 3';
+  document.getElementById('copper-bones').textContent = '0';
+  document.getElementById('copper-digs').textContent = '0';
+  document.getElementById('copper-hint').textContent = 'Type the sniff prompt to start searching!';
+
+  buildYardGrid();
+  showScreen('screen-copper');
+  ensureAudio();
+  startMusic();
+  loadCopperSniff();
+
+  const input = document.getElementById('copper-hidden-input');
+  input.value = '';
+  input.focus();
+  document.getElementById('copper-sniff-area').onclick = () => input.focus();
+
+  // Keep bone button accessible for riddle system
+  document.getElementById('bone-btn').style.display = 'block';
+}
+
+function buildYardGrid() {
+  const grid = document.getElementById('yard-grid');
+  grid.innerHTML = '';
+  for (let i = 0; i < 9; i++) {
+    const spot = document.createElement('div');
+    spot.className = 'yard-spot';
+    spot.innerHTML = `🌿<span class="spot-number">${i + 1}</span>`;
+    spot.dataset.idx = i;
+    spot.onclick = () => digSpot(i);
+    grid.appendChild(spot);
+  }
+}
+
+function loadCopperSniff() {
+  copperState.phase = 'sniff';
+  copperState.currentPrompt = COPPER_SNIFF_PROMPTS[Math.floor(Math.random() * COPPER_SNIFF_PROMPTS.length)];
+  copperState.charIndex = 0;
+  copperState.charResults = {};
+  document.getElementById('copper-hint').textContent = '🐕 Sniff around to find the bone!';
+  renderCopperChars();
+}
+
+function renderCopperChars() {
+  const text = copperState.currentPrompt;
+  const container = document.getElementById('copper-prompt-text');
+  container.innerHTML = '';
+  for (let i = 0; i < text.length; i++) {
+    const span = document.createElement('span');
+    span.className = 'char';
+    if (text[i] === ' ') span.classList.add('space-char');
+    span.textContent = text[i] === ' ' ? '\u00A0' : text[i];
+    if (i < copperState.charIndex) {
+      span.classList.add(copperState.charResults[i] ? 'correct' : 'incorrect');
+    } else if (i === copperState.charIndex) {
+      span.classList.add('current');
+    } else {
+      span.classList.add('upcoming');
+    }
+    container.appendChild(span);
+  }
+}
+
+document.getElementById('copper-hidden-input').addEventListener('input', function(e) {
+  if (!copperState || !copperState.active) return;
+  const typed = e.data;
+  if (!typed) return;
+
+  const text = copperState.currentPrompt;
+  const expected = text[copperState.charIndex];
+  if (expected === undefined) return;
+
+  if (typed === expected) {
+    copperState.charResults[copperState.charIndex] = true;
+    sfxCorrect();
+  } else {
+    copperState.charResults[copperState.charIndex] = false;
+    sfxWrong();
+  }
+
+  copperState.charIndex++;
+
+  if (copperState.charIndex >= text.length) {
+    if (copperState.phase === 'sniff') {
+      // Sniff complete - now in dig phase
+      copperState.phase = 'dig';
+      document.getElementById('copper-hint').textContent =
+        '🔥 Now type a number (1-9) to dig that spot!';
+      copperState.currentPrompt = '';
+      document.getElementById('copper-prompt-text').innerHTML =
+        '<span style="color:var(--neon-yellow);font-family:Fredoka One,cursive;">Type 1-9 to dig!</span>';
+    }
+  } else {
+    renderCopperChars();
+  }
+  this.value = '';
+});
+
+document.getElementById('copper-hidden-input').addEventListener('keydown', function(e) {
+  if (!copperState || !copperState.active) return;
+
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    if (copperState.phase === 'sniff' && copperState.charIndex > 0) {
+      copperState.charIndex--;
+      delete copperState.charResults[copperState.charIndex];
+      renderCopperChars();
+    }
+    return;
+  }
+
+  if (e.key === 'Escape') {
+    stopMusic();
+    showScreen('screen-title');
+    return;
+  }
+
+  // Dig phase - type a number
+  if (copperState.phase === 'dig' && e.key >= '1' && e.key <= '9') {
+    e.preventDefault();
+    digSpot(parseInt(e.key) - 1);
+  }
+});
+
+function digSpot(idx) {
+  if (!copperState || copperState.phase !== 'dig') return;
+  if (copperState.gridRevealed.includes(idx)) return;
+
+  copperState.gridRevealed.push(idx);
+  copperState.totalDigs++;
+  document.getElementById('copper-digs').textContent = copperState.totalDigs;
+
+  const spots = document.querySelectorAll('.yard-spot');
+  const spot = spots[idx];
+  spot.classList.add('dug');
+
+  if (idx === copperState.bonePos) {
+    // Found the bone!
+    spot.innerHTML = `🦴<span class="spot-number">${idx + 1}</span>`;
+    spot.classList.add('found-bone');
+    copperState.bonesFound++;
+    document.getElementById('copper-bones').textContent = copperState.bonesFound;
+    document.getElementById('copper-hint').textContent = '🦴 BONE FOUND! BORK BORK BORK!';
+    sfxLevelUp();
+    launchConfetti();
+
+    // Next round or end
+    if (copperState.round >= copperState.totalRounds) {
+      setTimeout(() => endCopperGame(), 2000);
+    } else {
+      copperState.round++;
+      setTimeout(() => {
+        copperState.bonePos = Math.floor(Math.random() * 9);
+        copperState.gridRevealed = [];
+        document.getElementById('copper-round').textContent =
+          `Round ${copperState.round} of ${copperState.totalRounds}`;
+        buildYardGrid();
+        loadCopperSniff();
+      }, 1500);
+    }
+  } else {
+    // Not here - give hint
+    const boneRow = Math.floor(copperState.bonePos / 3);
+    const boneCol = copperState.bonePos % 3;
+    const digRow = Math.floor(idx / 3);
+    const digCol = idx % 3;
+    const dist = Math.abs(boneRow - digRow) + Math.abs(boneCol - digCol);
+
+    let hint, emoji;
+    if (dist <= 1) { hint = 'HOT! 🔥 Very close!'; emoji = '🔥'; }
+    else if (dist <= 2) { hint = 'Warm... getting closer!'; emoji = '☀️'; }
+    else { hint = 'Cold... try somewhere else!'; emoji = '❄️'; }
+
+    spot.innerHTML = `${emoji}<span class="spot-number">${idx + 1}</span>`;
+    document.getElementById('copper-hint').textContent = hint;
+    sfxWrong();
+
+    // Go back to sniff phase for another attempt
+    setTimeout(() => {
+      if (copperState && copperState.active && copperState.phase === 'dig') {
+        loadCopperSniff();
+      }
+    }, 800);
+  }
+}
+
+function endCopperGame() {
+  copperState.active = false;
+  stopMusic();
+  sfxComplete();
+
+  const stars = Math.min(5, copperState.bonesFound + 2);
+  document.getElementById('results-rank').textContent = '🦴';
+  document.getElementById('results-title').textContent =
+    copperState.bonesFound === 3 ? 'BEST BOI! All Bones Found!' : `${copperState.bonesFound}/3 Bones Found!`;
+  document.getElementById('results-subtitle').textContent =
+    `${copperState.totalDigs} digs total — Copper`;
+
+  const starContainer = document.getElementById('star-rating');
+  starContainer.innerHTML = '';
+  for (let i = 0; i < 5; i++) {
+    const s = document.createElement('span');
+    s.className = `star ${i < stars ? 'filled' : 'empty'}`;
+    s.textContent = i < stars ? '⭐' : '☆';
+    s.style.animationDelay = `${i * 0.15}s`;
+    starContainer.appendChild(s);
+  }
+
+  document.getElementById('res-score').textContent = copperState.bonesFound;
+  document.getElementById('res-wpm').textContent = '—';
+  document.getElementById('res-accuracy').textContent =
+    copperState.totalDigs > 0 ? Math.round(copperState.bonesFound / copperState.totalDigs * 100) + '%' : '—';
+  document.getElementById('res-streak').textContent = copperState.bonesFound + ' 🦴';
+  document.getElementById('achievements').innerHTML = '';
+  document.getElementById('spanish-learned').style.display = 'none';
+
+  showScreen('screen-results');
+  setTimeout(() => launchConfetti(), 300);
 }
 </script>
 </body>
