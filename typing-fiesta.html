@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Typing Fiesta! - Learn to Type en Espanol</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --neon-pink: #ff2d95;
+    --neon-blue: #00d4ff;
+    --neon-green: #39ff14;
+    --neon-purple: #b026ff;
+    --neon-yellow: #fff700;
+    --neon-orange: #ff6e00;
+    --dark-bg: #0a0a2e;
+    --card-bg: rgba(255,255,255,0.06);
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--dark-bg);
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* === ANIMATED BACKGROUND === */
+  .bg-stars {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(2px 2px at 20% 30%, rgba(255,255,255,0.3), transparent),
+      radial-gradient(2px 2px at 40% 70%, rgba(255,255,255,0.2), transparent),
+      radial-gradient(1px 1px at 60% 20%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(2px 2px at 80% 50%, rgba(255,255,255,0.2), transparent),
+      radial-gradient(1px 1px at 10% 80%, rgba(255,255,255,0.3), transparent),
+      radial-gradient(1px 1px at 70% 90%, rgba(255,255,255,0.2), transparent),
+      radial-gradient(2px 2px at 50% 10%, rgba(255,255,255,0.3), transparent),
+      radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.4), transparent);
+    animation: twinkle 4s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle { 0% { opacity: 0.5; } 100% { opacity: 1; } }
+
+  .floating-emoji {
+    position: fixed; font-size: 2rem; opacity: 0.15;
+    animation: floatAround 20s linear infinite;
+    pointer-events: none; z-index: 0;
+  }
+  @keyframes floatAround {
+    0% { transform: translateY(100vh) rotate(0deg); }
+    100% { transform: translateY(-100px) rotate(360deg); }
+  }
+
+  /* === SCREENS === */
+  .screen {
+    display: none; position: relative; z-index: 1;
+    min-height: 100vh;
+    flex-direction: column; align-items: center; justify-content: center;
+    padding: 2rem;
+  }
+  .screen.active { display: flex; }
+
+  /* === TITLE SCREEN === */
+  .title-logo {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(3rem, 8vw, 6rem);
+    background: linear-gradient(135deg, var(--neon-pink), var(--neon-yellow), var(--neon-green), var(--neon-blue));
+    background-size: 300% 300%;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease infinite;
+    text-align: center;
+    text-shadow: none;
+    filter: drop-shadow(0 0 30px rgba(255,45,149,0.4));
+  }
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .subtitle {
+    font-size: 1.3rem; color: rgba(255,255,255,0.7);
+    margin: 0.5rem 0 2rem; text-align: center;
+  }
+
+  .player-select {
+    display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center;
+    margin-bottom: 2rem;
+  }
+
+  .player-card {
+    background: var(--card-bg);
+    border: 3px solid rgba(255,255,255,0.1);
+    border-radius: 20px; padding: 2rem 3rem;
+    cursor: pointer; transition: all 0.3s;
+    text-align: center; min-width: 200px;
+  }
+  .player-card:hover {
+    transform: scale(1.08);
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 30px rgba(0,212,255,0.3);
+  }
+  .player-card.selected {
+    border-color: var(--neon-green);
+    box-shadow: 0 0 40px rgba(57,255,20,0.3);
+    background: rgba(57,255,20,0.08);
+  }
+  .player-card .avatar { font-size: 4rem; margin-bottom: 0.5rem; }
+  .player-card .name {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+  }
+
+  /* === BUTTONS === */
+  .btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.3rem;
+    padding: 1rem 3rem;
+    border: none; border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-play {
+    background: linear-gradient(135deg, var(--neon-pink), var(--neon-purple));
+    color: #fff;
+    box-shadow: 0 0 30px rgba(176,38,255,0.4);
+  }
+  .btn-play:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 50px rgba(176,38,255,0.6);
+  }
+  .btn-play:disabled {
+    opacity: 0.4; cursor: not-allowed; transform: none;
+  }
+  .btn-secondary {
+    background: rgba(255,255,255,0.1);
+    color: #fff; border: 2px solid rgba(255,255,255,0.2);
+  }
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.2);
+    border-color: var(--neon-blue);
+  }
+
+  /* === MODE SELECT SCREEN === */
+  .mode-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem; max-width: 900px; width: 100%; margin: 1.5rem 0;
+  }
+  .mode-card {
+    background: var(--card-bg);
+    border: 2px solid rgba(255,255,255,0.08);
+    border-radius: 16px; padding: 1.5rem;
+    cursor: pointer; transition: all 0.3s;
+    text-align: center;
+  }
+  .mode-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--neon-yellow);
+    box-shadow: 0 8px 30px rgba(255,247,0,0.15);
+  }
+  .mode-card .mode-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+  .mode-card .mode-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem; margin-bottom: 0.3rem;
+  }
+  .mode-card .mode-desc {
+    font-size: 0.85rem; color: rgba(255,255,255,0.5);
+  }
+
+  /* === GAME SCREEN === */
+  .game-hud {
+    display: flex; justify-content: space-between; align-items: center;
+    width: 100%; max-width: 900px;
+    padding: 1rem 1.5rem;
+    background: var(--card-bg);
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap; gap: 0.5rem;
+  }
+  .hud-item {
+    text-align: center;
+  }
+  .hud-label {
+    font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px;
+    color: rgba(255,255,255,0.4);
+  }
+  .hud-value {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+  }
+  .hud-value.score { color: var(--neon-yellow); }
+  .hud-value.streak { color: var(--neon-orange); }
+  .hud-value.wpm { color: var(--neon-green); }
+  .hud-value.level { color: var(--neon-blue); }
+  .hud-value.timer { color: var(--neon-pink); }
+
+  /* Streak fire animation */
+  .streak-fire { display: inline; }
+  .streak-fire.lit::after { content: " lit"; }
+
+  /* XP bar */
+  .xp-bar-container {
+    width: 100%; max-width: 900px;
+    height: 8px; background: rgba(255,255,255,0.1);
+    border-radius: 4px; margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+  .xp-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--neon-green), var(--neon-blue), var(--neon-purple));
+    background-size: 200% 100%;
+    animation: xpShimmer 2s linear infinite;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+  @keyframes xpShimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+  }
+
+  /* Spanish hint box */
+  .spanish-hint {
+    background: linear-gradient(135deg, rgba(255,110,0,0.15), rgba(255,247,0,0.1));
+    border: 1px solid rgba(255,247,0,0.2);
+    border-radius: 12px;
+    padding: 1rem 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    max-width: 900px; width: 100%;
+  }
+  .hint-spanish {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.8rem;
+    color: var(--neon-yellow);
+  }
+  .hint-english {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.5);
+    margin-top: 0.3rem;
+  }
+  .hint-category {
+    display: inline-block;
+    font-size: 0.7rem;
+    background: rgba(255,255,255,0.1);
+    padding: 2px 10px;
+    border-radius: 10px;
+    margin-top: 0.3rem;
+    color: rgba(255,255,255,0.4);
+  }
+
+  /* Typing area */
+  .typing-area {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 900px; width: 100%;
+    margin-bottom: 1rem;
+  }
+  .prompt-text {
+    font-size: 1.6rem;
+    line-height: 2;
+    letter-spacing: 1px;
+    font-family: 'Nunito', monospace;
+    word-wrap: break-word;
+    min-height: 60px;
+  }
+  .prompt-text .char {
+    position: relative;
+    transition: color 0.1s;
+  }
+  .prompt-text .char.correct { color: var(--neon-green); }
+  .prompt-text .char.incorrect {
+    color: var(--neon-pink);
+    text-decoration: underline;
+    text-decoration-color: var(--neon-pink);
+  }
+  .prompt-text .char.current {
+    background: rgba(0,212,255,0.3);
+    border-radius: 3px;
+    animation: cursorBlink 1s step-end infinite;
+  }
+  .prompt-text .char.upcoming { color: rgba(255,255,255,0.3); }
+  @keyframes cursorBlink {
+    50% { background: rgba(0,212,255,0.1); }
+  }
+
+  /* Hidden input */
+  .hidden-input {
+    position: absolute; opacity: 0; pointer-events: none;
+  }
+
+  /* Combo popup */
+  .combo-popup {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-family: 'Fredoka One', cursive;
+    font-size: 3rem;
+    pointer-events: none;
+    z-index: 100;
+    animation: none;
+  }
+  .combo-popup.show {
+    animation: comboAnim 1s ease forwards;
+  }
+  @keyframes comboAnim {
+    0% { transform: translate(-50%, -50%) scale(0) rotate(-10deg); opacity: 1; }
+    30% { transform: translate(-50%, -50%) scale(1.3) rotate(5deg); opacity: 1; }
+    100% { transform: translate(-50%, -80%) scale(0.8); opacity: 0; }
+  }
+
+  /* Floating +points */
+  .float-points {
+    position: fixed;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: var(--neon-yellow);
+    pointer-events: none;
+    z-index: 99;
+    animation: floatUp 1s ease forwards;
+  }
+  @keyframes floatUp {
+    0% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-80px); }
+  }
+
+  /* === RESULTS SCREEN === */
+  .results-card {
+    background: var(--card-bg);
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 24px;
+    padding: 3rem;
+    max-width: 600px; width: 100%;
+    text-align: center;
+  }
+  .results-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .results-subtitle {
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 2rem;
+  }
+  .results-stats {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1rem; margin-bottom: 2rem;
+  }
+  .stat-box {
+    background: rgba(255,255,255,0.05);
+    border-radius: 12px; padding: 1rem;
+  }
+  .stat-box .stat-val {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+  }
+  .stat-box .stat-label {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .spanish-learned {
+    background: rgba(255,247,0,0.05);
+    border: 1px solid rgba(255,247,0,0.15);
+    border-radius: 12px;
+    padding: 1rem; margin-bottom: 2rem;
+    text-align: left;
+  }
+  .spanish-learned h3 {
+    font-family: 'Fredoka One', cursive;
+    color: var(--neon-yellow);
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+  }
+  .spanish-learned .word-list {
+    display: flex; flex-wrap: wrap; gap: 0.5rem;
+  }
+  .spanish-learned .word-chip {
+    background: rgba(255,255,255,0.08);
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+  }
+  .spanish-learned .word-chip span {
+    color: rgba(255,255,255,0.4);
+    font-size: 0.75rem;
+  }
+
+  .results-actions {
+    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+  }
+
+  /* === KEYBOARD VISUAL === */
+  .keyboard {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 6px;
+    max-width: 900px; width: 100%;
+    margin-top: 0.5rem;
+  }
+  .kb-row {
+    display: flex; gap: 5px;
+  }
+  .kb-key {
+    width: 48px; height: 48px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem; font-weight: 700;
+    color: rgba(255,255,255,0.5);
+    transition: all 0.15s;
+  }
+  .kb-key.finger-left-pinky { border-bottom: 3px solid #ff6b6b; }
+  .kb-key.finger-left-ring { border-bottom: 3px solid #ffa94d; }
+  .kb-key.finger-left-middle { border-bottom: 3px solid #ffd43b; }
+  .kb-key.finger-left-index { border-bottom: 3px solid #69db7c; }
+  .kb-key.finger-right-index { border-bottom: 3px solid #69db7c; }
+  .kb-key.finger-right-middle { border-bottom: 3px solid #ffd43b; }
+  .kb-key.finger-right-ring { border-bottom: 3px solid #ffa94d; }
+  .kb-key.finger-right-pinky { border-bottom: 3px solid #ff6b6b; }
+  .kb-key.finger-thumb { border-bottom: 3px solid var(--neon-blue); }
+  .kb-key.active {
+    background: rgba(0,212,255,0.3);
+    border-color: var(--neon-blue);
+    color: #fff;
+    box-shadow: 0 0 15px rgba(0,212,255,0.3);
+    transform: scale(1.05);
+  }
+  .kb-key.pressed-correct {
+    background: rgba(57,255,20,0.3);
+    border-color: var(--neon-green);
+  }
+  .kb-key.pressed-wrong {
+    background: rgba(255,45,149,0.3);
+    border-color: var(--neon-pink);
+  }
+  .kb-key.space { width: 280px; }
+  .kb-key.wide { width: 72px; font-size: 0.65rem; }
+  .kb-key.wider { width: 96px; font-size: 0.65rem; }
+
+  /* === DIFFICULTY BADGES === */
+  .diff-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .diff-badge.easy { background: rgba(57,255,20,0.2); color: var(--neon-green); }
+  .diff-badge.medium { background: rgba(255,247,0,0.2); color: var(--neon-yellow); }
+  .diff-badge.hard { background: rgba(255,110,0,0.2); color: var(--neon-orange); }
+  .diff-badge.boss { background: rgba(255,45,149,0.2); color: var(--neon-pink); }
+
+  /* === PARTICLES === */
+  .particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 200;
+    border-radius: 50%;
+    animation: particleFly 0.8s ease-out forwards;
+  }
+  @keyframes particleFly {
+    0% { opacity: 1; transform: translate(0,0) scale(1); }
+    100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0); }
+  }
+
+  /* === CONFETTI === */
+  .confetti {
+    position: fixed;
+    width: 10px; height: 10px;
+    z-index: 300;
+    pointer-events: none;
+    animation: confettiFall 3s ease-out forwards;
+  }
+  @keyframes confettiFall {
+    0% { opacity: 1; transform: translateY(0) rotate(0deg); }
+    100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 600px) {
+    .kb-key { width: 32px; height: 36px; font-size: 0.7rem; }
+    .kb-key.space { width: 160px; }
+    .kb-key.wide { width: 48px; }
+    .kb-key.wider { width: 64px; }
+    .prompt-text { font-size: 1.2rem; }
+    .game-hud { padding: 0.7rem 1rem; }
+  }
+
+  .screen-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    margin-bottom: 0.3rem;
+    text-align: center;
+  }
+
+  /* Level up overlay */
+  .level-up-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.7);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 500;
+  }
+  .level-up-overlay.show { display: flex; }
+  .level-up-box {
+    text-align: center;
+    animation: levelUpBounce 0.6s ease;
+  }
+  .level-up-box .lu-emoji { font-size: 5rem; }
+  .level-up-box .lu-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3rem;
+    background: linear-gradient(135deg, var(--neon-yellow), var(--neon-orange));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .level-up-box .lu-sub { color: rgba(255,255,255,0.6); margin-top: 0.5rem; }
+  @keyframes levelUpBounce {
+    0% { transform: scale(0) rotate(-15deg); }
+    60% { transform: scale(1.2) rotate(5deg); }
+    100% { transform: scale(1) rotate(0deg); }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-stars"></div>
+<div id="floating-emojis"></div>
+<div id="combo-popup" class="combo-popup"></div>
+<div id="level-up-overlay" class="level-up-overlay">
+  <div class="level-up-box">
+    <div class="lu-emoji" id="lu-emoji"></div>
+    <div class="lu-text" id="lu-text"></div>
+    <div class="lu-sub" id="lu-sub"></div>
+  </div>
+</div>
+
+<!-- ==================== TITLE SCREEN ==================== -->
+<div id="screen-title" class="screen active">
+  <div class="title-logo">TYPING FIESTA!</div>
+  <div class="subtitle">Learn to type + learn Spanish = double W no cap</div>
+
+  <div class="player-select">
+    <div class="player-card" data-player="Bryson" onclick="selectPlayer(this)">
+      <div class="avatar">🎮</div>
+      <div class="name">Bryson</div>
+    </div>
+    <div class="player-card" data-player="Angelina" onclick="selectPlayer(this)">
+      <div class="avatar">🌟</div>
+      <div class="name">Angelina</div>
+    </div>
+  </div>
+
+  <button class="btn btn-play" id="btn-start" disabled onclick="showModeSelect()">
+    Let's Go! 🚀
+  </button>
+</div>
+
+<!-- ==================== MODE SELECT ==================== -->
+<div id="screen-modes" class="screen">
+  <div class="screen-title">Choose Your Vibe</div>
+  <div class="subtitle" id="mode-greeting"></div>
+
+  <div class="mode-grid">
+    <div class="mode-card" onclick="startGame('vocab')">
+      <div class="mode-icon">📚</div>
+      <div class="mode-title">Vocab Grind</div>
+      <div class="mode-desc">Type Spanish words one at a time. Perfect for beginners!</div>
+      <div class="diff-badge easy">Easy</div>
+    </div>
+    <div class="mode-card" onclick="startGame('phrases')">
+      <div class="mode-icon">💬</div>
+      <div class="mode-title">Frases Mode</div>
+      <div class="mode-desc">Full Spanish phrases with English meanings. Mas dificil!</div>
+      <div class="diff-badge medium">Medium</div>
+    </div>
+    <div class="mode-card" onclick="startGame('spanglish')">
+      <div class="mode-icon">🔥</div>
+      <div class="mode-title">Spanglish Remix</div>
+      <div class="mode-desc">English sentences with Spanish words mixed in. Bussin!</div>
+      <div class="diff-badge medium">Medium</div>
+    </div>
+    <div class="mode-card" onclick="startGame('boss')">
+      <div class="mode-icon">👑</div>
+      <div class="mode-title">Boss Level</div>
+      <div class="mode-desc">Full Spanish sentences. Only for the real ones. Sigma grindset!</div>
+      <div class="diff-badge boss">Boss</div>
+    </div>
+    <div class="mode-card" onclick="startGame('race')">
+      <div class="mode-icon">🏎️</div>
+      <div class="mode-title">Speed Race</div>
+      <div class="mode-desc">60-second speed run! How many words can you type? Clock is ticking!</div>
+      <div class="diff-badge hard">Timed</div>
+    </div>
+    <div class="mode-card" onclick="startGame('story')">
+      <div class="mode-icon">📖</div>
+      <div class="mode-title">Story Mode</div>
+      <div class="mode-desc">Type through a bilingual adventure! New story each time!</div>
+      <div class="diff-badge medium">Adventure</div>
+    </div>
+  </div>
+
+  <button class="btn btn-secondary" onclick="showScreen('screen-title')" style="margin-top:1rem;">
+    ← Back
+  </button>
+</div>
+
+<!-- ==================== GAME SCREEN ==================== -->
+<div id="screen-game" class="screen">
+  <div class="game-hud">
+    <div class="hud-item">
+      <div class="hud-label">Score</div>
+      <div class="hud-value score" id="hud-score">0</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">Streak</div>
+      <div class="hud-value streak" id="hud-streak">0 🔥</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">WPM</div>
+      <div class="hud-value wpm" id="hud-wpm">0</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">Level</div>
+      <div class="hud-value level" id="hud-level">1</div>
+    </div>
+    <div class="hud-item" id="hud-timer-box" style="display:none;">
+      <div class="hud-label">Time</div>
+      <div class="hud-value timer" id="hud-timer">60</div>
+    </div>
+    <div class="hud-item">
+      <div class="hud-label">Progress</div>
+      <div class="hud-value" id="hud-progress" style="color:rgba(255,255,255,0.6);">1/10</div>
+    </div>
+  </div>
+
+  <div class="xp-bar-container">
+    <div class="xp-bar" id="xp-bar"></div>
+  </div>
+
+  <div class="spanish-hint" id="spanish-hint">
+    <div class="hint-spanish" id="hint-spanish"></div>
+    <div class="hint-english" id="hint-english"></div>
+    <div class="hint-category" id="hint-category"></div>
+  </div>
+
+  <div class="typing-area" id="typing-area" tabindex="0">
+    <div class="prompt-text" id="prompt-text"></div>
+  </div>
+
+  <input type="text" class="hidden-input" id="hidden-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+
+  <div class="keyboard" id="keyboard"></div>
+</div>
+
+<!-- ==================== RESULTS SCREEN ==================== -->
+<div id="screen-results" class="screen">
+  <div class="results-card">
+    <div class="results-title" id="results-title">GG! 🎉</div>
+    <div class="results-subtitle" id="results-subtitle"></div>
+
+    <div class="results-stats">
+      <div class="stat-box">
+        <div class="stat-val score" id="res-score">0</div>
+        <div class="stat-label">Score</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val wpm" id="res-wpm">0</div>
+        <div class="stat-label">WPM</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" style="color:var(--neon-green)" id="res-accuracy">0%</div>
+        <div class="stat-label">Accuracy</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val streak" id="res-streak">0</div>
+        <div class="stat-label">Best Streak</div>
+      </div>
+    </div>
+
+    <div class="spanish-learned" id="spanish-learned">
+      <h3>Spanish Words You Practiced 🇪🇸</h3>
+      <div class="word-list" id="words-learned"></div>
+    </div>
+
+    <div class="results-actions">
+      <button class="btn btn-play" onclick="startGame(currentMode)">Play Again</button>
+      <button class="btn btn-secondary" onclick="showModeSelect()">Change Mode</button>
+      <button class="btn btn-secondary" onclick="showScreen('screen-title')">Home</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  TYPING FIESTA - Game Data & Logic
+// ============================================================
+
+let currentPlayer = null;
+let currentMode = null;
+let gameState = {};
+
+// ---- SPANISH VOCABULARY (categorized) ----
+const VOCAB = {
+  animals: [
+    { es: "gato", en: "cat" }, { es: "perro", en: "dog" }, { es: "pajaro", en: "bird" },
+    { es: "pez", en: "fish" }, { es: "caballo", en: "horse" }, { es: "mariposa", en: "butterfly" },
+    { es: "tortuga", en: "turtle" }, { es: "conejo", en: "rabbit" }, { es: "tigre", en: "tiger" },
+    { es: "lobo", en: "wolf" }, { es: "serpiente", en: "snake" }, { es: "oso", en: "bear" },
+    { es: "mono", en: "monkey" }, { es: "ballena", en: "whale" }, { es: "aguila", en: "eagle" },
+    { es: "delfin", en: "dolphin" }, { es: "leon", en: "lion" }, { es: "elefante", en: "elephant" },
+  ],
+  colors: [
+    { es: "rojo", en: "red" }, { es: "azul", en: "blue" }, { es: "verde", en: "green" },
+    { es: "amarillo", en: "yellow" }, { es: "morado", en: "purple" }, { es: "naranja", en: "orange" },
+    { es: "blanco", en: "white" }, { es: "negro", en: "black" }, { es: "rosa", en: "pink" },
+    { es: "dorado", en: "gold" }, { es: "plateado", en: "silver" }, { es: "gris", en: "gray" },
+  ],
+  food: [
+    { es: "agua", en: "water" }, { es: "comida", en: "food" }, { es: "manzana", en: "apple" },
+    { es: "arroz", en: "rice" }, { es: "pollo", en: "chicken" }, { es: "queso", en: "cheese" },
+    { es: "pan", en: "bread" }, { es: "leche", en: "milk" }, { es: "helado", en: "ice cream" },
+    { es: "fresa", en: "strawberry" }, { es: "platano", en: "banana" }, { es: "chocolate", en: "chocolate" },
+    { es: "tacos", en: "tacos" }, { es: "pizza", en: "pizza" }, { es: "galleta", en: "cookie" },
+  ],
+  family: [
+    { es: "familia", en: "family" }, { es: "mama", en: "mom" }, { es: "papa", en: "dad" },
+    { es: "hermano", en: "brother" }, { es: "hermana", en: "sister" }, { es: "abuelo", en: "grandpa" },
+    { es: "abuela", en: "grandma" }, { es: "amigo", en: "friend" }, { es: "hijo", en: "son" },
+    { es: "hija", en: "daughter" }, { es: "primo", en: "cousin" }, { es: "tio", en: "uncle" },
+  ],
+  greetings: [
+    { es: "hola", en: "hello" }, { es: "adios", en: "goodbye" }, { es: "gracias", en: "thank you" },
+    { es: "por favor", en: "please" }, { es: "buenos dias", en: "good morning" },
+    { es: "buenas noches", en: "good night" }, { es: "como estas", en: "how are you" },
+    { es: "muy bien", en: "very good" }, { es: "de nada", en: "you're welcome" },
+    { es: "lo siento", en: "I'm sorry" }, { es: "con permiso", en: "excuse me" },
+  ],
+  gaming: [
+    { es: "juego", en: "game" }, { es: "ganar", en: "to win" }, { es: "perder", en: "to lose" },
+    { es: "rapido", en: "fast" }, { es: "fuerte", en: "strong" }, { es: "equipo", en: "team" },
+    { es: "victoria", en: "victory" }, { es: "estrella", en: "star" }, { es: "poder", en: "power" },
+    { es: "nivel", en: "level" }, { es: "mundo", en: "world" }, { es: "batalla", en: "battle" },
+    { es: "campeon", en: "champion" }, { es: "escudo", en: "shield" }, { es: "espada", en: "sword" },
+  ],
+  school: [
+    { es: "escuela", en: "school" }, { es: "libro", en: "book" }, { es: "maestro", en: "teacher" },
+    { es: "estudiante", en: "student" }, { es: "clase", en: "class" }, { es: "tarea", en: "homework" },
+    { es: "examen", en: "exam" }, { es: "lapiz", en: "pencil" }, { es: "papel", en: "paper" },
+    { es: "mochila", en: "backpack" }, { es: "matematicas", en: "math" }, { es: "ciencias", en: "science" },
+  ],
+  everyday: [
+    { es: "casa", en: "house" }, { es: "carro", en: "car" }, { es: "grande", en: "big" },
+    { es: "bonito", en: "pretty" }, { es: "feliz", en: "happy" }, { es: "triste", en: "sad" },
+    { es: "tiempo", en: "time" }, { es: "dinero", en: "money" }, { es: "musica", en: "music" },
+    { es: "baile", en: "dance" }, { es: "sol", en: "sun" }, { es: "luna", en: "moon" },
+    { es: "lluvia", en: "rain" }, { es: "nieve", en: "snow" }, { es: "fuego", en: "fire" },
+    { es: "cielo", en: "sky" }, { es: "tierra", en: "earth" }, { es: "rio", en: "river" },
+  ]
+};
+
+// ---- SPANGLISH PROMPTS (Gen Alpha style) ----
+const SPANGLISH = [
+  { text: "that sunset was so bonito no cap", spanish: [{ es: "bonito", en: "pretty/beautiful" }] },
+  { text: "my hermano just got a victory royale", spanish: [{ es: "hermano", en: "brother" }] },
+  { text: "we need more agua its caliente outside", spanish: [{ es: "agua", en: "water" }, { es: "caliente", en: "hot" }] },
+  { text: "this comida from abuela hits different", spanish: [{ es: "comida", en: "food" }, { es: "abuela", en: "grandma" }] },
+  { text: "the gato is sleeping on my mochila again", spanish: [{ es: "gato", en: "cat" }, { es: "mochila", en: "backpack" }] },
+  { text: "lets go to the playa this verano", spanish: [{ es: "playa", en: "beach" }, { es: "verano", en: "summer" }] },
+  { text: "that musica at the fiesta was fire", spanish: [{ es: "musica", en: "music" }, { es: "fiesta", en: "party" }] },
+  { text: "mi amigo said the pelicula was amazing", spanish: [{ es: "amigo", en: "friend" }, { es: "pelicula", en: "movie" }] },
+  { text: "the estrella in the cielo look so cool tonight", spanish: [{ es: "estrella", en: "star" }, { es: "cielo", en: "sky" }] },
+  { text: "the maestro said the examen is on viernes", spanish: [{ es: "maestro", en: "teacher" }, { es: "examen", en: "exam" }, { es: "viernes", en: "Friday" }] },
+  { text: "that equipo played with so much corazon", spanish: [{ es: "equipo", en: "team" }, { es: "corazon", en: "heart" }] },
+  { text: "my familia went to a restaurante for tacos", spanish: [{ es: "familia", en: "family" }, { es: "restaurante", en: "restaurant" }] },
+  { text: "the perro ran rapido through the jardin", spanish: [{ es: "perro", en: "dog" }, { es: "rapido", en: "fast" }, { es: "jardin", en: "garden" }] },
+  { text: "i need a nuevo telefono mine is so lento", spanish: [{ es: "nuevo", en: "new" }, { es: "telefono", en: "phone" }, { es: "lento", en: "slow" }] },
+  { text: "she wore a vestido color rosa to the baile", spanish: [{ es: "vestido", en: "dress" }, { es: "rosa", en: "pink" }, { es: "baile", en: "dance" }] },
+  { text: "the leon at the zoologico was durmiendo", spanish: [{ es: "leon", en: "lion" }, { es: "zoologico", en: "zoo" }, { es: "durmiendo", en: "sleeping" }] },
+  { text: "vamos to get helado after escuela today", spanish: [{ es: "vamos", en: "let's go" }, { es: "helado", en: "ice cream" }, { es: "escuela", en: "school" }] },
+  { text: "that diamante skin in the juego is so raro", spanish: [{ es: "diamante", en: "diamond" }, { es: "juego", en: "game" }, { es: "raro", en: "rare" }] },
+  { text: "the mariposa in the jardin was azul and morado", spanish: [{ es: "mariposa", en: "butterfly" }, { es: "jardin", en: "garden" }, { es: "azul", en: "blue" }, { es: "morado", en: "purple" }] },
+  { text: "we built a castillo in minecraft with fuego", spanish: [{ es: "castillo", en: "castle" }, { es: "fuego", en: "fire" }] },
+  { text: "bro that was so chistoso i cant stop laughing", spanish: [{ es: "chistoso", en: "funny" }] },
+  { text: "my primo got first lugar in the carrera", spanish: [{ es: "primo", en: "cousin" }, { es: "lugar", en: "place" }, { es: "carrera", en: "race" }] },
+];
+
+// ---- SPANISH PHRASES ----
+const PHRASES = [
+  { text: "yo quiero jugar", en: "I want to play" },
+  { text: "el gato es negro", en: "the cat is black" },
+  { text: "me gusta la musica", en: "I like music" },
+  { text: "donde esta la comida", en: "where is the food" },
+  { text: "el sol esta brillando", en: "the sun is shining" },
+  { text: "mi casa es grande", en: "my house is big" },
+  { text: "el perro corre rapido", en: "the dog runs fast" },
+  { text: "quiero agua por favor", en: "I want water please" },
+  { text: "la luna es bonita", en: "the moon is pretty" },
+  { text: "hoy es un buen dia", en: "today is a good day" },
+  { text: "vamos a la playa", en: "let's go to the beach" },
+  { text: "el libro es interesante", en: "the book is interesting" },
+  { text: "mi hermana es muy feliz", en: "my sister is very happy" },
+  { text: "tengo un gato y un perro", en: "I have a cat and a dog" },
+  { text: "el cielo es azul hoy", en: "the sky is blue today" },
+  { text: "me gusta el helado de fresa", en: "I like strawberry ice cream" },
+  { text: "mi amigo es muy fuerte", en: "my friend is very strong" },
+  { text: "la mariposa es de muchos colores", en: "the butterfly is many colors" },
+  { text: "necesito hacer la tarea", en: "I need to do homework" },
+  { text: "estoy aprendiendo espanol", en: "I am learning Spanish" },
+];
+
+// ---- BOSS-LEVEL SPANISH SENTENCES ----
+const BOSS_SENTENCES = [
+  { text: "mi familia y yo fuimos al parque y jugamos todo el dia", en: "my family and I went to the park and played all day" },
+  { text: "el maestro nos dijo que el examen es muy importante", en: "the teacher told us the exam is very important" },
+  { text: "quiero aprender a cocinar como mi abuela porque su comida es la mejor", en: "I want to learn to cook like my grandma because her food is the best" },
+  { text: "mi hermano y yo construimos un castillo de arena en la playa", en: "my brother and I built a sandcastle at the beach" },
+  { text: "la musica de la fiesta estaba tan buena que todos bailaron", en: "the party music was so good that everyone danced" },
+  { text: "los animales del zoologico son muy grandes y bonitos", en: "the animals at the zoo are very big and pretty" },
+  { text: "cuando llueve me gusta quedarme en casa y leer un libro", en: "when it rains I like to stay home and read a book" },
+  { text: "mi color favorito es el azul como el color del cielo", en: "my favorite color is blue like the color of the sky" },
+  { text: "el equipo gano el campeonato y todos estaban muy felices", en: "the team won the championship and everyone was very happy" },
+  { text: "vamos a la tienda a comprar frutas y verduras frescas", en: "let's go to the store to buy fresh fruits and vegetables" },
+];
+
+// ---- STORY MODE STORIES ----
+const STORIES = [
+  {
+    title: "The Minecraft Aventura",
+    lines: [
+      { text: "hola amigos vamos a jugar", en: "hello friends let's play", hint: "The adventure begins..." },
+      { text: "we spawned in a bosque oscuro", en: null, hint: "bosque oscuro = dark forest" },
+      { text: "necesitamos madera y piedra", en: "we need wood and stone", hint: "Time to gather resources!" },
+      { text: "cuidado there is a creeper verde", en: null, hint: "verde = green (classic creeper!)" },
+      { text: "construimos una casa grande", en: "we built a big house", hint: "Base building time!" },
+      { text: "the noche is coming rapido", en: null, hint: "noche = night, rapido = fast" },
+      { text: "tenemos espadas y escudos", en: "we have swords and shields", hint: "Ready for battle!" },
+      { text: "victoria the dragon is defeated", en: null, hint: "victoria = victory! GG!" },
+    ]
+  },
+  {
+    title: "La Gran Carrera Espacial",
+    lines: [
+      { text: "tres dos uno despegamos", en: "three two one we blast off", hint: "Liftoff!" },
+      { text: "the nave espacial goes so rapido", en: null, hint: "nave espacial = spaceship" },
+      { text: "las estrellas son muy brillantes", en: "the stars are very bright", hint: "So beautiful up here..." },
+      { text: "we found a planeta nuevo y bonito", en: null, hint: "planeta nuevo = new planet" },
+      { text: "hay agua y arboles verdes aqui", en: "there is water and green trees here", hint: "A habitable world!" },
+      { text: "the alien said hola amigo welcome", en: null, hint: "Even aliens speak Spanglish!" },
+      { text: "compartimos comida y musica", en: "we shared food and music", hint: "Universal language of friendship" },
+      { text: "regresamos a la tierra como heroes", en: "we returned to earth as heroes", hint: "What a W!" },
+    ]
+  },
+  {
+    title: "El Torneo de Gaming",
+    lines: [
+      { text: "hoy es el gran dia del torneo", en: "today is the big tournament day", hint: "Game day!" },
+      { text: "my equipo is looking muy fuerte", en: null, hint: "equipo = team, fuerte = strong" },
+      { text: "practicamos todos los dias", en: "we practiced every day", hint: "That grind paid off!" },
+      { text: "the first batalla was so intense", en: null, hint: "batalla = battle" },
+      { text: "ganamos tres juegos seguidos", en: "we won three games in a row", hint: "On a streak!" },
+      { text: "the final round mi corazon beat so rapido", en: null, hint: "corazon = heart" },
+      { text: "somos los campeones del mundo", en: "we are the champions of the world", hint: "CHAMPIONS!" },
+      { text: "celebramos con una gran fiesta", en: "we celebrated with a big party", hint: "Time to celebrate!" },
+    ]
+  }
+];
+
+// ---- COMBO MESSAGES ----
+const COMBO_MESSAGES = [
+  { min: 5, text: "Nice! 🔥", color: "var(--neon-orange)" },
+  { min: 10, text: "Sheeeesh! 🥶", color: "var(--neon-blue)" },
+  { min: 15, text: "No Cap! 💯", color: "var(--neon-yellow)" },
+  { min: 20, text: "Sigma Mode! 🐺", color: "var(--neon-purple)" },
+  { min: 30, text: "GOATED! 🐐", color: "var(--neon-green)" },
+  { min: 40, text: "ABSOLUTELY BUSSIN! 🤯", color: "var(--neon-pink)" },
+  { min: 50, text: "LEGENDARY! 👑", color: "var(--neon-yellow)" },
+];
+
+const RESULT_TITLES = [
+  { minWpm: 0, title: "Keep Grinding! 💪", sub: "Practice makes perfect, fam" },
+  { minWpm: 15, title: "Getting There! 🌱", sub: "Your fingers are warming up" },
+  { minWpm: 25, title: "Solid Run! 🔥", sub: "You're lowkey cracked at this" },
+  { minWpm: 35, title: "Sheeeesh! 🥶", sub: "Ice cold typing skills fr fr" },
+  { minWpm: 45, title: "GOATED! 🐐", sub: "You just unlocked sigma typing" },
+  { minWpm: 60, title: "ABSOLUTELY LEGENDARY! 👑", sub: "Bro you're the final boss of typing" },
+];
+
+// ---- KEYBOARD LAYOUT ----
+const KB_ROWS = [
+  [
+    { key: "`", finger: "finger-left-pinky" }, { key: "1", finger: "finger-left-pinky" },
+    { key: "2", finger: "finger-left-ring" }, { key: "3", finger: "finger-left-middle" },
+    { key: "4", finger: "finger-left-index" }, { key: "5", finger: "finger-left-index" },
+    { key: "6", finger: "finger-right-index" }, { key: "7", finger: "finger-right-index" },
+    { key: "8", finger: "finger-right-middle" }, { key: "9", finger: "finger-right-ring" },
+    { key: "0", finger: "finger-right-pinky" }, { key: "-", finger: "finger-right-pinky" },
+    { key: "=", finger: "finger-right-pinky" },
+  ],
+  [
+    { key: "Q", finger: "finger-left-pinky" }, { key: "W", finger: "finger-left-ring" },
+    { key: "E", finger: "finger-left-middle" }, { key: "R", finger: "finger-left-index" },
+    { key: "T", finger: "finger-left-index" }, { key: "Y", finger: "finger-right-index" },
+    { key: "U", finger: "finger-right-index" }, { key: "I", finger: "finger-right-middle" },
+    { key: "O", finger: "finger-right-ring" }, { key: "P", finger: "finger-right-pinky" },
+  ],
+  [
+    { key: "A", finger: "finger-left-pinky" }, { key: "S", finger: "finger-left-ring" },
+    { key: "D", finger: "finger-left-middle" }, { key: "F", finger: "finger-left-index" },
+    { key: "G", finger: "finger-left-index" }, { key: "H", finger: "finger-right-index" },
+    { key: "J", finger: "finger-right-index" }, { key: "K", finger: "finger-right-middle" },
+    { key: "L", finger: "finger-right-ring" }, { key: ";", finger: "finger-right-pinky" },
+  ],
+  [
+    { key: "Z", finger: "finger-left-pinky" }, { key: "X", finger: "finger-left-ring" },
+    { key: "C", finger: "finger-left-middle" }, { key: "V", finger: "finger-left-index" },
+    { key: "B", finger: "finger-left-index" }, { key: "N", finger: "finger-right-index" },
+    { key: "M", finger: "finger-right-index" }, { key: ",", finger: "finger-right-middle" },
+    { key: ".", finger: "finger-right-ring" },
+  ],
+  [
+    { key: "SPACE", finger: "finger-thumb", wide: "space" },
+  ]
+];
+
+// ============================================================
+//  AUDIO (Web Audio API - no files needed)
+// ============================================================
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx;
+function ensureAudio() {
+  if (!audioCtx) audioCtx = new AudioCtx();
+}
+
+function playTone(freq, duration, type = 'sine', vol = 0.08) {
+  ensureAudio();
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.type = type; o.frequency.value = freq;
+  g.gain.setValueAtTime(vol, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(); o.stop(audioCtx.currentTime + duration);
+}
+
+function sfxCorrect() { playTone(880, 0.08, 'sine', 0.05); }
+function sfxWrong() { playTone(200, 0.15, 'sawtooth', 0.04); }
+function sfxCombo() { playTone(660, 0.1); playTone(880, 0.1); setTimeout(() => playTone(1100, 0.15), 80); }
+function sfxLevelUp() {
+  [523, 659, 784, 1047].forEach((f, i) => setTimeout(() => playTone(f, 0.2, 'sine', 0.06), i * 100));
+}
+function sfxComplete() {
+  [523, 659, 784, 1047, 1319].forEach((f, i) => setTimeout(() => playTone(f, 0.25, 'triangle', 0.06), i * 120));
+}
+
+// ============================================================
+//  UI HELPERS
+// ============================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function selectPlayer(el) {
+  document.querySelectorAll('.player-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  currentPlayer = el.dataset.player;
+  document.getElementById('btn-start').disabled = false;
+}
+
+function showModeSelect() {
+  const greetings = [
+    `What's good ${currentPlayer}? Pick your challenge!`,
+    `${currentPlayer} is in the building! Choose wisely:`,
+    `Alright ${currentPlayer}, time to level up! 🎯`,
+    `${currentPlayer} said bet, let's go! 💪`,
+  ];
+  document.getElementById('mode-greeting').textContent = greetings[Math.floor(Math.random() * greetings.length)];
+  showScreen('screen-modes');
+}
+
+// Floating background emojis
+function spawnFloatingEmojis() {
+  const emojis = ['🌮', '🎮', '⭐', '🔥', '💎', '🎵', '🌈', '🚀', '🐐', '🏆', '🎯', '💫', '🇪🇸'];
+  const container = document.getElementById('floating-emojis');
+  container.innerHTML = '';
+  for (let i = 0; i < 12; i++) {
+    const el = document.createElement('div');
+    el.className = 'floating-emoji';
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = Math.random() * 100 + '%';
+    el.style.animationDelay = Math.random() * 20 + 's';
+    el.style.animationDuration = (15 + Math.random() * 20) + 's';
+    container.appendChild(el);
+  }
+}
+spawnFloatingEmojis();
+
+// Build keyboard
+function buildKeyboard() {
+  const kb = document.getElementById('keyboard');
+  kb.innerHTML = '';
+  KB_ROWS.forEach(row => {
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'kb-row';
+    row.forEach(k => {
+      const keyDiv = document.createElement('div');
+      keyDiv.className = `kb-key ${k.finger}${k.wide ? ' ' + k.wide : ''}`;
+      keyDiv.textContent = k.key === 'SPACE' ? '⎵' : k.key;
+      keyDiv.dataset.key = k.key;
+      rowDiv.appendChild(keyDiv);
+    });
+    kb.appendChild(rowDiv);
+  });
+}
+buildKeyboard();
+
+function highlightKey(char, correct) {
+  const keyStr = char === ' ' ? 'SPACE' : char.toUpperCase();
+  const keyEl = document.querySelector(`.kb-key[data-key="${keyStr}"]`);
+  if (!keyEl) return;
+  keyEl.classList.add(correct ? 'pressed-correct' : 'pressed-wrong');
+  setTimeout(() => {
+    keyEl.classList.remove('pressed-correct', 'pressed-wrong');
+  }, 200);
+}
+
+function showNextKey(char) {
+  document.querySelectorAll('.kb-key').forEach(k => k.classList.remove('active'));
+  const keyStr = char === ' ' ? 'SPACE' : char.toUpperCase();
+  const keyEl = document.querySelector(`.kb-key[data-key="${keyStr}"]`);
+  if (keyEl) keyEl.classList.add('active');
+}
+
+// Particles
+function spawnParticles(x, y, color, count = 6) {
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const angle = (Math.PI * 2 / count) * i;
+    const dist = 30 + Math.random() * 40;
+    p.style.cssText = `
+      left:${x}px; top:${y}px;
+      width:${4 + Math.random()*4}px; height:${4 + Math.random()*4}px;
+      background:${color};
+      --dx:${Math.cos(angle)*dist}px;
+      --dy:${Math.sin(angle)*dist}px;
+    `;
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 800);
+  }
+}
+
+// Confetti
+function launchConfetti() {
+  const colors = ['#ff2d95','#00d4ff','#39ff14','#b026ff','#fff700','#ff6e00'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.cssText = `
+      left:${Math.random()*100}%; top:-10px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${6+Math.random()*8}px; height:${6+Math.random()*8}px;
+      border-radius:${Math.random()>0.5?'50%':'2px'};
+      animation-delay:${Math.random()*1.5}s;
+      animation-duration:${2+Math.random()*2}s;
+    `;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 5000);
+  }
+}
+
+// Combo popup
+function showCombo(text, color) {
+  const popup = document.getElementById('combo-popup');
+  popup.textContent = text;
+  popup.style.color = color;
+  popup.classList.remove('show');
+  void popup.offsetWidth;
+  popup.classList.add('show');
+  sfxCombo();
+}
+
+// Float points
+function showFloatPoints(points, x, y) {
+  const el = document.createElement('div');
+  el.className = 'float-points';
+  el.textContent = `+${points}`;
+  el.style.left = x + 'px';
+  el.style.top = y + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1000);
+}
+
+// Level up overlay
+function showLevelUp(level) {
+  const emojis = ['🎯','⚡','🔥','💎','🌟','👑','🏆','🐐'];
+  document.getElementById('lu-emoji').textContent = emojis[Math.min(level-1, emojis.length-1)];
+  document.getElementById('lu-text').textContent = `LEVEL ${level}!`;
+  const subs = [
+    "You're just getting started!",
+    "Warming up fr fr!",
+    "Okay okay I see you!",
+    "Straight bussin!",
+    "No cap you're cracked!",
+    "Built different!",
+    "Main character energy!",
+    "GOAT status unlocked!",
+  ];
+  document.getElementById('lu-sub').textContent = subs[Math.min(level-1, subs.length-1)];
+  document.getElementById('level-up-overlay').classList.add('show');
+  sfxLevelUp();
+  setTimeout(() => document.getElementById('level-up-overlay').classList.remove('show'), 1800);
+}
+
+// ============================================================
+//  GAME ENGINE
+// ============================================================
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getAllVocab() {
+  return Object.entries(VOCAB).flatMap(([cat, words]) => words.map(w => ({ ...w, category: cat })));
+}
+
+function generatePrompts(mode) {
+  switch(mode) {
+    case 'vocab': {
+      const all = shuffle(getAllVocab()).slice(0, 15);
+      return all.map(w => ({
+        text: w.es,
+        hintSpanish: w.es,
+        hintEnglish: w.en,
+        hintCategory: w.category,
+        spanishWords: [{ es: w.es, en: w.en }],
+      }));
+    }
+    case 'phrases': {
+      const all = shuffle(PHRASES).slice(0, 12);
+      return all.map(p => ({
+        text: p.text,
+        hintSpanish: p.text,
+        hintEnglish: p.en,
+        hintCategory: 'Spanish phrase',
+        spanishWords: p.text.split(' ').map(w => ({ es: w, en: '' })),
+      }));
+    }
+    case 'spanglish': {
+      const all = shuffle(SPANGLISH).slice(0, 12);
+      return all.map(s => ({
+        text: s.text,
+        hintSpanish: s.spanish.map(w => w.es).join(', '),
+        hintEnglish: s.spanish.map(w => `${w.es} = ${w.en}`).join(' | '),
+        hintCategory: 'Spanglish remix',
+        spanishWords: s.spanish,
+      }));
+    }
+    case 'boss': {
+      const all = shuffle(BOSS_SENTENCES).slice(0, 8);
+      return all.map(s => ({
+        text: s.text,
+        hintSpanish: s.text.slice(0, 40) + '...',
+        hintEnglish: s.en,
+        hintCategory: 'Boss level - full Spanish!',
+        spanishWords: [],
+      }));
+    }
+    case 'race': {
+      // Mix everything for speed mode
+      const vocabItems = shuffle(getAllVocab()).slice(0, 20).map(w => ({
+        text: w.es,
+        hintSpanish: w.es,
+        hintEnglish: w.en,
+        hintCategory: w.category,
+        spanishWords: [{ es: w.es, en: w.en }],
+      }));
+      const phraseItems = shuffle(SPANGLISH).slice(0, 10).map(s => ({
+        text: s.text,
+        hintSpanish: s.spanish.map(w => w.es).join(', '),
+        hintEnglish: s.spanish.map(w => `${w.es} = ${w.en}`).join(' | '),
+        hintCategory: 'Spanglish remix',
+        spanishWords: s.spanish,
+      }));
+      return shuffle([...vocabItems, ...phraseItems]);
+    }
+    case 'story': {
+      const story = STORIES[Math.floor(Math.random() * STORIES.length)];
+      return story.lines.map(line => ({
+        text: line.text,
+        hintSpanish: story.title,
+        hintEnglish: line.en || line.hint,
+        hintCategory: line.hint || 'Story mode',
+        spanishWords: [],
+      }));
+    }
+  }
+}
+
+function startGame(mode) {
+  currentMode = mode;
+  const prompts = generatePrompts(mode);
+
+  gameState = {
+    mode,
+    prompts,
+    currentIndex: 0,
+    charIndex: 0,
+    score: 0,
+    streak: 0,
+    bestStreak: 0,
+    totalCorrect: 0,
+    totalTyped: 0,
+    level: 1,
+    xp: 0,
+    xpNeeded: 50,
+    startTime: null,
+    wordsCompleted: 0,
+    allSpanishWords: [],
+    timerInterval: null,
+    timeLeft: 60,
+    raceActive: mode === 'race',
+  };
+
+  showScreen('screen-game');
+  updateHUD();
+
+  // Show/hide timer for race mode
+  document.getElementById('hud-timer-box').style.display = mode === 'race' ? 'block' : 'none';
+
+  loadPrompt();
+
+  // Focus input
+  const input = document.getElementById('hidden-input');
+  input.value = '';
+  input.focus();
+
+  // Click to refocus
+  document.getElementById('typing-area').onclick = () => input.focus();
+}
+
+function loadPrompt() {
+  const prompt = gameState.prompts[gameState.currentIndex];
+  if (!prompt) { endGame(); return; }
+
+  gameState.charIndex = 0;
+
+  // Update hint
+  document.getElementById('hint-spanish').textContent = prompt.hintSpanish;
+  document.getElementById('hint-english').textContent = prompt.hintEnglish;
+  document.getElementById('hint-category').textContent = prompt.hintCategory;
+
+  // Collect spanish words
+  if (prompt.spanishWords) {
+    prompt.spanishWords.forEach(w => {
+      if (w.es && !gameState.allSpanishWords.find(x => x.es === w.es)) {
+        gameState.allSpanishWords.push(w);
+      }
+    });
+  }
+
+  // Render characters
+  renderChars();
+
+  // Show next key hint
+  if (prompt.text.length > 0) {
+    showNextKey(prompt.text[0]);
+  }
+
+  // Update progress
+  document.getElementById('hud-progress').textContent =
+    `${gameState.currentIndex + 1}/${gameState.prompts.length}`;
+}
+
+function renderChars() {
+  const prompt = gameState.prompts[gameState.currentIndex];
+  const container = document.getElementById('prompt-text');
+  container.innerHTML = '';
+
+  for (let i = 0; i < prompt.text.length; i++) {
+    const span = document.createElement('span');
+    span.className = 'char';
+    span.textContent = prompt.text[i];
+
+    if (i < gameState.charIndex) {
+      // Already typed - check if it was correct (stored in state)
+      span.classList.add(gameState.charResults?.[i] ? 'correct' : 'incorrect');
+    } else if (i === gameState.charIndex) {
+      span.classList.add('current');
+    } else {
+      span.classList.add('upcoming');
+    }
+    container.appendChild(span);
+  }
+}
+
+function updateHUD() {
+  document.getElementById('hud-score').textContent = gameState.score;
+  document.getElementById('hud-streak').textContent = `${gameState.streak} ${gameState.streak >= 5 ? '🔥' : ''}`;
+  document.getElementById('hud-level').textContent = gameState.level;
+
+  // WPM calculation
+  let wpm = 0;
+  if (gameState.startTime) {
+    const elapsed = (Date.now() - gameState.startTime) / 1000 / 60;
+    if (elapsed > 0) wpm = Math.round(gameState.wordsCompleted / elapsed);
+  }
+  document.getElementById('hud-wpm').textContent = wpm;
+
+  // XP bar
+  document.getElementById('xp-bar').style.width =
+    Math.min(100, (gameState.xp / gameState.xpNeeded) * 100) + '%';
+
+  // Timer for race
+  if (gameState.raceActive) {
+    document.getElementById('hud-timer').textContent = gameState.timeLeft;
+  }
+}
+
+function addXP(amount) {
+  gameState.xp += amount;
+  while (gameState.xp >= gameState.xpNeeded) {
+    gameState.xp -= gameState.xpNeeded;
+    gameState.level++;
+    gameState.xpNeeded = Math.floor(gameState.xpNeeded * 1.4);
+    showLevelUp(gameState.level);
+  }
+}
+
+// ---- INPUT HANDLING ----
+document.getElementById('hidden-input').addEventListener('input', function(e) {
+  // Start timer on first keypress
+  if (!gameState.startTime) {
+    gameState.startTime = Date.now();
+    if (gameState.raceActive) startRaceTimer();
+  }
+
+  const typed = e.data;
+  if (!typed) return;
+
+  const prompt = gameState.prompts[gameState.currentIndex];
+  if (!prompt) return;
+
+  const expected = prompt.text[gameState.charIndex];
+  if (expected === undefined) return;
+
+  gameState.totalTyped++;
+
+  if (!gameState.charResults) gameState.charResults = {};
+
+  if (typed === expected) {
+    // Correct!
+    gameState.charResults[gameState.charIndex] = true;
+    gameState.totalCorrect++;
+    gameState.streak++;
+    if (gameState.streak > gameState.bestStreak) gameState.bestStreak = gameState.streak;
+
+    // Points
+    let points = 10;
+    const multiplier = Math.min(5, 1 + Math.floor(gameState.streak / 5));
+    points *= multiplier;
+    gameState.score += points;
+    addXP(points / 2);
+
+    sfxCorrect();
+    highlightKey(expected, true);
+
+    // Show float points occasionally
+    if (gameState.streak % 5 === 0 && gameState.streak > 0) {
+      const rect = document.getElementById('typing-area').getBoundingClientRect();
+      showFloatPoints(points, rect.left + Math.random() * rect.width, rect.top);
+    }
+
+    // Combo messages
+    for (let i = COMBO_MESSAGES.length - 1; i >= 0; i--) {
+      if (gameState.streak === COMBO_MESSAGES[i].min) {
+        showCombo(COMBO_MESSAGES[i].text, COMBO_MESSAGES[i].color);
+        break;
+      }
+    }
+
+    // Particles on big streaks
+    if (gameState.streak > 0 && gameState.streak % 10 === 0) {
+      const rect = document.getElementById('hud-streak').getBoundingClientRect();
+      spawnParticles(rect.left + rect.width/2, rect.top + rect.height/2, 'var(--neon-orange)', 10);
+    }
+
+    gameState.charIndex++;
+
+    // Check if word/prompt complete
+    if (gameState.charIndex >= prompt.text.length) {
+      completePrompt();
+    } else {
+      renderChars();
+      showNextKey(prompt.text[gameState.charIndex]);
+    }
+
+  } else {
+    // Wrong!
+    gameState.charResults[gameState.charIndex] = false;
+    gameState.streak = 0;
+    sfxWrong();
+    highlightKey(expected, false);
+
+    // Still advance (forgiving mode)
+    gameState.charIndex++;
+    if (gameState.charIndex >= prompt.text.length) {
+      completePrompt();
+    } else {
+      renderChars();
+      showNextKey(prompt.text[gameState.charIndex]);
+    }
+  }
+
+  updateHUD();
+  this.value = '';
+});
+
+// Handle backspace (prevent default browser behavior)
+document.getElementById('hidden-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    // Allow going back
+    if (gameState.charIndex > 0) {
+      gameState.charIndex--;
+      delete gameState.charResults[gameState.charIndex];
+      renderChars();
+      const prompt = gameState.prompts[gameState.currentIndex];
+      showNextKey(prompt.text[gameState.charIndex]);
+    }
+  }
+});
+
+function completePrompt() {
+  const prompt = gameState.prompts[gameState.currentIndex];
+  const words = prompt.text.split(' ').length;
+  gameState.wordsCompleted += words;
+  gameState.charResults = {};
+
+  // Bonus for perfect prompt
+  const allCorrect = gameState.totalCorrect === gameState.totalTyped;
+  if (allCorrect && prompt.text.length > 5) {
+    gameState.score += 50;
+    addXP(30);
+  }
+
+  gameState.currentIndex++;
+
+  if (gameState.currentIndex >= gameState.prompts.length && !gameState.raceActive) {
+    endGame();
+  } else if (gameState.raceActive && gameState.currentIndex >= gameState.prompts.length) {
+    // In race mode, reshuffle and keep going
+    gameState.prompts = [...gameState.prompts, ...generatePrompts(currentMode)];
+    loadPrompt();
+  } else {
+    loadPrompt();
+  }
+}
+
+// Race timer
+function startRaceTimer() {
+  gameState.timerInterval = setInterval(() => {
+    gameState.timeLeft--;
+    document.getElementById('hud-timer').textContent = gameState.timeLeft;
+    if (gameState.timeLeft <= 10) {
+      document.getElementById('hud-timer').style.animation = 'none';
+      document.getElementById('hud-timer').style.color = gameState.timeLeft % 2 === 0 ? 'var(--neon-pink)' : '#fff';
+    }
+    if (gameState.timeLeft <= 0) {
+      clearInterval(gameState.timerInterval);
+      endGame();
+    }
+  }, 1000);
+}
+
+function endGame() {
+  if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+
+  sfxComplete();
+  launchConfetti();
+
+  // Calculate stats
+  const elapsed = gameState.startTime ? (Date.now() - gameState.startTime) / 1000 / 60 : 1;
+  const wpm = elapsed > 0 ? Math.round(gameState.wordsCompleted / elapsed) : 0;
+  const accuracy = gameState.totalTyped > 0 ? Math.round((gameState.totalCorrect / gameState.totalTyped) * 100) : 0;
+
+  // Find result title
+  let resultInfo = RESULT_TITLES[0];
+  for (const r of RESULT_TITLES) {
+    if (wpm >= r.minWpm) resultInfo = r;
+  }
+
+  document.getElementById('results-title').textContent = resultInfo.title;
+  document.getElementById('results-subtitle').textContent = `${resultInfo.sub} — ${currentPlayer}`;
+  document.getElementById('res-score').textContent = gameState.score;
+  document.getElementById('res-wpm').textContent = wpm;
+  document.getElementById('res-accuracy').textContent = accuracy + '%';
+  document.getElementById('res-streak').textContent = gameState.bestStreak;
+
+  // Spanish words learned
+  const wordsDiv = document.getElementById('words-learned');
+  wordsDiv.innerHTML = '';
+  const uniqueWords = gameState.allSpanishWords.slice(0, 20);
+  if (uniqueWords.length > 0) {
+    uniqueWords.forEach(w => {
+      const chip = document.createElement('div');
+      chip.className = 'word-chip';
+      chip.innerHTML = `${w.es} <span>= ${w.en}</span>`;
+      wordsDiv.appendChild(chip);
+    });
+    document.getElementById('spanish-learned').style.display = 'block';
+  } else {
+    document.getElementById('spanish-learned').style.display = 'none';
+  }
+
+  showScreen('screen-results');
+
+  // More confetti after a sec
+  setTimeout(launchConfetti, 1500);
+}
+
+// ---- KEEP INPUT FOCUSED ----
+document.addEventListener('keydown', function(e) {
+  const gameScreen = document.getElementById('screen-game');
+  if (gameScreen.classList.contains('active')) {
+    const input = document.getElementById('hidden-input');
+    if (document.activeElement !== input) {
+      input.focus();
+    }
+  }
+});
+
+// Prevent tab from leaving
+document.getElementById('hidden-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Tab') e.preventDefault();
+});
+</script>
+</body>
+</html>
