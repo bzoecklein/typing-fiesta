@@ -162,7 +162,41 @@
     font-size: 4rem; margin-bottom: 0.5rem;
     transition: transform 0.3s;
   }
-  .player-card:hover .avatar { transform: scale(1.15) rotate(5deg); }
+  .player-card:hover .avatar { transform: scale(1.15) rotate(5deg); transition: transform 0.2s ease; }
+  /* Player-specific hover animations */
+  .player-card[data-player="Bryson"]:hover .avatar { animation: controllerWiggle 0.4s ease infinite; transform: none; }
+  .player-card[data-player="Angelina"]:hover .avatar { animation: starSparkle 0.8s ease infinite; transform: none; }
+  .player-card[data-player="Mom"]:hover .avatar { animation: roseBloom 0.6s ease infinite; transform: none; }
+  .player-card[data-player="Dad"]:hover .avatar { animation: briefcaseTilt 0.6s ease infinite; transform: none; }
+  .player-card[data-player="Alice"]:hover .avatar { animation: demonBounce 0.5s ease infinite; transform: none; }
+  .player-card[data-player="Copper"]:hover .avatar { animation: tailWag 0.3s ease infinite; transform: none; }
+  @keyframes controllerWiggle {
+    0%, 100% { transform: rotate(-8deg) scale(1.15); }
+    25% { transform: rotate(8deg) scale(1.2); }
+    50% { transform: rotate(-6deg) scale(1.15); }
+    75% { transform: rotate(6deg) scale(1.2); }
+  }
+  @keyframes starSparkle {
+    0%, 100% { transform: scale(1.15); filter: drop-shadow(0 0 8px rgba(255,247,0,0.3)); }
+    50% { transform: scale(1.35); filter: drop-shadow(0 0 25px rgba(255,247,0,0.8)); }
+  }
+  @keyframes roseBloom {
+    0%, 100% { transform: scale(1.1); filter: drop-shadow(0 0 5px rgba(255,45,149,0.2)); }
+    50% { transform: scale(1.35); filter: drop-shadow(0 0 25px rgba(255,45,149,0.6)); }
+  }
+  @keyframes briefcaseTilt {
+    0%, 100% { transform: rotate(0deg) scale(1.15); }
+    25% { transform: rotate(-12deg) scale(1.15); }
+    75% { transform: rotate(12deg) scale(1.15); }
+  }
+  @keyframes demonBounce {
+    0%, 100% { transform: translateY(0) scale(1.15); }
+    50% { transform: translateY(-12px) scale(1.25); }
+  }
+  @keyframes tailWag {
+    0%, 100% { transform: rotate(-15deg) scale(1.15); }
+    50% { transform: rotate(15deg) scale(1.15); }
+  }
   .player-card .name {
     font-family: 'Fredoka One', cursive;
     font-size: 1.5rem;
@@ -1142,7 +1176,7 @@
   .dance-screen { text-align: center; }
   .dance-stage {
     position: relative;
-    width: 340px; height: 500px;
+    width: 640px; height: 550px;
     margin: 0 auto;
     overflow: hidden;
     border-radius: 24px;
@@ -1151,30 +1185,38 @@
     border: 1px solid rgba(255,45,149,0.15);
   }
   .dance-hit-zone {
-    position: absolute; top: 60px; left: 0; right: 0; height: 56px;
+    position: absolute; top: 60px; left: 0; right: 0; height: 62px;
     border-top: 3px solid rgba(255,45,149,0.5);
     border-bottom: 3px solid rgba(255,45,149,0.5);
     background: rgba(255,45,149,0.06);
-    display: flex; justify-content: center; gap: 36px; align-items: center;
+    display: flex; justify-content: center; gap: 12px; align-items: center;
     z-index: 5;
   }
   .dance-hit-zone .hit-slot {
-    width: 50px; height: 50px; border-radius: 12px;
+    width: 56px; height: 56px; border-radius: 12px;
     border: 2px solid rgba(255,255,255,0.15);
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.5rem; color: rgba(255,255,255,0.2);
+    font-size: 1.6rem; color: rgba(255,255,255,0.25);
+    font-family: 'Fredoka One', cursive;
+    font-weight: 900;
   }
   .dance-arrow {
-    position: absolute; width: 50px; height: 50px;
-    border-radius: 12px; font-size: 1.8rem;
+    position: absolute; width: 56px; height: 56px;
+    border-radius: 12px; font-size: 2.2rem;
     display: flex; align-items: center; justify-content: center;
     transition: none; z-index: 4;
     text-shadow: 0 0 12px currentColor;
+    font-family: 'Fredoka One', cursive;
+    font-weight: 900;
   }
-  .dance-arrow.left { color: var(--neon-green); background: rgba(57,255,20,0.12); border: 1px solid rgba(57,255,20,0.3); }
-  .dance-arrow.up { color: var(--neon-blue); background: rgba(0,212,255,0.12); border: 1px solid rgba(0,212,255,0.3); }
-  .dance-arrow.down { color: var(--neon-purple); background: rgba(176,38,255,0.12); border: 1px solid rgba(176,38,255,0.3); }
-  .dance-arrow.right { color: var(--neon-orange); background: rgba(255,110,0,0.12); border: 1px solid rgba(255,110,0,0.3); }
+  .dance-arrow.lane-0 { color: var(--neon-green); background: rgba(57,255,20,0.12); border: 1px solid rgba(57,255,20,0.3); }
+  .dance-arrow.lane-1 { color: var(--neon-blue); background: rgba(0,212,255,0.12); border: 1px solid rgba(0,212,255,0.3); }
+  .dance-arrow.lane-2 { color: var(--neon-purple); background: rgba(176,38,255,0.12); border: 1px solid rgba(176,38,255,0.3); }
+  .dance-arrow.lane-3 { color: var(--neon-orange); background: rgba(255,110,0,0.12); border: 1px solid rgba(255,110,0,0.3); }
+  .dance-arrow.lane-4 { color: var(--neon-pink); background: rgba(255,45,149,0.12); border: 1px solid rgba(255,45,149,0.3); }
+  .dance-arrow.lane-5 { color: var(--neon-yellow); background: rgba(255,247,0,0.12); border: 1px solid rgba(255,247,0,0.3); }
+  .dance-arrow.lane-6 { color: var(--neon-green); background: rgba(57,255,20,0.12); border: 1px solid rgba(57,255,20,0.3); }
+  .dance-arrow.lane-7 { color: var(--neon-blue); background: rgba(0,212,255,0.12); border: 1px solid rgba(0,212,255,0.3); }
   .dance-arrow.hit-perfect { animation: arrowPerfect 0.3s ease forwards; }
   .dance-arrow.hit-good { animation: arrowGood 0.3s ease forwards; }
   .dance-arrow.hit-miss { animation: arrowMiss 0.3s ease forwards; }
@@ -1445,6 +1487,132 @@
     font-family: 'Fredoka One', cursive; font-size: 0.85rem;
     color: rgba(255,255,255,0.35); margin-bottom: 0.5rem;
   }
+
+  /* === GEN ALPHA FLAVOR POPUP === */
+  .flavor-popup {
+    position: fixed;
+    top: 18%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    font-family: 'Comic Sans MS', 'Fredoka One', cursive;
+    font-size: 1.6rem;
+    font-weight: 900;
+    pointer-events: none;
+    z-index: 150;
+    text-align: center;
+    white-space: nowrap;
+    text-shadow: 0 0 15px currentColor, 0 2px 4px rgba(0,0,0,0.5);
+    opacity: 0;
+  }
+  .flavor-popup.show {
+    animation: flavorPop 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+  @keyframes flavorPop {
+    0% { transform: translate(-50%, -50%) scale(0) rotate(-5deg); opacity: 0; }
+    15% { transform: translate(-50%, -50%) scale(1.2) rotate(3deg); opacity: 1; }
+    30% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+    80% { transform: translate(-50%, -55%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -70%) scale(0.8); opacity: 0; }
+  }
+
+  /* === BOSS BATTLE UI === */
+  .boss-screen { text-align: center; max-width: 700px; margin: 0 auto; }
+  .boss-emoji {
+    font-size: 6rem; margin: 1rem 0;
+    filter: drop-shadow(0 0 25px rgba(255,45,149,0.4));
+    transition: transform 0.1s, filter 0.1s;
+  }
+  .boss-emoji.hit {
+    animation: demonHit 0.3s ease;
+    filter: drop-shadow(0 0 30px rgba(255,45,149,0.6)) brightness(1.5);
+  }
+  .boss-emoji.defeated {
+    animation: demonDefeat 0.8s ease forwards;
+  }
+  .boss-hp-bar {
+    width: 300px; height: 22px; margin: 0 auto 0.3rem;
+    background: rgba(255,255,255,0.08); border-radius: 11px;
+    overflow: hidden; border: 1px solid rgba(255,255,255,0.12);
+    position: relative;
+  }
+  .boss-hp-fill {
+    height: 100%; border-radius: 11px;
+    background: linear-gradient(90deg, #ff4444, var(--neon-pink));
+    transition: width 0.3s ease;
+  }
+  .boss-hp-text {
+    font-family: 'Fredoka One', cursive; font-size: 0.85rem;
+    color: var(--neon-pink); margin-bottom: 0.3rem;
+  }
+  .boss-name {
+    font-family: 'Fredoka One', cursive; font-size: 1.8rem;
+    color: var(--neon-orange); margin-bottom: 0.2rem;
+  }
+  .boss-taunt {
+    font-style: italic; color: rgba(255,255,255,0.5);
+    font-size: 0.9rem; margin-bottom: 1rem; min-height: 1.5em;
+  }
+
+  /* === TYPED RIDDLE INPUT (kid riddles between lessons) === */
+  .kid-riddle-input-area {
+    background: rgba(255,247,0,0.06); border: 2px solid rgba(255,247,0,0.2);
+    border-radius: 14px; padding: 0.8rem 1.5rem;
+    font-size: 1.3rem; color: var(--neon-yellow);
+    min-height: 44px; text-align: center;
+    font-family: 'Fredoka One', cursive;
+    margin-top: 1rem;
+  }
+  .kid-riddle-hint {
+    font-size: 0.85rem; color: rgba(255,255,255,0.4);
+    margin-top: 0.5rem; min-height: 1.2em;
+  }
+
+  /* === ACHIEVEMENT TOAST === */
+  .achievement-toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: rgba(255,247,0,0.1);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,247,0,0.3);
+    border-radius: 16px;
+    padding: 0.8rem 1.5rem;
+    display: flex; align-items: center; gap: 0.6rem;
+    z-index: 700;
+    animation: toastSlide 3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    box-shadow: 0 8px 30px rgba(255,247,0,0.1);
+  }
+  .achievement-toast .toast-icon { font-size: 1.5rem; }
+  .achievement-toast .toast-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.9rem; color: var(--neon-yellow);
+  }
+  .achievement-toast .toast-sub {
+    font-size: 0.7rem; color: rgba(255,255,255,0.4); font-weight: 600;
+  }
+  @keyframes toastSlide {
+    0% { transform: translateX(120%); opacity: 0; }
+    15% { transform: translateX(0); opacity: 1; }
+    85% { transform: translateX(0); opacity: 1; }
+    100% { transform: translateX(120%); opacity: 0; }
+  }
+
+  /* === RANDOM EVENT FLASH === */
+  .random-event-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 450; pointer-events: none;
+  }
+  .random-event-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.5rem;
+    text-shadow: 0 0 30px currentColor;
+    animation: eventFlash 1.5s ease forwards;
+  }
+  @keyframes eventFlash {
+    0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+    20% { transform: scale(1.3) rotate(3deg); opacity: 1; }
+    40% { transform: scale(1) rotate(0deg); opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateY(-30px); opacity: 0; }
+  }
 </style>
 </head>
 <body>
@@ -1460,6 +1628,7 @@
 </div>
 
 <div id="combo-popup" class="combo-popup"></div>
+<div id="flavor-popup" class="flavor-popup"></div>
 <div id="level-up-overlay" class="level-up-overlay">
   <div class="level-up-box">
     <div class="lu-emoji" id="lu-emoji"></div>
@@ -1657,7 +1826,7 @@
 <div id="screen-mom" class="screen">
   <div class="dance-screen">
     <div class="screen-title" style="margin-bottom:0.3rem;">🌹 Dance Floor 🌹</div>
-    <div class="subtitle" style="margin-bottom:0.5rem;">Hit the arrows on beat!</div>
+    <div class="subtitle" style="margin-bottom:0.5rem;">Type the letters on beat!</div>
     <div class="dance-score-hud">
       <div class="hud-item">
         <div class="hud-label">Score</div>
@@ -1674,10 +1843,14 @@
     </div>
     <div class="dance-stage" id="dance-stage">
       <div class="dance-hit-zone" id="dance-hit-zone">
-        <div class="hit-slot">←</div>
-        <div class="hit-slot">↑</div>
-        <div class="hit-slot">↓</div>
-        <div class="hit-slot">→</div>
+        <div class="hit-slot">F</div>
+        <div class="hit-slot">J</div>
+        <div class="hit-slot">D</div>
+        <div class="hit-slot">K</div>
+        <div class="hit-slot">A</div>
+        <div class="hit-slot">S</div>
+        <div class="hit-slot">L</div>
+        <div class="hit-slot">;</div>
       </div>
     </div>
     <div class="dance-lyrics" id="dance-lyrics"></div>
@@ -1692,7 +1865,10 @@
     <div class="lesson-progress-bar">
       <div class="lesson-progress-fill" id="lesson-progress-fill" style="width:0%"></div>
     </div>
-    <div class="subtitle" id="lesson-subtitle" style="margin-bottom:1rem;">Type the letters below</div>
+    <div class="xp-bar-container" style="max-width:500px; margin:0.5rem auto;">
+      <div class="xp-bar" id="lesson-xp-bar"></div>
+    </div>
+    <div class="subtitle" id="lesson-subtitle" style="margin-bottom:1rem;">Type the words below</div>
     <div class="typing-area" id="lesson-typing-area" tabindex="0">
       <div class="prompt-text" id="lesson-prompt-text"></div>
     </div>
@@ -1724,6 +1900,48 @@
     <div style="margin-top:1rem;">
       <button class="btn btn-secondary" id="mystery-continue-btn" onclick="continueFromMystery()" style="display:none;">Continue to Next Lesson</button>
     </div>
+  </div>
+</div>
+
+<!-- ==================== BOSS BATTLE SCREEN ==================== -->
+<div id="screen-boss" class="screen">
+  <div class="boss-screen">
+    <div class="screen-title" id="boss-title">BOSS BATTLE!</div>
+    <div class="boss-name" id="boss-name">The Skibidi King</div>
+    <div class="boss-emoji" id="boss-emoji">🚽</div>
+    <div class="boss-hp-text" id="boss-hp-text">HP: 5 / 5</div>
+    <div class="boss-hp-bar">
+      <div class="boss-hp-fill" id="boss-hp-fill" style="width:100%"></div>
+    </div>
+    <div class="boss-taunt" id="boss-taunt">You can't flush me!</div>
+    <div class="typing-area" id="boss-typing-area" tabindex="0">
+      <div class="prompt-text" id="boss-prompt-text"></div>
+    </div>
+    <input type="text" class="hidden-input" id="boss-hidden-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <div style="margin-top:1rem;">
+      <div class="hud-item" style="display:inline-block; margin: 0 1rem;">
+        <div class="hud-label">Damage</div>
+        <div class="hud-value" id="boss-damage" style="color:var(--neon-pink);">0</div>
+      </div>
+      <div class="hud-item" style="display:inline-block; margin: 0 1rem;">
+        <div class="hud-label">Words</div>
+        <div class="hud-value" id="boss-words" style="color:var(--neon-green);">0</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== KID RIDDLE (TYPED) SCREEN ==================== -->
+<div id="screen-kid-riddle" class="screen">
+  <div class="riddle-card">
+    <div class="riddle-icon">🧩</div>
+    <div class="riddle-title">Riddle Time!</div>
+    <div class="riddle-subtitle">Type the answer to earn bonus XP!</div>
+    <div class="riddle-question" id="kid-riddle-question"></div>
+    <div class="kid-riddle-input-area" id="kid-riddle-typed"></div>
+    <input type="text" class="hidden-input" id="kid-riddle-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <div class="kid-riddle-hint" id="kid-riddle-hint"></div>
+    <div class="riddle-feedback" id="kid-riddle-feedback"></div>
   </div>
 </div>
 
@@ -4068,10 +4286,16 @@ showModeSelect = function() {
 // ============================================================
 //  MOM - DANCE FLOOR GAME 🌹
 // ============================================================
-const DANCE_ARROWS = ['left', 'up', 'down', 'right'];
-const DANCE_KEYS = { ArrowLeft: 'left', ArrowUp: 'up', ArrowDown: 'down', ArrowRight: 'right' };
-const DANCE_SYMBOLS = { left: '←', up: '↑', down: '↓', right: '→' };
-const DANCE_LANES = { left: 0, up: 1, down: 2, right: 3 };
+// Letter-based lanes for Mom's typing dance game
+const DANCE_ALL_LETTERS = ['f','j','d','k','a','s','l',';'];
+const DANCE_SYMBOLS_MAP = { f:'F', j:'J', d:'D', k:'K', a:'A', s:'S', l:'L', ';':';' };
+const DANCE_LANE_MAP = { f:0, j:1, d:2, k:3, a:4, s:5, l:6, ';':7 };
+// Progressive introduction: which letters are available at each time threshold (seconds)
+const DANCE_PROGRESSION = [
+  { after: 0, letters: ['f','j','d','k'] },           // first 30s: index/middle fingers
+  { after: 30, letters: ['f','j','d','k','a','s','l',';'] },  // all home row
+  { after: 60, letters: ['f','j','d','k','a','s','l',';','e','i','r','u'] },  // + common top row
+];
 
 const REGGAETON_LYRICS = [
   "Dale dale dale no te detengas...",
@@ -4142,12 +4366,12 @@ function startMomGame() {
     const stageH = stage.offsetHeight;
     const hitY = 60; // hit zone top position
     const now = Date.now();
+    const DANCE_TRAVEL = 4000; // slower travel time for learning
 
     danceState.arrows.forEach(arrow => {
       if (arrow.hit) return;
       const elapsed = now - arrow.spawnTime;
-      const travelTime = 2500; // ms to travel full stage
-      const y = stageH + 30 - (elapsed / travelTime) * (stageH + 80);
+      const y = stageH + 30 - (elapsed / DANCE_TRAVEL) * (stageH + 80);
       arrow.el.style.top = y + 'px';
 
       // Miss detection - arrow passed above hit zone
@@ -4168,21 +4392,37 @@ function startMomGame() {
   danceState.animFrame = requestAnimationFrame(animateDance);
 }
 
+function getAvailableDanceLetters() {
+  if (!danceState) return DANCE_PROGRESSION[0].letters;
+  const elapsed = (Date.now() - danceState.startTime) / 1000;
+  let available = DANCE_PROGRESSION[0].letters;
+  for (const p of DANCE_PROGRESSION) {
+    if (elapsed >= p.after) available = p.letters;
+  }
+  return available;
+}
+
 function spawnDanceArrow() {
-  const dir = DANCE_ARROWS[Math.floor(Math.random() * DANCE_ARROWS.length)];
+  const available = getAvailableDanceLetters();
+  // Only use letters that have lanes on screen (first 8)
+  const usable = available.filter(l => DANCE_LANE_MAP[l] !== undefined);
+  const letter = usable[Math.floor(Math.random() * usable.length)];
+  const lane = DANCE_LANE_MAP[letter];
   const stage = document.getElementById('dance-stage');
   const el = document.createElement('div');
-  el.className = `dance-arrow ${dir}`;
-  el.textContent = DANCE_SYMBOLS[dir];
+  // Use lane class for coloring, or fallback
+  const laneClass = lane !== undefined ? `lane-${lane}` : 'lane-0';
+  el.className = `dance-arrow ${laneClass}`;
+  el.textContent = DANCE_SYMBOLS_MAP[letter] || letter.toUpperCase();
 
-  const laneX = 42 + DANCE_LANES[dir] * 72;
+  const laneX = 24 + (lane !== undefined ? lane : 0) * 76;
   el.style.left = laneX + 'px';
   el.style.top = (stage.offsetHeight + 30) + 'px';
 
   stage.appendChild(el);
   danceState.arrows.push({
-    id: danceState.arrowId++, dir, el,
-    spawnTime: Date.now(), hit: false,
+    id: danceState.arrowId++, dir: letter, el,
+    spawnTime: Date.now(), hit: false, lane,
   });
 }
 
@@ -4209,20 +4449,23 @@ function spawnRoseParticles(x, y) {
   }
 }
 
-// Dance key handler
+// Dance key handler - listens for letter keys
 document.addEventListener('keydown', function(e) {
   if (!danceState || !danceState.active) return;
-  const dir = DANCE_KEYS[e.key];
-  if (!dir) return;
+  // Map pressed key to a dance letter
+  const pressed = e.key.toLowerCase();
+  // Check if this is a valid dance letter (including semicolon)
+  const validLetters = [...DANCE_ALL_LETTERS];
+  if (!validLetters.includes(pressed)) return;
   e.preventDefault();
 
   const hitY = 60;
-  const hitRange = 50;
+  const hitRange = 55;
   let bestArrow = null;
   let bestDist = Infinity;
 
   danceState.arrows.forEach(arrow => {
-    if (arrow.hit || arrow.dir !== dir) return;
+    if (arrow.hit || arrow.dir !== pressed) return;
     const top = parseInt(arrow.el.style.top);
     const dist = Math.abs(top - hitY);
     if (dist < bestDist) { bestDist = dist; bestArrow = arrow; }
@@ -4231,7 +4474,7 @@ document.addEventListener('keydown', function(e) {
   if (bestArrow && bestDist < hitRange * 2) {
     bestArrow.hit = true;
     let points = 0;
-    if (bestDist < 15) {
+    if (bestDist < 18) {
       points = 100;
       danceState.perfect++;
       bestArrow.el.classList.add('hit-perfect');
@@ -4337,32 +4580,304 @@ const LESSON_DEFS = [
   { name: 'Bilingual Master', keys: 'spanish', desc: 'English + Spanish mix!' },
 ];
 
+// === LESSON WORD BANKS (real words replace gibberish) ===
+const LESSON_WORD_BANK = {
+  homeRow: ['dad', 'ask', 'fall', 'salad', 'flask', 'glad', 'half', 'lads', 'alas', 'shall',
+            'dash', 'flash', 'glass', 'lass', 'flag', 'jail', 'skill', 'all', 'fall', 'hall',
+            'sad', 'fad', 'had', 'lad', 'add', 'ash', 'jag', 'gal', 'lag', 'sag'],
+  homeTop: ['quite', 'tower', 'youth', 'worthy', 'equip', 'quest', 'quote', 'squid', 'fruit',
+            'quiet', 'power', 'write', 'after', 'other', 'their', 'water', 'field', 'house',
+            'right', 'world', 'story', 'stuff', 'first', 'there', 'these', 'where', 'super',
+            'party', 'typed', 'proud', 'throw', 'straw', 'tough'],
+  allRows: ['zombie', 'boxing', 'complex', 'phantom', 'wizard', 'frozen', 'jungle', 'planet',
+            'galaxy', 'rocket', 'knight', 'dragon', 'castle', 'pirate', 'legend', 'shadow',
+            'mystic', 'blazer', 'vortex', 'matrix', 'cyber', 'pixel', 'quest', 'ninja',
+            'viking', 'puzzle', 'combat', 'travel', 'explore', 'beyond'],
+  spanish: ['hola amigo', 'buenas noches', 'me gusta', 'por favor', 'gracias', 'como estas',
+            'muy bien', 'el gato', 'la casa', 'buenos dias', 'de nada', 'te quiero',
+            'lo siento', 'vamos', 'bonito', 'estrella', 'corazon', 'familia']
+};
+
+// === GEN ALPHA FLAVOR MESSAGES ===
+const GEN_ALPHA_FLAVOR = {
+  correct: [
+    "no cap, that was bussin typing fr fr 💀",
+    "you just typed that with RIZZ 🗿",
+    "bro is sigma at typing 🐺",
+    "W typing, absolute GOAT 🐐",
+    "main character energy rn 💅",
+    "that was lowkey fire 🔥",
+    "slay bestie SLAY 💅✨",
+    "rent free in the typing hall of fame 🏆",
+    "you ate that and left no crumbs 🍽️",
+    "giving very much keyboard warrior 💪",
+    "this goes hard ngl 🗣️",
+    "ayo that accuracy is bussin 📈",
+    "sheeeesh ice cold typing 🥶",
+    "built different fr 🧬",
+    "on god that was clean ✨",
+    "understood the assignment 📝",
+    "bro woke up and chose greatness 👑",
+    "typing so fast it's not even real 💨",
+    "certified sigma moment 🐺",
+    "no cap you're him 🫡",
+  ],
+  wrong: [
+    "this typing is NOT skibidi 😤",
+    "ohio level typing detected 💀",
+    "NPC behavior rn 🤖",
+    "bro got caught in 4k typing wrong 📸",
+    "the typing has no rizz rn 😬",
+    "down bad at typing fr 📉",
+    "that was NOT bussin 🚫",
+  ],
+  boss: [
+    "boss is literally shaking rn 😱",
+    "W damage, keep going! 🗡️",
+    "you're cooking the boss fr 🍳",
+    "boss is malding 🤬",
+    "one more hit and it's over 💀",
+  ]
+};
+
+// === XP LEVEL TITLES ===
+const XP_LEVEL_TITLES = [
+  { level: 1, title: "NPC", emoji: "🤖" },
+  { level: 2, title: "Side Character", emoji: "👤" },
+  { level: 3, title: "Main Character", emoji: "⭐" },
+  { level: 4, title: "Sigma", emoji: "🐺" },
+  { level: 5, title: "Rizz Lord", emoji: "👑" },
+  { level: 6, title: "Skibidi King", emoji: "🚽" },
+  { level: 7, title: "Ohio Final Boss", emoji: "🌽" },
+  { level: 8, title: "The GOAT", emoji: "🐐" },
+];
+
+// === KID RIDDLES (type-the-answer) ===
+const KID_RIDDLES = [
+  { q: "I have hands but can't clap. What am I?", answer: "clock", hint: "tick tock tick tock..." },
+  { q: "What has a head and a tail but no body?", answer: "coin", hint: "you flip me to decide things" },
+  { q: "I'm tall when I'm young and short when I'm old. What am I?", answer: "candle", hint: "I melt as I burn" },
+  { q: "What can you catch but not throw?", answer: "cold", hint: "achoo! 🤧" },
+  { q: "What has legs but doesn't walk?", answer: "table", hint: "you eat dinner on me" },
+  { q: "What has ears but cannot hear?", answer: "corn", hint: "🌽 only in Ohio..." },
+  { q: "What gets wetter the more it dries?", answer: "towel", hint: "you use me after a shower" },
+  { q: "What can travel around the world while staying in a corner?", answer: "stamp", hint: "I go on letters and envelopes" },
+  { q: "What has a neck but no head?", answer: "bottle", hint: "you drink from me" },
+  { q: "What building has the most stories?", answer: "library", hint: "full of books!" },
+  { q: "What goes up but never comes down?", answer: "age", hint: "everyone gets more of this" },
+  { q: "What can fill a room but takes no space?", answer: "light", hint: "flip the switch!" },
+  { q: "What word is spelled incorrectly in every dictionary?", answer: "incorrectly", hint: "think about it literally..." },
+  { q: "What has 88 keys but can't open a door?", answer: "piano", hint: "🎹 makes beautiful music" },
+  { q: "What has words but never speaks?", answer: "book", hint: "📚 you read me" },
+];
+
+// === LESSON BOSSES ===
+const LESSON_BOSSES = [
+  { name: "The Skibidi King 🚽", emoji: "🚽", hp: 5, taunt: "You can't flush me!",
+    taunts: ["*toilet noises intensify*", "skibidi dop dop yes yes", "you have no plunger for THIS", "the toilet throne is MINE"],
+    words: ['skibidi', 'toilet', 'flush', 'plunge', 'drain', 'splash', 'porcelain', 'handle'] },
+  { name: "Ohio Final Boss 🌽", emoji: "🌽", hp: 7, taunt: "Only in Ohio...",
+    taunts: ["only in Ohio would someone try to fight me", "the cornfields give me power", "you can't escape Ohio", "Ohio consumes all"],
+    words: ['ohio', 'corn', 'field', 'escape', 'midwest', 'bizarre', 'buckeye', 'highway', 'strange'] },
+  { name: "The Sigma Wolf 🐺", emoji: "🐺", hp: 10, taunt: "I grind while you sleep",
+    taunts: ["while you typed that I did 100 pushups", "sigma rule 1: never stop grinding", "my aura is too powerful", "I don't need typing skills I have mindset"],
+    words: ['sigma', 'grind', 'alpha', 'wolf', 'mindset', 'hustle', 'focus', 'energy', 'warrior', 'beast'] },
+  { name: "Cringe Lord 💀", emoji: "💀", hp: 12, taunt: "Your typing has no rizz",
+    taunts: ["cringe detected", "imagine typing slow in 2024", "even my grandma types faster", "you have zero aura"],
+    words: ['cringe', 'yikes', 'bruh', 'ratio', 'delete', 'blocked', 'muted', 'logged', 'cancelled', 'exposed', 'caught', 'clapped'] },
+];
+
+// === ACHIEVEMENT DEFINITIONS ===
+const ACHIEVEMENT_DEFS = {
+  first_blood: { icon: '🩸', name: 'First Blood', desc: 'Complete your first lesson' },
+  no_cap_perfect: { icon: '🎯', name: 'No Cap Perfect', desc: '100% accuracy on a lesson' },
+  boss_slayer: { icon: '⚔️', name: 'Boss Slayer', desc: 'Defeat your first boss' },
+  sigma_grinder: { icon: '🐺', name: 'Sigma Grinder', desc: 'Reach level 5' },
+  bilingual_king: { icon: '🇪🇸', name: 'Bilingual King', desc: 'Complete a Spanish lesson' },
+  riddle_master: { icon: '🧩', name: 'Riddle Master', desc: 'Solve 3 riddles correctly' },
+  speed_demon: { icon: '💨', name: 'Speed Demon', desc: 'Type a word in under 2 seconds' },
+  streak_king: { icon: '🔥', name: 'Streak King', desc: 'Get a 10-word streak in lessons' },
+};
+
+// === RANDOM EVENT DEFINITIONS ===
+const RANDOM_EVENTS = [
+  { type: 'jumpscare', text: "JUMPSCARE! 👻", color: 'var(--neon-purple)', effect: 'flash' },
+  { type: 'bonus', text: "BONUS ROUND! Triple XP! 🌟", color: 'var(--neon-yellow)', effect: 'tripleXp' },
+  { type: 'lag', text: "WiFi lagging... 📶", color: 'var(--neon-blue)', effect: 'slow' },
+  { type: 'reverse', text: "REVERSE MODE! 🔄", color: 'var(--neon-orange)', effect: 'reverse' },
+  { type: 'speed', text: "SPEED BOOST! 2x XP! ⚡", color: 'var(--neon-green)', effect: 'doubleXp' },
+];
+
+// === EXPANDED MYSTERY STORIES (10 stories with branching) ===
 const MYSTERY_STORIES = [
   {
-    text: "You stand at the entrance of a dark, ancient cave. Strange glowing symbols cover the walls. A faint breeze carries whispers from deep inside...",
-    prompt: "Type your choice:",
-    choices: [
-      { word: "ENTER", next: "You step inside. The symbols glow brighter as you pass, revealing a hidden passage to the LEFT and a staircase going DOWN." },
-      { word: "SEARCH", next: "You search around the entrance and find an old map scratched into the rock. It shows a treasure deep within!" },
-      { word: "LISTEN", next: "You listen carefully. The whispers seem to say 'follow the light...' A golden glow appears ahead." },
+    title: "The Skibidi Toilet Dungeon",
+    beats: [
+      { text: "You descend into a dungeon made entirely of cursed toilets. Water drips from the ceiling. A Skibidi head pops out of a nearby toilet and stares at you menacingly...",
+        prompt: "Type your choice:", choices: [
+          { word: "FLUSH", next: "You flush the nearest toilet. A secret passage opens in the wall! But you hear more Skibidi heads singing in the darkness..." },
+          { word: "DANCE", next: "You hit the Skibidi dance. The toilet heads are impressed! They start vibing with you and show you a hidden door." },
+          { word: "RUN", next: "You sprint down the corridor! Toilet lids slam open and shut behind you. You find a plunger — it might be useful..." },
+        ]},
+      { text: "You reach the heart of the dungeon. The Skibidi King sits on a golden toilet throne, surrounded by an army of toilet soldiers. He points at you and yells 'SKIBIDI DOP DOP YES YES!'",
+        prompt: "Final choice:", choices: [
+          { word: "PLUNGE", next: "You raise the legendary plunger and defeat the Skibidi King! The toilets all flush in celebration. You are the Dungeon Master! 🏆" },
+          { word: "NEGOTIATE", next: "You offer a peace treaty. The Skibidi King agrees — toilets and humans can coexist. You're a diplomat! 🕊️" },
+          { word: "VIBE", next: "You out-Skibidi the Skibidi King with the most fire dance moves ever seen. He bows before your rizz. 💃" },
+        ]},
     ]
   },
   {
-    text: "Deep in the enchanted forest, you find a crossroads. A wise owl watches from above. Three paths stretch before you: one covered in flowers, one shrouded in mist, and one lit by fireflies.",
-    prompt: "Which path? Type your choice:",
-    choices: [
-      { word: "FLOWERS", next: "The flower path leads to a garden where a friendly fairy offers you a magic key! 'This opens the treasure room,' she says." },
-      { word: "MIST", next: "Through the mist you find a sleeping dragon guarding a chest. Maybe you can sneak past..." },
-      { word: "FIREFLIES", next: "The fireflies guide you to a hidden waterfall. Behind it, a secret door with a golden lock!" },
+    title: "Ohio Final Boss",
+    beats: [
+      { text: "You wake up in a cornfield. A sign reads 'WELCOME TO OHIO - YOU CAN NEVER LEAVE.' The corn whispers your name. A farmer approaches with glowing red eyes...",
+        prompt: "What do you do?", choices: [
+          { word: "HIDE", next: "You duck into the corn rows. The stalks part to reveal... another Ohio. It's Ohio all the way down." },
+          { word: "FIGHT", next: "You challenge the farmer! He transforms into a giant corn monster. This is the Ohio Final Boss!" },
+          { word: "BEFRIEND", next: "You offer the farmer a handshake. He smiles and says 'Welcome, brother. Have some corn.' The corn is actually delicious." },
+        ]},
+      { text: "The Ohio Portal appears — your one chance to escape! But the corn monsters have surrounded you. Ohio doesn't want you to leave...",
+        prompt: "Escape plan:", choices: [
+          { word: "JUMP", next: "You leap through the portal! You land in... Florida. Somehow this is worse. But at least you escaped Ohio! 🌴" },
+          { word: "STAY", next: "You decide Ohio isn't so bad. They make you the mayor. You rule the corn with wisdom and grace. 🌽👑" },
+          { word: "YEET", next: "You YEET the corn boss into the portal! He lands in California. Ohio is free. You are the hero of Ohio! 🦸" },
+        ]},
     ]
   },
   {
-    text: "You've found the treasure room! But there are three chests: one gold, one silver, and one wooden. The inscription reads: 'Only one holds the real treasure. Choose wisely!'",
-    prompt: "Which chest? Type your choice:",
-    choices: [
-      { word: "GOLD", next: "The gold chest opens to reveal... a mirror! It shows your reflection and reads: 'The real treasure is knowledge!' You've leveled up!" },
-      { word: "SILVER", next: "The silver chest contains a glowing crystal that hums with energy. It grants you the power of fast typing!" },
-      { word: "WOODEN", next: "The simple wooden chest holds a beautiful journal full of stories from ancient explorers. Wisdom is the greatest treasure!" },
+    title: "Rizz Academy",
+    beats: [
+      { text: "Welcome to Rizz Academy, where they teach the ancient art of being cool. Your professor, Dr. Charisma, hands you a textbook titled 'Advanced Rizz Theory'...",
+        prompt: "First class:", choices: [
+          { word: "STUDY", next: "You study hard. Chapter 1: 'The Eyebrow Raise.' You practice in the mirror for hours. Your rizz level increases by 3!" },
+          { word: "SKIP", next: "You skip class to practice rizz in the real world. You try to impress the cafeteria lady. She gives you extra fries. Rizz confirmed!" },
+          { word: "TEACH", next: "You realize you already HAVE rizz. You take over the class. The students are amazed. Dr. Charisma nods approvingly." },
+        ]},
+      { text: "It's the final exam: a Rizz Battle against the legendary Cringe Lord! He has anti-rizz powers that make everything awkward. The whole school is watching...",
+        prompt: "Your move:", choices: [
+          { word: "COMPLIMENT", next: "You compliment the Cringe Lord so sincerely he starts crying tears of joy. His cringe shield breaks! You win with kindness! 💝" },
+          { word: "JOKE", next: "You tell the funniest joke ever told. Even the Cringe Lord laughs. His powers fade! You graduate as Rizz Valedictorian! 🎓" },
+          { word: "WALK", next: "You do the sigma walk. So cool, so confident. The Cringe Lord can't even look at you. Maximum rizz achieved! 🐺" },
+        ]},
+    ]
+  },
+  {
+    title: "The Sigma Grindset Trail",
+    beats: [
+      { text: "You're on the Sigma Trail — a wilderness where only grinders survive. Your supplies: a protein shake, a motivational poster, and a wolf plushie. The path splits three ways...",
+        prompt: "Which trail?", choices: [
+          { word: "MOUNTAIN", next: "You climb the Grind Mountain! Each step makes you stronger. At the top, you find a gym with free weights. Peak sigma." },
+          { word: "RIVER", next: "You follow the Hustle River. The water whispers motivational quotes. You catch a fish that says 'never stop grinding.' Wise fish." },
+          { word: "CAVE", next: "You enter the Mindset Cave. Ancient writings on the wall: 'Wake up at 4am. Cold showers. No excuses.' You feel powerful." },
+        ]},
+      { text: "You reach the Sigma Summit. A pack of wolves awaits. The Alpha Wolf challenges you to prove you're a true sigma. The wind howls. The moment of truth...",
+        prompt: "Prove yourself:", choices: [
+          { word: "HOWL", next: "You howl at the moon! The wolves howl back! You're accepted into the pack! You ARE the sigma wolf! 🐺🌕" },
+          { word: "MEDITATE", next: "You sit and meditate in silence. The wolves respect your inner peace. The Alpha bows. True sigma energy. 🧘" },
+          { word: "GRIND", next: "You do 100 pushups right there on the summit. The wolves are SHOOK. They crown you the Sigma King! 💪👑" },
+        ]},
+    ]
+  },
+  {
+    title: "Fortnite IRL",
+    beats: [
+      { text: "The battle bus drops you into a real-life Fortnite match! You land in Tilted Towers (it's actually a shopping mall). You find a shopping cart as your first weapon...",
+        prompt: "Where to loot?", choices: [
+          { word: "MALL", next: "You raid the food court! You find a legendary pizza slice that gives +100 health. Also some shield potions (they're just Gatorade)." },
+          { word: "ROOF", next: "You build to the roof using cardboard boxes! From up here you can see the whole map. Someone is default dancing in the parking lot." },
+          { word: "BASEMENT", next: "The basement has a supply drop! Inside: a Nerf gun and a cape. Not meta but dripped out." },
+        ]},
+      { text: "It's the final circle! Only you and one opponent remain. They're doing the default dance to assert dominance. The storm is closing in. This is it...",
+        prompt: "Final move:", choices: [
+          { word: "DANCE", next: "You hit them with the Orange Justice! They're so impressed they forfeit. VICTORY ROYALE! 🏆🕺" },
+          { word: "BUILD", next: "You build a massive fortress out of cereal boxes! They can't get in. You win by timeout! Biggest brain play ever! 🧠" },
+          { word: "BEFRIEND", next: "You drop your weapon and do the wave emote. They wave back. You both win! Friendship royale! 🤝" },
+        ]},
+    ]
+  },
+  {
+    title: "The Backrooms",
+    beats: [
+      { text: "You clip through the floor and end up in the Backrooms. Endless yellow rooms stretch in every direction. The fluorescent lights buzz. Something is watching you from behind the wallpaper...",
+        prompt: "Navigate:", choices: [
+          { word: "LEFT", next: "You go left. The rooms get darker. You find a vending machine that only sells warm almond water. It tastes like memories..." },
+          { word: "FORWARD", next: "Straight ahead! The hallways seem to shift. You find writing on the wall: 'TYPE FASTER TO ESCAPE.' Noted." },
+          { word: "BACK", next: "You try to go back but the room behind you is different now. A door appears that wasn't there before. The handle is warm..." },
+        ]},
+      { text: "You find a computer terminal in one of the rooms. The screen shows: 'TYPE THE EXIT CODE TO ESCAPE THE BACKROOMS.' The walls start closing in...",
+        prompt: "Type the code:", choices: [
+          { word: "ESCAPE", next: "The walls stop! A portal opens! You step through and you're back in your room. Was it real? Your socks are still wet from the carpet... 🏠" },
+          { word: "STAY", next: "You decide to explore more. You find Level Fun — it's actually a party! Cake, balloons, confetti! The Backrooms aren't so bad! 🎈" },
+          { word: "GLITCH", next: "You type GLITCH and clip through the wall! You end up in the coding dimension where everything is made of letters. You ARE the Backrooms now. 💻" },
+        ]},
+    ]
+  },
+  {
+    title: "Discord Mod's Lair",
+    beats: [
+      { text: "You enter the Discord Mod's Lair. Mountains of empty energy drink cans surround a gaming chair. The Mod has banned 10,000 users and shows no signs of stopping. His ban hammer glows with dark energy...",
+        prompt: "Your approach:", choices: [
+          { word: "APPEAL", next: "You write a formal ban appeal. The Mod reads it, adjusts his glasses, and says 'I'll think about it.' Progress!" },
+          { word: "MEME", next: "You send the perfect meme. The Mod laughs so hard he drops the ban hammer! Quick, grab it!" },
+          { word: "NITRO", next: "You offer Discord Nitro. The Mod's eyes light up. 'Perhaps we can negotiate...' he says, stroking his anime figurine." },
+        ]},
+      { text: "The Mod challenges you to a final duel: whoever types the fastest gets to be the server admin. The fate of 100,000 members hangs in the balance!",
+        prompt: "Battle strategy:", choices: [
+          { word: "TYPE", next: "Your fingers become a blur! You type so fast the chat can't keep up! The Mod is defeated! You are the new admin! Use your power wisely... 👑" },
+          { word: "HACK", next: "Just kidding, you don't hack — you type so well the server becomes a wholesome community. The Mod tears up with pride. 🥲" },
+          { word: "PEACE", next: "You propose making the server a democracy. Everyone votes. The Mod becomes head moderator (but nice this time). Peace in the server! 🕊️" },
+        ]},
+    ]
+  },
+  {
+    title: "The Roblox Obby of Doom",
+    beats: [
+      { text: "You load into the hardest Roblox obby ever created. Lava, spinning blades, and disappearing platforms as far as you can see. 999 players have tried. 0 have finished. Your Roblox avatar takes a deep breath...",
+        prompt: "First obstacle:", choices: [
+          { word: "JUMP", next: "You make a perfect jump over the lava pit! The crowd goes wild! 'EEEEE' someone types in chat. You're on stage 2!" },
+          { word: "SKIP", next: "You find a secret shortcut behind the start wall! It skips to stage 50! The speedrun community is SHOOK!" },
+          { word: "BUILD", next: "Wait, this isn't a building game— but somehow you place a block mid-air and walk across! Glitch or skill? Doesn't matter, you're ahead!" },
+        ]},
+      { text: "The final stage: a single invisible platform over an endless void. One wrong step and you restart from the beginning. The timer shows 999 hours of combined player attempts...",
+        prompt: "The final step:", choices: [
+          { word: "TRUST", next: "You trust the process and walk forward. The invisible platform holds! You beat the obby! Your name goes on the WALL OF LEGENDS! 🏆" },
+          { word: "STYLE", next: "You backflip across the final gap while doing an emote. The most stylish obby completion in Roblox history! 🤸✨" },
+          { word: "ROBUX", next: "You buy the skip for 999 Robux. Pay to win? No. Pay to WIN. Efficiency is key! 💰" },
+        ]},
+    ]
+  },
+  {
+    title: "TikTok Time Machine",
+    beats: [
+      { text: "A glitching phone transports you through TikTok history! You land in the era of Vine (the ancient ancestor). Logan Paul and King Bach walk past. The trends here are... vintage.",
+        prompt: "Time travel to:", choices: [
+          { word: "FUTURE", next: "You jump to 2030 TikTok! Everyone communicates through holographic dances. The most popular sound is a cat meowing in autotune. The future is weird." },
+          { word: "PAST", next: "You go further back — to MySpace! Tom is everyone's friend. The pages are covered in glitter GIFs. It's beautiful and terrible." },
+          { word: "FIX", next: "You try to fix the timeline by creating the perfect TikTok. 10 billion views. You accidentally become the most famous person in history." },
+        ]},
+      { text: "The timeline is fracturing! All the trends from every era are mixing together. People are doing the Griddy while planking on a hoverboard. Only you can restore order!",
+        prompt: "Save the timeline:", choices: [
+          { word: "DUET", next: "You duet every single trend simultaneously. The timeline can't handle this much content and resets itself. Timeline saved through pure content! 📱✨" },
+          { word: "DELETE", next: "You delete the glitch and everything returns to normal. You're awarded the Golden Algorithm for your service. 🏅" },
+          { word: "TREND", next: "You create a NEW trend so powerful it unifies all timelines. Everyone does the same dance across all of history. Peace through TikTok! 🕺🌍" },
+        ]},
+    ]
+  },
+  {
+    title: "The Last WiFi Signal",
+    beats: [
+      { text: "Your phone is at 1% and the WiFi just died. You're in a world without internet. People are... talking to each other? With their MOUTHS? Horrifying. You must find the Last WiFi Signal before your battery dies!",
+        prompt: "Search where?", choices: [
+          { word: "CAFE", next: "The coffee shop has WiFi but the password is 50 characters long and it's written in Comic Sans. You start typing..." },
+          { word: "LIBRARY", next: "The library has ancient computers with dial-up internet. It makes that noise. SKREEEEE BONG BONG BONG. But it works!" },
+          { word: "ROOF", next: "You climb to the roof! One bar of signal! You hold your phone up like Simba from The Lion King. The signal strengthens!" },
+        ]},
+      { text: "You found it — the Last WiFi Router, glowing with legendary power! But the Router Guardian demands a typing challenge before granting access. 'Prove your fingers are worthy of this bandwidth!'",
+        prompt: "Accept the challenge:", choices: [
+          { word: "ACCEPT", next: "You type faster than ever before! The Router Guardian is amazed! Full WiFi restored! 5G! No more buffering! The world is saved! 📶✨" },
+          { word: "HOTSPOT", next: "You realize you had mobile hotspot the whole time. The Router Guardian facepalms. Sometimes the answer was in your pocket all along. 📱😅" },
+          { word: "SHARE", next: "You offer to share the WiFi with everyone. The Router Guardian smiles. 'THIS is what the internet was made for.' Free WiFi for all! 🌐💝" },
+        ]},
     ]
   },
 ];
@@ -4385,28 +4900,162 @@ function saveLessonProgress(player, lesson) {
 function generateLessonPrompts(lessonNum) {
   const def = LESSON_DEFS[Math.min(lessonNum - 1, LESSON_DEFS.length - 1)];
   if (def.keys === 'spanish') {
-    // Spanish lessons use vocab
-    const words = shuffle(getAllVocab()).slice(0, 12);
-    return words.map(w => w.es);
+    return shuffle(LESSON_WORD_BANK.spanish).slice(0, 10);
   }
-  const chars = def.keys.replace(/\s/g, '');
-  const prompts = [];
-  for (let i = 0; i < 12; i++) {
-    let word = '';
-    const len = 3 + Math.floor(Math.random() * 4);
-    for (let j = 0; j < len; j++) {
-      word += chars[Math.floor(Math.random() * chars.length)];
+  // Pick from appropriate word bank based on which rows are active
+  const hasTop = def.keys.includes('q') || def.keys.includes('w');
+  const hasBottom = def.keys.includes('z') || def.keys.includes('x');
+  let bank;
+  if (hasBottom) bank = LESSON_WORD_BANK.allRows;
+  else if (hasTop) bank = LESSON_WORD_BANK.homeTop;
+  else bank = LESSON_WORD_BANK.homeRow;
+  return shuffle(bank).slice(0, 10);
+}
+
+// === XP/LEVEL PERSISTENCE FOR LESSONS ===
+function getLessonXpData(player) {
+  try {
+    return JSON.parse(localStorage.getItem(`typingFiesta_xp_${player}`) || '{"xp":0,"level":1,"totalXp":0}');
+  } catch { return { xp: 0, level: 1, totalXp: 0 }; }
+}
+
+function saveLessonXpData(player, data) {
+  localStorage.setItem(`typingFiesta_xp_${player}`, JSON.stringify(data));
+}
+
+function getLessonAchievements(player) {
+  try {
+    return JSON.parse(localStorage.getItem(`typingFiesta_achievements_${player}`) || '[]');
+  } catch { return []; }
+}
+
+function saveLessonAchievement(player, achievementId) {
+  const achievements = getLessonAchievements(player);
+  if (!achievements.includes(achievementId)) {
+    achievements.push(achievementId);
+    localStorage.setItem(`typingFiesta_achievements_${player}`, JSON.stringify(achievements));
+    return true; // newly unlocked
+  }
+  return false;
+}
+
+function addLessonXp(amount) {
+  if (!lessonState) return;
+  const xpData = getLessonXpData(lessonState.player);
+  xpData.xp += amount;
+  xpData.totalXp += amount;
+  const xpNeeded = 100 + (xpData.level - 1) * 50;
+  while (xpData.xp >= xpNeeded) {
+    xpData.xp -= xpNeeded;
+    xpData.level++;
+    const title = XP_LEVEL_TITLES.find(t => t.level === xpData.level);
+    if (title) {
+      showLevelUp(xpData.level);
     }
-    prompts.push(word);
   }
-  return prompts;
+  saveLessonXpData(lessonState.player, xpData);
+  // Update XP bars if visible
+  const pct = Math.min(100, (xpData.xp / (100 + (xpData.level - 1) * 50)) * 100);
+  const xpBar = document.getElementById('xp-bar');
+  if (xpBar) xpBar.style.width = pct + '%';
+  const lessonXpBar = document.getElementById('lesson-xp-bar');
+  if (lessonXpBar) lessonXpBar.style.width = pct + '%';
+}
+
+// === GEN ALPHA FLAVOR POPUP ===
+function showFlavorPopup(type) {
+  const messages = type === 'wrong' ? GEN_ALPHA_FLAVOR.wrong :
+                   type === 'boss' ? GEN_ALPHA_FLAVOR.boss :
+                   GEN_ALPHA_FLAVOR.correct;
+  const msg = messages[Math.floor(Math.random() * messages.length)];
+  const popup = document.getElementById('flavor-popup');
+  popup.textContent = msg;
+  const colors = ['var(--neon-pink)', 'var(--neon-yellow)', 'var(--neon-green)', 'var(--neon-blue)', 'var(--neon-orange)', 'var(--neon-purple)'];
+  popup.style.color = colors[Math.floor(Math.random() * colors.length)];
+  popup.classList.remove('show');
+  void popup.offsetWidth;
+  popup.classList.add('show');
+  setTimeout(() => popup.classList.remove('show'), 1500);
+}
+
+// === ACHIEVEMENT TOAST ===
+function showAchievementToast(achievementId) {
+  const def = ACHIEVEMENT_DEFS[achievementId];
+  if (!def) return;
+  const toast = document.createElement('div');
+  toast.className = 'achievement-toast';
+  toast.innerHTML = `
+    <div class="toast-icon">${def.icon}</div>
+    <div>
+      <div class="toast-text">${def.name}</div>
+      <div class="toast-sub">${def.desc}</div>
+    </div>
+  `;
+  document.body.appendChild(toast);
+  sfxLevelUp();
+  setTimeout(() => toast.remove(), 3200);
+}
+
+function tryUnlockAchievement(player, achievementId) {
+  if (saveLessonAchievement(player, achievementId)) {
+    showAchievementToast(achievementId);
+  }
+}
+
+// === RANDOM EVENT SYSTEM ===
+let activeRandomEvent = null;
+
+function tryRandomEvent() {
+  if (Math.random() > 0.05) return; // 5% chance
+  if (activeRandomEvent) return;
+  const event = RANDOM_EVENTS[Math.floor(Math.random() * RANDOM_EVENTS.length)];
+  activeRandomEvent = event;
+
+  // Show event overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'random-event-overlay';
+  overlay.innerHTML = `<div class="random-event-text" style="color:${event.color}">${event.text}</div>`;
+  document.body.appendChild(overlay);
+
+  if (event.effect === 'flash') {
+    // Brief screen flash for jumpscare
+    document.body.style.filter = 'brightness(3)';
+    setTimeout(() => { document.body.style.filter = ''; }, 100);
+  }
+
+  setTimeout(() => {
+    overlay.remove();
+    // Clear event after a few seconds
+    setTimeout(() => { activeRandomEvent = null; }, 3000);
+  }, 1500);
+}
+
+function isBossLesson(lessonNum) {
+  return lessonNum > 1 && lessonNum % 3 === 0;
 }
 
 function startLessonGame() {
   const progress = getLessonProgress(currentPlayer);
   const lessonNum = progress.currentLesson;
+
+  // Check if this should be a boss battle
+  if (isBossLesson(lessonNum)) {
+    startBossBattle(lessonNum);
+    return;
+  }
+
+  // Check if we should show a riddle between lessons (every 2 lessons after lesson 1)
+  if (lessonNum > 1 && lessonNum % 2 === 0 && !lessonState?._skipRiddle) {
+    startKidRiddle(lessonNum);
+    return;
+  }
+
   const def = LESSON_DEFS[Math.min(lessonNum - 1, LESSON_DEFS.length - 1)];
   const prompts = generateLessonPrompts(lessonNum);
+
+  // Load XP data
+  const xpData = getLessonXpData(currentPlayer);
+  const levelTitle = XP_LEVEL_TITLES.find(t => t.level === xpData.level) || XP_LEVEL_TITLES[0];
 
   lessonState = {
     player: currentPlayer, lessonNum, prompts,
@@ -4414,14 +5063,21 @@ function startLessonGame() {
     totalCorrect: 0, totalTyped: 0,
     charResults: {},
     completed: false,
+    streak: 0, wordStartTime: null,
+    _skipRiddle: false,
   };
 
   document.getElementById('lesson-title').textContent = `Lesson ${lessonNum}: ${def.name}`;
-  document.getElementById('lesson-badge').textContent = def.desc;
+  document.getElementById('lesson-badge').textContent = `${levelTitle.emoji} ${levelTitle.title} — ${def.desc}`;
   document.getElementById('lesson-progress-fill').style.width =
     ((lessonNum - 1) / LESSON_DEFS.length * 100) + '%';
   document.getElementById('lesson-accuracy').textContent = '100%';
   document.getElementById('lesson-progress-text').textContent = `0/${prompts.length}`;
+
+  // Update XP bar
+  const xpNeeded = 100 + (xpData.level - 1) * 50;
+  const xpBar = document.getElementById('xp-bar');
+  if (xpBar) xpBar.style.width = Math.min(100, (xpData.xp / xpNeeded) * 100) + '%';
 
   showScreen('screen-lesson');
   ensureAudio();
@@ -4475,19 +5131,64 @@ document.getElementById('lesson-hidden-input').addEventListener('input', functio
   const expected = text[lessonState.charIndex];
   if (expected === undefined) return;
 
+  if (!lessonState.wordStartTime) lessonState.wordStartTime = Date.now();
+
   lessonState.totalTyped++;
   if (typed === expected) {
     lessonState.charResults[lessonState.charIndex] = true;
     lessonState.totalCorrect++;
+    lessonState.streak = (lessonState.streak || 0) + 1;
     sfxCorrect();
+
+    // XP for correct character
+    addLessonXp(2);
+
+    // Random event check (5% per character)
+    if (lessonState.streak > 3) tryRandomEvent();
+
+    // Active random event bonuses
+    if (activeRandomEvent) {
+      if (activeRandomEvent.effect === 'tripleXp') addLessonXp(4); // extra on top
+      if (activeRandomEvent.effect === 'doubleXp') addLessonXp(2); // extra on top
+    }
+
+    // Streak achievement
+    if (lessonState.streak >= 10) {
+      tryUnlockAchievement(lessonState.player, 'streak_king');
+    }
   } else {
     lessonState.charResults[lessonState.charIndex] = false;
+    lessonState.streak = 0;
     sfxWrong();
+    // Show Gen Alpha wrong flavor occasionally
+    if (Math.random() < 0.3) showFlavorPopup('wrong');
   }
   lessonState.charIndex++;
 
   if (lessonState.charIndex >= text.length) {
+    // Word completed!
+    const wordTime = lessonState.wordStartTime ? (Date.now() - lessonState.wordStartTime) / 1000 : 99;
+    lessonState.wordStartTime = null;
+
+    // XP for completing a word
+    addLessonXp(10);
+
+    // Speed demon achievement
+    if (wordTime < 2) tryUnlockAchievement(lessonState.player, 'speed_demon');
+
+    // Show Gen Alpha flavor on word complete
+    if (Math.random() < 0.4) showFlavorPopup('correct');
+
+    // Perfect accuracy bonus for this word
+    const wordCorrect = Object.values(lessonState.charResults).filter(v => v).length;
+    const wordTotal = Object.keys(lessonState.charResults).length;
+    if (wordCorrect === wordTotal && wordTotal > 2) {
+      addLessonXp(25);
+      showPerfect();
+    }
+
     lessonState.currentIndex++;
+    lessonState.charResults = {};
     document.getElementById('lesson-progress-text').textContent =
       `${lessonState.currentIndex}/${lessonState.prompts.length}`;
     loadLessonPrompt();
@@ -4523,9 +5224,23 @@ function endLesson() {
   const acc = lessonState.totalTyped > 0
     ? Math.round(lessonState.totalCorrect / lessonState.totalTyped * 100) : 0;
 
+  // Achievements
+  tryUnlockAchievement(lessonState.player, 'first_blood');
+  if (acc >= 100) tryUnlockAchievement(lessonState.player, 'no_cap_perfect');
+  if (lessonState.lessonNum >= 10) tryUnlockAchievement(lessonState.player, 'bilingual_king');
+
+  // XP bonus for completing lesson
+  addLessonXp(acc >= 90 ? 50 : 20);
+
+  // Check level for sigma_grinder achievement
+  const xpData = getLessonXpData(lessonState.player);
+  if (xpData.level >= 5) tryUnlockAchievement(lessonState.player, 'sigma_grinder');
+
   if (acc >= 90) {
     saveLessonProgress(lessonState.player, lessonState.lessonNum + 1);
     sfxLevelUp();
+    // Show Gen Alpha celebration
+    showFlavorPopup('correct');
     // Show mystery narrative between lessons
     showMysteryNarrative();
   } else {
@@ -4578,14 +5293,18 @@ let mysteryState = null;
 
 function showMysteryNarrative() {
   const story = MYSTERY_STORIES[Math.floor(Math.random() * MYSTERY_STORIES.length)];
+  const beatIdx = 0; // Start at first beat
+  const beat = story.beats[beatIdx];
   mysteryState = {
     story, choiceMade: false, typed: '',
-    choices: story.choices,
+    choices: beat.choices,
+    currentBeat: beatIdx,
   };
 
-  document.getElementById('mystery-text').textContent = story.text;
+  document.getElementById('mystery-title').textContent = '🔮 ' + story.title;
+  document.getElementById('mystery-text').textContent = beat.text;
   document.getElementById('mystery-choice-prompt').textContent =
-    story.prompt + ' ' + story.choices.map(c => c.word).join(' / ');
+    beat.prompt + ' ' + beat.choices.map(c => c.word).join(' / ');
   document.getElementById('mystery-typing-area').textContent = '';
   document.getElementById('mystery-continue-btn').style.display = 'none';
 
@@ -4610,8 +5329,31 @@ document.getElementById('mystery-hidden-input').addEventListener('input', functi
       document.getElementById('mystery-text').textContent = choice.next;
       document.getElementById('mystery-choice-prompt').textContent = '';
       document.getElementById('mystery-typing-area').textContent = '✨ ' + choice.word + ' ✨';
-      document.getElementById('mystery-continue-btn').style.display = 'inline-block';
-      launchConfetti();
+      addLessonXp(15); // XP for making a story choice
+      showFlavorPopup('correct');
+
+      // Check if there are more beats in this story
+      const nextBeat = mysteryState.currentBeat + 1;
+      if (nextBeat < mysteryState.story.beats.length) {
+        // Auto-advance to next beat after delay
+        setTimeout(() => {
+          const beat = mysteryState.story.beats[nextBeat];
+          mysteryState.currentBeat = nextBeat;
+          mysteryState.choiceMade = false;
+          mysteryState.typed = '';
+          mysteryState.choices = beat.choices;
+          document.getElementById('mystery-text').textContent = beat.text;
+          document.getElementById('mystery-choice-prompt').textContent =
+            beat.prompt + ' ' + beat.choices.map(c => c.word).join(' / ');
+          document.getElementById('mystery-typing-area').textContent = '';
+          document.getElementById('mystery-hidden-input').value = '';
+          document.getElementById('mystery-hidden-input').focus();
+        }, 2500);
+      } else {
+        // Story complete!
+        document.getElementById('mystery-continue-btn').style.display = 'inline-block';
+        launchConfetti();
+      }
       break;
     }
   }
@@ -4635,8 +5377,261 @@ document.getElementById('mystery-hidden-input').addEventListener('keydown', func
 function continueFromMystery() {
   sfxClick();
   clearMysteryParticles();
+  // Set flag to skip riddle so we go straight to lesson
+  if (lessonState) lessonState._skipRiddle = true;
   startLessonGame(); // Start next lesson
 }
+
+// ============================================================
+//  BOSS BATTLE SYSTEM
+// ============================================================
+let bossState = null;
+
+function startBossBattle(lessonNum) {
+  const bossIdx = Math.min(Math.floor((lessonNum - 3) / 3), LESSON_BOSSES.length - 1);
+  const boss = LESSON_BOSSES[Math.max(0, bossIdx)];
+
+  bossState = {
+    boss, hp: boss.hp, maxHp: boss.hp,
+    words: shuffle([...boss.words]),
+    currentIndex: 0, charIndex: 0, charResults: {},
+    damage: 0, wordsTyped: 0,
+    active: true, lessonNum,
+    player: currentPlayer,
+  };
+
+  document.getElementById('boss-name').textContent = boss.name;
+  document.getElementById('boss-emoji').textContent = boss.emoji;
+  document.getElementById('boss-emoji').classList.remove('hit', 'defeated');
+  document.getElementById('boss-hp-text').textContent = `HP: ${boss.hp} / ${boss.hp}`;
+  document.getElementById('boss-hp-fill').style.width = '100%';
+  document.getElementById('boss-taunt').textContent = boss.taunt;
+  document.getElementById('boss-damage').textContent = '0';
+  document.getElementById('boss-words').textContent = '0';
+
+  showScreen('screen-boss');
+  ensureAudio();
+  startMusic();
+  loadBossPrompt();
+
+  const input = document.getElementById('boss-hidden-input');
+  input.value = '';
+  input.focus();
+  document.getElementById('boss-typing-area').onclick = () => input.focus();
+}
+
+function loadBossPrompt() {
+  if (!bossState || !bossState.active) return;
+  if (bossState.currentIndex >= bossState.words.length) {
+    bossState.words = shuffle([...bossState.boss.words]);
+    bossState.currentIndex = 0;
+  }
+  bossState.charIndex = 0;
+  bossState.charResults = {};
+  renderBossChars();
+
+  // Show random taunt
+  if (Math.random() < 0.4) {
+    const taunts = bossState.boss.taunts;
+    document.getElementById('boss-taunt').textContent = taunts[Math.floor(Math.random() * taunts.length)];
+  }
+}
+
+function renderBossChars() {
+  const text = bossState.words[bossState.currentIndex];
+  const container = document.getElementById('boss-prompt-text');
+  container.innerHTML = '';
+  for (let i = 0; i < text.length; i++) {
+    const span = document.createElement('span');
+    span.className = 'char';
+    if (text[i] === ' ') span.classList.add('space-char');
+    span.textContent = text[i] === ' ' ? '\u00A0' : text[i];
+    if (i < bossState.charIndex) {
+      span.classList.add(bossState.charResults[i] ? 'correct' : 'incorrect');
+    } else if (i === bossState.charIndex) {
+      span.classList.add('current');
+    } else {
+      span.classList.add('upcoming');
+    }
+    container.appendChild(span);
+  }
+}
+
+function updateBossHp() {
+  const pct = Math.max(0, bossState.hp / bossState.maxHp * 100);
+  document.getElementById('boss-hp-fill').style.width = pct + '%';
+  document.getElementById('boss-hp-text').textContent =
+    `HP: ${Math.max(0, bossState.hp)} / ${bossState.maxHp}`;
+}
+
+function hitBossEmoji() {
+  const el = document.getElementById('boss-emoji');
+  el.classList.remove('hit');
+  void el.offsetWidth;
+  el.classList.add('hit');
+  setTimeout(() => el.classList.remove('hit'), 300);
+}
+
+document.getElementById('boss-hidden-input').addEventListener('input', function(e) {
+  if (!bossState || !bossState.active) return;
+  const typed = e.data;
+  if (!typed) return;
+  const text = bossState.words[bossState.currentIndex];
+  const expected = text[bossState.charIndex];
+  if (expected === undefined) return;
+
+  if (typed === expected) {
+    bossState.charResults[bossState.charIndex] = true;
+    sfxCorrect();
+  } else {
+    bossState.charResults[bossState.charIndex] = false;
+    sfxWrong();
+    // Mistakes heal the boss by 1 HP
+    bossState.hp = Math.min(bossState.maxHp, bossState.hp + 1);
+    updateBossHp();
+    showFlavorPopup('wrong');
+  }
+  bossState.charIndex++;
+
+  if (bossState.charIndex >= text.length) {
+    // Word completed = 1 damage to boss
+    bossState.hp--;
+    bossState.damage++;
+    bossState.wordsTyped++;
+    document.getElementById('boss-damage').textContent = bossState.damage;
+    document.getElementById('boss-words').textContent = bossState.wordsTyped;
+    hitBossEmoji();
+    updateBossHp();
+    showFlavorPopup('boss');
+    addLessonXp(10);
+
+    if (bossState.hp <= 0) {
+      // Boss defeated!
+      bossState.active = false;
+      document.getElementById('boss-emoji').classList.add('defeated');
+      sfxLevelUp();
+      launchConfetti();
+      addLessonXp(50);
+      tryUnlockAchievement(bossState.player, 'boss_slayer');
+
+      // Advance lesson and show victory
+      saveLessonProgress(bossState.player, bossState.lessonNum + 1);
+      setTimeout(() => {
+        stopMusic();
+        showFlavorPopup('correct');
+        // Go to mystery narrative as reward
+        showMysteryNarrative();
+      }, 1500);
+    } else {
+      bossState.currentIndex++;
+      loadBossPrompt();
+    }
+  } else {
+    renderBossChars();
+  }
+  this.value = '';
+});
+
+document.getElementById('boss-hidden-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    if (bossState && bossState.charIndex > 0) {
+      bossState.charIndex--;
+      delete bossState.charResults[bossState.charIndex];
+      renderBossChars();
+    }
+  }
+  if (e.key === 'Escape') {
+    stopMusic();
+    showScreen('screen-title');
+  }
+});
+
+// ============================================================
+//  KID RIDDLE SYSTEM (type-the-answer between lessons)
+// ============================================================
+let kidRiddleState = null;
+
+function startKidRiddle(lessonNum) {
+  const riddle = KID_RIDDLES[Math.floor(Math.random() * KID_RIDDLES.length)];
+  kidRiddleState = {
+    riddle, typed: '', solved: false,
+    attempts: 0, lessonNum,
+    player: currentPlayer,
+  };
+
+  document.getElementById('kid-riddle-question').textContent = riddle.q;
+  document.getElementById('kid-riddle-typed').textContent = '';
+  document.getElementById('kid-riddle-hint').textContent = '';
+  document.getElementById('kid-riddle-feedback').textContent = '';
+  document.getElementById('kid-riddle-feedback').style.color = '';
+
+  showScreen('screen-kid-riddle');
+  const input = document.getElementById('kid-riddle-input');
+  input.value = '';
+  input.focus();
+}
+
+document.getElementById('kid-riddle-input').addEventListener('input', function(e) {
+  if (!kidRiddleState || kidRiddleState.solved) return;
+  const typed = e.data;
+  if (!typed) return;
+  kidRiddleState.typed += typed.toLowerCase();
+  document.getElementById('kid-riddle-typed').textContent = kidRiddleState.typed;
+
+  // Check if answer matches
+  if (kidRiddleState.typed === kidRiddleState.riddle.answer) {
+    kidRiddleState.solved = true;
+    sfxPerfect();
+    addLessonXp(30);
+    showFlavorPopup('correct');
+    document.getElementById('kid-riddle-feedback').textContent = "Correct! no cap, big brain energy 🧠";
+    document.getElementById('kid-riddle-feedback').style.color = 'var(--neon-green)';
+    kidRiddleState.attempts++;
+
+    // Track riddle solves for achievement
+    const solves = parseInt(localStorage.getItem(`typingFiesta_riddleSolves_${kidRiddleState.player}`) || '0') + 1;
+    localStorage.setItem(`typingFiesta_riddleSolves_${kidRiddleState.player}`, solves.toString());
+    if (solves >= 3) tryUnlockAchievement(kidRiddleState.player, 'riddle_master');
+
+    // Auto-continue to lesson after delay
+    setTimeout(() => {
+      // Set skip flag so startLessonGame doesn't re-trigger riddle
+      lessonState = lessonState || {};
+      lessonState._skipRiddle = true;
+      startLessonGame();
+    }, 2000);
+  }
+  this.value = '';
+});
+
+document.getElementById('kid-riddle-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    if (kidRiddleState && !kidRiddleState.solved) {
+      kidRiddleState.typed = kidRiddleState.typed.slice(0, -1);
+      document.getElementById('kid-riddle-typed').textContent = kidRiddleState.typed;
+    }
+  }
+  if (e.key === 'Enter' && kidRiddleState && !kidRiddleState.solved) {
+    // Wrong answer - give hint and reset
+    kidRiddleState.attempts++;
+    if (kidRiddleState.attempts >= 2) {
+      document.getElementById('kid-riddle-hint').textContent = 'Hint: ' + kidRiddleState.riddle.hint;
+    }
+    document.getElementById('kid-riddle-feedback').textContent = "Not quite! Try again 💀";
+    document.getElementById('kid-riddle-feedback').style.color = 'var(--neon-orange)';
+    kidRiddleState.typed = '';
+    document.getElementById('kid-riddle-typed').textContent = '';
+    sfxWrong();
+  }
+  if (e.key === 'Escape') {
+    // Skip riddle and go to lesson
+    lessonState = lessonState || {};
+    lessonState._skipRiddle = true;
+    startLessonGame();
+  }
+});
 
 // ============================================================
 //  DAD - BRIEFCASE COLLECTOR / NEWS GAME 💼
