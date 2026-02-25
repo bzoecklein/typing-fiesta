@@ -993,6 +993,26 @@
       <div class="name">Angelina</div>
       <div class="player-tag">Player 2</div>
     </div>
+    <div class="player-card" data-player="Alice" onclick="selectPlayer(this)">
+      <div class="avatar">🎀</div>
+      <div class="name">Alice</div>
+      <div class="player-tag">K-Pop Hunter</div>
+    </div>
+    <div class="player-card" data-player="Copper" onclick="selectPlayer(this)">
+      <div class="avatar">🐕</div>
+      <div class="name">Copper</div>
+      <div class="player-tag">Good Boy</div>
+    </div>
+    <div class="player-card" data-player="Dad" onclick="selectPlayer(this)">
+      <div class="avatar">💼</div>
+      <div class="name">Dad</div>
+      <div class="player-tag">Managing Partner</div>
+    </div>
+    <div class="player-card" data-player="Mom" onclick="selectPlayer(this)">
+      <div class="avatar">💃</div>
+      <div class="name">Mom</div>
+      <div class="player-tag">Reggaeton Queen</div>
+    </div>
   </div>
 
   <button class="btn btn-play" id="btn-start" disabled onclick="showModeSelect()">
@@ -1394,6 +1414,264 @@ const STORIES = [
   }
 ];
 
+// ============================================================
+//  SPECIAL PROFILES
+// ============================================================
+
+// --- COPPER THE DOG (INT: 0 / Fallout garbled mode) ---
+const COPPER_PROMPTS = [
+  // Garbled dog thoughts
+  { text: "bork bork bork bork bork", hint: "woof woof woof", category: "bork language" },
+  { text: "wof wooof wroof bork yap", hint: "*tail wagging intensifies*", category: "advanced bork" },
+  { text: "bnoe bnoe i smel a bnoe", hint: "BONE!! B O N E !!", category: "bnoe detection" },
+  { text: "skirrel skirrel skirrel run", hint: "SQUIRREL!!! MUST. CHASE.", category: "threat assessment" },
+  { text: "hooman giv treet pls pls pls", hint: "I deserve a treat right now", category: "negotiations" },
+  { text: "cat cat cat cat bark bark", hint: "INTRUDER ALERT", category: "security patrol" },
+  { text: "zzzz bork zzz bork zzzzzz", hint: "*dreaming of chasing rabbits*", category: "nap time" },
+  { text: "wlak wlak go outsied pls", hint: "WALK?? DID YOU SAY WALK??", category: "w-a-l-k" },
+  { text: "fech bal bal bal thro bal", hint: "throw the ball THROW IT", category: "ball operations" },
+  { text: "snif snif snif butt snif", hint: "just saying hello", category: "social skills" },
+  { text: "dig dig dig hol in yrad", hint: "making improvements to the yard", category: "landscaping" },
+  { text: "chimken chimken i smel chimken", hint: "IS THAT CHICKEN??", category: "kitchen recon" },
+  { text: "mud mud rol in mud hehe", hint: "bath time? never heard of it", category: "spa day" },
+  { text: "mai hooman iz best hooman", hint: "*stares lovingly*", category: "feelings" },
+  { text: "bely rub bely rub now pls", hint: "this is not a request", category: "demands" },
+  { text: "car rid car rid hed out windo", hint: "EARS FLAPPING IN THE WIND", category: "transportation" },
+  { text: "posmin iz here bark bark bark", hint: "RED ALERT!! MAILMAN!!", category: "home defense" },
+  { text: "i eet shoo i eet ur shoo", hint: "it was delicious thank you", category: "fine dining" },
+  { text: "thunderr scray hid undr bed", hint: "the sky is angry at me", category: "weather report" },
+  { text: "sit sit i sit giv treet now", hint: "I did the thing. Pay up.", category: "contract law" },
+  { text: "vakoom iz scaree monstr help", hint: "THE LOUD FLOOR MONSTER", category: "existential dread" },
+  { text: "leesh leesh outsied go go go", hint: "OUTSIDE OUTSIDE OUTSIDE", category: "expedition prep" },
+  { text: "i luv u i luv u i luv u", hint: "*entire body wagging*", category: "pure love" },
+  { text: "goldun doodl iz best doodl", hint: "this is simply a fact", category: "science" },
+  { text: "copr iz gud boi vry gud boi", hint: "the goodest boy actually", category: "self assessment" },
+];
+
+const COPPER_COMBOS = [
+  { min: 3, text: "BORK! 🐕", color: "var(--neon-orange)" },
+  { min: 6, text: "GOOD BOY!! 🦴", color: "var(--neon-yellow)" },
+  { min: 10, text: "ZOOMIES!!! 💨", color: "var(--neon-green)" },
+  { min: 15, text: "TREAT TIME! 🍖", color: "var(--neon-blue)" },
+  { min: 20, text: "BEST BOI!!! 🐕‍🦺", color: "var(--neon-purple)" },
+  { min: 30, text: "LEGENDARY GOOD BOY! 👑🐕", color: "var(--neon-pink)" },
+];
+
+const COPPER_MASCOTS = {
+  idle: '🐕', typing: '🐶', streak: '🐕‍🦺', bigStreak: '🦮', fire: '🐾',
+  wrong: '🐕', sad: '🐕', perfect: '🦴', complete: '🐶', thinking: '🐕'
+};
+
+// --- DAD (Brice - Managing Attorney) ---
+const DAD_PROMPTS = [
+  { text: "billable hours billable hours billable hours", hint: "the grind never stops", category: "attorney life" },
+  { text: "per my last email as previously discussed", hint: "I ALREADY TOLD YOU THIS", category: "passive aggressive" },
+  { text: "the retainer has been depleted please remit", hint: "pay up buttercup", category: "collections" },
+  { text: "objection your honor that is hearsay", hint: "classic courtroom move", category: "litigation" },
+  { text: "please see the attached invoice for services", hint: "ka-ching", category: "revenue" },
+  { text: "the dow jones is up three hundred points", hint: "portfolio goes brrr", category: "markets" },
+  { text: "pursuant to florida statute section seven four two", hint: "lawyering intensifies", category: "statutes" },
+  { text: "have the kids finished their kumon packets yet", hint: "education is important", category: "parenting" },
+  { text: "the kumon worksheets are on the kitchen table", hint: "no screen time until done", category: "kumon life" },
+  { text: "compound interest is the eighth wonder of the world", hint: "- Albert Einstein (maybe)", category: "finance wisdom" },
+  { text: "i need to review this contract by end of day", hint: "another day another doc", category: "deadlines" },
+  { text: "the briefcase has the depositions in it", hint: "important briefcase stuff", category: "briefcase matters" },
+  { text: "did you file the motion for summary judgment", hint: "paperwork never ends", category: "litigation" },
+  { text: "breaking news the fed raised interest rates again", hint: "economy things", category: "news" },
+  { text: "lets circle back on this in our next meeting", hint: "corporate speak activated", category: "buzzwords" },
+  { text: "the stock portfolio is looking diversified", hint: "don't put eggs in one basket", category: "investments" },
+  { text: "please complete kumon levels a through f by friday", hint: "dad means business", category: "kumon assignments" },
+  { text: "this deposition transcript is two hundred pages", hint: "reading is fundamental", category: "discovery" },
+  { text: "i need a new briefcase this one is wearing out", hint: "executive accessory crisis", category: "fashion" },
+  { text: "the quarterly earnings report exceeded projections", hint: "stonks go up", category: "business news" },
+  { text: "motion to compel discovery is hereby granted", hint: "legal victory", category: "courtroom wins" },
+  { text: "time is money and money is billable hours", hint: "the attorney equation", category: "philosophy" },
+  { text: "kids practice your typing then do your kumon", hint: "dad's daily orders", category: "household mgmt" },
+  { text: "the market correction is a buying opportunity", hint: "buy the dip", category: "investment advice" },
+  { text: "please hold all my calls i am in a deposition", hint: "do not disturb", category: "busy busy" },
+];
+
+const DAD_COMBOS = [
+  { min: 3, text: "BILLABLE! 💰", color: "var(--neon-green)" },
+  { min: 6, text: "SUSTAINED! ⚖️", color: "var(--neon-yellow)" },
+  { min: 10, text: "BRIEFCASE MODE! 💼", color: "var(--neon-blue)" },
+  { min: 15, text: "PARTNER TRACK! 📈", color: "var(--neon-purple)" },
+  { min: 20, text: "MANAGING PARTNER! 👔", color: "var(--neon-orange)" },
+  { min: 30, text: "OBJECTION OVERRULED! ⚖️👑", color: "var(--neon-pink)" },
+];
+
+const DAD_MASCOTS = {
+  idle: '👔', typing: '⌨️', streak: '💼', bigStreak: '📈', fire: '💰',
+  wrong: '📉', sad: '😤', perfect: '⚖️', complete: '🏆', thinking: '🤔'
+};
+
+// --- MOM (Michelle - Reggaeton Queen) ---
+const MOM_PROMPTS = [
+  // Reggaeton / Latin pop lyrics and phrases
+  { text: "dale dale dale no te detengas", hint: "go go go don't stop - Pitbull vibes", category: "reggaeton" },
+  { text: "gasolina dame mas gasolina", hint: "Daddy Yankee classic!", category: "reggaeton legend" },
+  { text: "despacito quiero respirar tu cuello despacito", hint: "Luis Fonsi - Despacito", category: "global hit" },
+  { text: "yo perreo sola yo perreo sola", hint: "Bad Bunny - Yo Perreo Sola", category: "bad bunny" },
+  { text: "vivir mi vida la la la la", hint: "Marc Anthony - Vivir Mi Vida", category: "salsa pop" },
+  { text: "suavemente besame que yo quiero sentir tus labios", hint: "Elvis Crespo - Suavemente", category: "classic" },
+  { text: "danza kuduro danza kuduro", hint: "Don Omar - throw it back!", category: "dance floor" },
+  { text: "la bicicleta me lleva a tu casa", hint: "Shakira & Carlos Vives", category: "shakira" },
+  { text: "oye mi canto no te vayas de mi lado", hint: "listen to my song", category: "reggaeton" },
+  { text: "ella baila sola cuando suena la cancion", hint: "she dances alone when the song plays", category: "dance" },
+  { text: "taki taki rumba suena el drum en la calle", hint: "DJ Snake - Taki Taki", category: "taki taki" },
+  { text: "a ella le gusta la gasolina dame mas gasolina", hint: "DALE!!", category: "daddy yankee" },
+  { text: "bonita bonita como las flores en mayo", hint: "pretty pretty like flowers in May", category: "romantic" },
+  { text: "bailando yo la vi bailando ella me miro bailando", hint: "Enrique Iglesias - Bailando", category: "bailando" },
+  { text: "la vida es un carnaval hay que vivir cantando", hint: "Celia Cruz - Life is a carnival!", category: "celia cruz" },
+  { text: "azucar azucar azucar", hint: "AZUCAR!! - The Queen Celia Cruz", category: "iconic" },
+  { text: "me porto bonito bonito pa ti", hint: "Bad Bunny & Chencho Corleone", category: "bad bunny" },
+  { text: "shakira shakira las caderas no mienten", hint: "hips don't lie!", category: "shakira" },
+  { text: "waka waka eh eh tsamina mina", hint: "Shakira - World Cup anthem!", category: "shakira" },
+  { text: "dime donde estas corazon escondido", hint: "tell me where you are hidden heart", category: "romantic" },
+  { text: "calma calma vamos a la playa pa curarte el alma", hint: "Pedro Capo - Calma", category: "island vibes" },
+  { text: "la cintura la cintura todo el mundo a bailar", hint: "Alvaro Soler - La Cintura", category: "euro latin" },
+  { text: "mi gente todo el mundo singing mi musica", hint: "J Balvin - Mi Gente", category: "j balvin" },
+  { text: "felices los cuatro que nos quedemos juntos los cuatro", hint: "Maluma - Felices Los 4", category: "maluma" },
+  { text: "una vaina loca loca loca una vaina loca", hint: "something crazy crazy crazy!", category: "fiesta" },
+];
+
+const MOM_COMBOS = [
+  { min: 3, text: "DALE! 💃", color: "var(--neon-pink)" },
+  { min: 6, text: "AZUCAR! 🎶", color: "var(--neon-yellow)" },
+  { min: 10, text: "REGGAETON! 🔊", color: "var(--neon-orange)" },
+  { min: 15, text: "PERREO! 💃🔥", color: "var(--neon-purple)" },
+  { min: 20, text: "QUEEN! 👑💃", color: "var(--neon-green)" },
+  { min: 30, text: "CELIA CRUZ MODE! 👑🎤", color: "var(--neon-pink)" },
+];
+
+const MOM_MASCOTS = {
+  idle: '💃', typing: '🎤', streak: '🎶', bigStreak: '🔊', fire: '🎉',
+  wrong: '😅', sad: '😢', perfect: '👑', complete: '🥳', thinking: '🤔'
+};
+
+// --- ALICE (age 4 - K-Pop Demon Hunters / easy mode) ---
+const ALICE_PROMPTS = [
+  // Very easy - single letters and tiny words, demon hunter + K-pop theme
+  { text: "a b c", hint: "you got this Alice!", category: "letters" },
+  { text: "d e f", hint: "keep going!", category: "letters" },
+  { text: "g h i", hint: "so cool!", category: "letters" },
+  { text: "j k l", hint: "amazing!", category: "letters" },
+  { text: "m n o", hint: "wow!", category: "letters" },
+  { text: "p q r", hint: "you're a star!", category: "letters" },
+  { text: "s t u", hint: "demon hunter in training!", category: "letters" },
+  { text: "v w x", hint: "almost there!", category: "letters" },
+  { text: "y z", hint: "you know ALL the letters!", category: "letters" },
+  { text: "go go go", hint: "K-pop dance time!", category: "k-pop moves" },
+  { text: "kick punch", hint: "demon hunter attack!", category: "demon hunter" },
+  { text: "run fast", hint: "chase the demon!", category: "demon hunter" },
+  { text: "cat dog", hint: "animal friends!", category: "easy words" },
+  { text: "big bad", hint: "the big bad demon!", category: "demon hunter" },
+  { text: "pop pop", hint: "K-pop! Pop pop!", category: "k-pop" },
+  { text: "sing song", hint: "la la la la!", category: "k-pop" },
+  { text: "hi bye", hint: "hello goodbye!", category: "easy words" },
+  { text: "red sun", hint: "the red sun rises - battle time!", category: "demon hunter" },
+  { text: "bad guy", hint: "the demon is the bad guy!", category: "demon hunter" },
+  { text: "hit hit", hint: "pow! pow!", category: "demon hunter" },
+  { text: "la la la", hint: "sing along!", category: "k-pop" },
+  { text: "one two", hint: "counting!", category: "numbers" },
+  { text: "up up up", hint: "jump up high!", category: "dance moves" },
+  { text: "no no no", hint: "no demons allowed!", category: "demon hunter" },
+  { text: "yay yay", hint: "we won!", category: "celebration" },
+  { text: "ice fire", hint: "demon hunter powers!", category: "demon hunter" },
+  { text: "star moon", hint: "K-pop stars shine bright!", category: "k-pop" },
+  { text: "love love", hint: "K-pop is love!", category: "k-pop" },
+  { text: "flip kick", hint: "cool demon hunter move!", category: "demon hunter" },
+  { text: "win win", hint: "Alice always wins!", category: "victory" },
+  { text: "bow wow", hint: "Copper says hi!", category: "friends" },
+  { text: "pink bow", hint: "Alice's favorite!", category: "style" },
+  { text: "dance now", hint: "K-pop dance break!", category: "k-pop dance" },
+  { text: "zap zap", hint: "demon hunter lightning!", category: "demon hunter" },
+  { text: "hug mom", hint: "hugs for Michelle!", category: "family" },
+  { text: "hug dad", hint: "hugs for Brice!", category: "family" },
+];
+
+const ALICE_COMBOS = [
+  { min: 3, text: "YAY! 🎀", color: "var(--neon-pink)" },
+  { min: 5, text: "K-POP! 💜", color: "var(--neon-purple)" },
+  { min: 8, text: "DEMON SLAYER! ⚔️", color: "var(--neon-orange)" },
+  { min: 12, text: "SUPERSTAR! 🌟", color: "var(--neon-yellow)" },
+  { min: 16, text: "IDOL HUNTER! 💜⚔️", color: "var(--neon-blue)" },
+  { min: 20, text: "LEGENDARY ALICE! 👑🎀", color: "var(--neon-pink)" },
+];
+
+const ALICE_MASCOTS = {
+  idle: '🎀', typing: '⭐', streak: '💜', bigStreak: '⚔️', fire: '🔥',
+  wrong: '🙈', sad: '🥺', perfect: '👑', complete: '🎉', thinking: '🤔'
+};
+
+// Helper: is this a special profile?
+function isSpecialProfile() {
+  return ['Copper', 'Dad', 'Mom', 'Alice'].includes(currentPlayer);
+}
+
+function getSpecialPrompts() {
+  switch(currentPlayer) {
+    case 'Copper': return shuffle(COPPER_PROMPTS).slice(0, 20);
+    case 'Dad': return shuffle(DAD_PROMPTS).slice(0, 20);
+    case 'Mom': return shuffle(MOM_PROMPTS).slice(0, 20);
+    case 'Alice': return shuffle(ALICE_PROMPTS).slice(0, 25);
+  }
+}
+
+function getSpecialCombos() {
+  switch(currentPlayer) {
+    case 'Copper': return COPPER_COMBOS;
+    case 'Dad': return DAD_COMBOS;
+    case 'Mom': return MOM_COMBOS;
+    case 'Alice': return ALICE_COMBOS;
+    default: return COMBO_MESSAGES;
+  }
+}
+
+function getSpecialMascots() {
+  switch(currentPlayer) {
+    case 'Copper': return COPPER_MASCOTS;
+    case 'Dad': return DAD_MASCOTS;
+    case 'Mom': return MOM_MASCOTS;
+    case 'Alice': return ALICE_MASCOTS;
+    default: return MASCOT_FACES;
+  }
+}
+
+function getResultTitlesForProfile() {
+  switch(currentPlayer) {
+    case 'Copper': return [
+      { minWpm: 0, title: "Good Try Copper!", sub: "Who's a good boy? You are!", emoji: "🐕", stars: 1 },
+      { minWpm: 5, title: "BORK BORK!", sub: "Copper typed with his paws!", emoji: "🐾", stars: 2 },
+      { minWpm: 10, title: "GOOD BOY!", sub: "Treats have been earned", emoji: "🦴", stars: 3 },
+      { minWpm: 15, title: "BEST BOI!", sub: "Copper is the smartest doodle", emoji: "🐕‍🦺", stars: 4 },
+      { minWpm: 20, title: "LEGENDARY DOODLE!", sub: "Golden doodle genius confirmed", emoji: "👑", stars: 5 },
+    ];
+    case 'Dad': return [
+      { minWpm: 0, title: "Billable Hours: Low", sub: "The partners are concerned", emoji: "📉", stars: 1 },
+      { minWpm: 15, title: "Associate Level", sub: "Keep grinding counselor", emoji: "📋", stars: 2 },
+      { minWpm: 25, title: "Senior Associate!", sub: "The briefcase is getting heavier", emoji: "💼", stars: 3 },
+      { minWpm: 35, title: "Partner Track!", sub: "The corner office is in sight", emoji: "📈", stars: 4 },
+      { minWpm: 45, title: "Managing Partner!", sub: "Zoecklein Law salutes you", emoji: "⚖️", stars: 5 },
+      { minWpm: 60, title: "SUPREME COURT!", sub: "All rise for the typing champion", emoji: "👑", stars: 5 },
+    ];
+    case 'Mom': return [
+      { minWpm: 0, title: "Calentando!", sub: "Warming up those dancing fingers", emoji: "🎵", stars: 1 },
+      { minWpm: 15, title: "DALE!", sub: "The rhythm is building!", emoji: "💃", stars: 2 },
+      { minWpm: 25, title: "REGGAETON FIRE!", sub: "Michelle is on fire!", emoji: "🔥", stars: 3 },
+      { minWpm: 35, title: "AZUCAR!", sub: "Celia Cruz would be proud!", emoji: "🎤", stars: 4 },
+      { minWpm: 45, title: "REINA DEL REGGAETON!", sub: "The queen of the dance floor!", emoji: "👑", stars: 5 },
+    ];
+    case 'Alice': return [
+      { minWpm: 0, title: "Great Job Alice!", sub: "You're learning so fast!", emoji: "🎀", stars: 2 },
+      { minWpm: 3, title: "K-Pop Star!", sub: "Alice is a superstar!", emoji: "⭐", stars: 3 },
+      { minWpm: 6, title: "Demon Hunter!", sub: "No demon is safe from Alice!", emoji: "⚔️", stars: 4 },
+      { minWpm: 10, title: "K-Pop Demon Queen!", sub: "The most powerful hunter ever!", emoji: "👑", stars: 5 },
+    ];
+    default: return RESULT_TITLES;
+  }
+}
+
 const COMBO_MESSAGES = [
   { min: 5, text: "Nice! 🔥", color: "var(--neon-orange)" },
   { min: 10, text: "Sheeeesh! 🥶", color: "var(--neon-blue)" },
@@ -1788,6 +2066,12 @@ function selectPlayer(el) {
 }
 
 function showModeSelect() {
+  // Special profiles skip mode select and go straight to their custom game
+  if (isSpecialProfile()) {
+    sfxClick();
+    startGame('special');
+    return;
+  }
   const greetings = [
     `What's good ${currentPlayer}? Pick your challenge!`,
     `${currentPlayer} is in the building! Choose wisely:`,
@@ -1836,7 +2120,8 @@ function showNextKey(char) {
 // Mascot
 function setMascot(face, extraClass) {
   const box = document.getElementById('mascot-box');
-  box.textContent = MASCOT_FACES[face] || MASCOT_FACES.idle;
+  const faces = getSpecialMascots();
+  box.textContent = faces[face] || faces.idle;
   box.className = 'mascot-box';
   if (extraClass) box.classList.add(extraClass);
 }
@@ -2024,6 +2309,16 @@ function generatePrompts(mode) {
         hintEnglish: line.en || line.hint, hintCategory: line.hint || 'Story mode', spanishWords: [],
       }));
     }
+    case 'special': {
+      const prompts = getSpecialPrompts();
+      return prompts.map(p => ({
+        text: p.text,
+        hintSpanish: p.text,
+        hintEnglish: p.hint || '',
+        hintCategory: p.category || currentPlayer + ' mode',
+        spanishWords: [],
+      }));
+    }
   }
 }
 
@@ -2206,9 +2501,10 @@ document.getElementById('hidden-input').addEventListener('input', function(e) {
       showFloatPoints(points, rect.left + Math.random() * rect.width * 0.8 + rect.width * 0.1, rect.top);
     }
 
-    for (let i = COMBO_MESSAGES.length - 1; i >= 0; i--) {
-      if (gameState.streak === COMBO_MESSAGES[i].min) {
-        showCombo(COMBO_MESSAGES[i].text, COMBO_MESSAGES[i].color);
+    const combos = getSpecialCombos();
+    for (let i = combos.length - 1; i >= 0; i--) {
+      if (gameState.streak === combos[i].min) {
+        showCombo(combos[i].text, combos[i].color);
         break;
       }
     }
@@ -2329,7 +2625,8 @@ function endGame() {
   const accuracy = gameState.totalTyped > 0 ? Math.round((gameState.totalCorrect / gameState.totalTyped) * 100) : 0;
 
   let resultInfo = RESULT_TITLES[0];
-  for (const r of RESULT_TITLES) {
+  const resultTitles = getResultTitlesForProfile();
+  for (const r of resultTitles) {
     if (wpm >= r.minWpm) resultInfo = r;
   }
 
