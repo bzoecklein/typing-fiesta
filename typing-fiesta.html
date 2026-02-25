@@ -1505,7 +1505,7 @@
     <div class="player-card" data-player="Dad" onclick="selectPlayer(this)">
       <div class="avatar">💼</div>
       <div class="name">Dad</div>
-      <div class="player-tag">The Boss</div>
+      <div class="player-tag">Dad</div>
     </div>
     <div class="player-card" data-player="Mom" onclick="selectPlayer(this)">
       <div class="avatar">🌹</div>
@@ -2616,36 +2616,105 @@ function sfxGameStart() {
 }
 
 // ============================================================
-//  BACKGROUND MUSIC - Procedural Synthwave/Chiptune
+//  BACKGROUND MUSIC ENGINE - Genre-Aware Beat Machine
 // ============================================================
 
-// Musical scales for procedural generation
-const SCALE_NOTES = {
-  // C major pentatonic frequencies across octaves
-  bass: [130.81, 146.83, 164.81, 196.00, 220.00, 261.63, 293.66],
-  melody: [523.25, 587.33, 659.25, 783.99, 880.00, 1046.50, 1174.66],
-  high: [1046.50, 1174.66, 1318.51, 1567.98, 1760.00],
-  chord: [
-    [261.63, 329.63, 392.00],  // C major
-    [220.00, 277.18, 329.63],  // A minor
-    [293.66, 369.99, 440.00],  // D minor
-    [349.23, 440.00, 523.25],  // F major
-    [392.00, 493.88, 587.33],  // G major
-    [261.63, 329.63, 392.00],  // C major
-  ],
+// Chord progressions per genre
+const MUSIC_GENRES = {
+  default: {
+    bpm: 115,
+    chords: [
+      [261.63, 329.63, 392.00],  // C major
+      [220.00, 277.18, 329.63],  // A minor
+      [349.23, 440.00, 523.25],  // F major
+      [392.00, 493.88, 587.33],  // G major
+    ],
+    scale: [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25],
+    style: 'synthwave',
+  },
+  reggaeton: {
+    bpm: 95,
+    chords: [
+      [220.00, 277.18, 329.63],  // Am
+      [349.23, 440.00, 523.25],  // F
+      [261.63, 329.63, 392.00],  // C
+      [392.00, 493.88, 587.33],  // G
+    ],
+    scale: [220.00, 261.63, 293.66, 329.63, 392.00, 440.00, 523.25],
+    style: 'reggaeton',
+  },
+  battle: {
+    bpm: 140,
+    chords: [
+      [220.00, 261.63, 329.63],  // Am
+      [196.00, 246.94, 293.66],  // Gm-ish
+      [233.08, 293.66, 349.23],  // Bb
+      [261.63, 329.63, 392.00],  // C
+    ],
+    scale: [220.00, 261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 523.25],
+    style: 'battle',
+  },
+  mystery: {
+    bpm: 90,
+    chords: [
+      [220.00, 261.63, 329.63],  // Am
+      [196.00, 233.08, 293.66],  // G
+      [174.61, 220.00, 261.63],  // Fm
+      [196.00, 246.94, 293.66],  // G
+    ],
+    scale: [220.00, 246.94, 261.63, 329.63, 349.23, 392.00, 440.00],
+    style: 'mystery',
+  },
+  business: {
+    bpm: 108,
+    chords: [
+      [261.63, 329.63, 392.00],  // C
+      [293.66, 369.99, 440.00],  // Dm
+      [220.00, 277.18, 329.63],  // Am
+      [392.00, 493.88, 587.33],  // G
+    ],
+    scale: [261.63, 329.63, 392.00, 440.00, 493.88, 523.25, 587.33, 659.25],
+    style: 'lofi',
+  },
+  copper: {
+    bpm: 120,
+    chords: [
+      [293.66, 369.99, 440.00],  // D
+      [329.63, 415.30, 493.88],  // E
+      [220.00, 277.18, 329.63],  // A
+      [220.00, 277.18, 329.63],  // A
+    ],
+    scale: [220.00, 246.94, 277.18, 329.63, 369.99, 440.00, 493.88],
+    style: 'funk',
+  },
 };
 
 let musicBeat = 0;
 let musicInterval = null;
 let currentPattern = 0;
-const BPM = 110;
-const BEAT_MS = 60000 / BPM / 4; // 16th note
+let currentGenre = MUSIC_GENRES.default;
+let BPM = 115;
+let BEAT_MS = 60000 / BPM / 4;
+
+function getGenreForPlayer() {
+  switch (currentPlayer) {
+    case 'Mom': return MUSIC_GENRES.reggaeton;
+    case 'Alice': return MUSIC_GENRES.battle;
+    case 'Bryson': case 'Angelina': return MUSIC_GENRES.mystery;
+    case 'Dad': return MUSIC_GENRES.business;
+    case 'Copper': return MUSIC_GENRES.copper;
+    default: return MUSIC_GENRES.default;
+  }
+}
 
 function startMusic() {
   ensureAudio();
   musicPlaying = true;
   musicBeat = 0;
   currentPattern = 0;
+  currentGenre = getGenreForPlayer();
+  BPM = currentGenre.bpm;
+  BEAT_MS = 60000 / BPM / 4;
 
   if (musicInterval) clearInterval(musicInterval);
   musicInterval = setInterval(musicTick, BEAT_MS);
@@ -2668,96 +2737,334 @@ function musicNote(freq, duration, type = 'sine', vol = 0.04) {
   o.type = type;
   o.frequency.value = freq;
   g.gain.setValueAtTime(vol, audioCtx.currentTime);
-  g.gain.setTargetAtTime(vol * 0.7, audioCtx.currentTime + duration * 0.3, duration * 0.2);
+  g.gain.setTargetAtTime(vol * 0.6, audioCtx.currentTime + duration * 0.2, duration * 0.15);
   g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
   o.connect(g); g.connect(musicGain);
   o.start(); o.stop(audioCtx.currentTime + duration);
 }
 
-function musicTick() {
-  if (!musicEnabled || !musicPlaying) { musicBeat++; return; }
+// Filtered bass with sub-oscillator
+function playBass(freq, duration, vol = 0.045) {
+  if (!musicEnabled) return;
+  // Sub oscillator
+  const sub = audioCtx.createOscillator();
+  sub.type = 'sine'; sub.frequency.value = freq;
+  const subG = audioCtx.createGain();
+  subG.gain.setValueAtTime(vol * 0.7, audioCtx.currentTime);
+  subG.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+  sub.connect(subG); subG.connect(musicGain);
+  sub.start(); sub.stop(audioCtx.currentTime + duration);
+  // Saw with filter
+  const saw = audioCtx.createOscillator();
+  saw.type = 'sawtooth'; saw.frequency.value = freq;
+  const flt = audioCtx.createBiquadFilter();
+  flt.type = 'lowpass'; flt.frequency.value = freq * 4; flt.Q.value = 2;
+  flt.frequency.setValueAtTime(freq * 6, audioCtx.currentTime);
+  flt.frequency.exponentialRampToValueAtTime(freq * 2, audioCtx.currentTime + duration * 0.5);
+  const sawG = audioCtx.createGain();
+  sawG.gain.setValueAtTime(vol * 0.5, audioCtx.currentTime);
+  sawG.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+  saw.connect(flt); flt.connect(sawG); sawG.connect(musicGain);
+  saw.start(); saw.stop(audioCtx.currentTime + duration);
+}
 
-  const bar = Math.floor(musicBeat / 16) % 8;
-  const beat = musicBeat % 16;
-  const chordIdx = Math.floor(bar / 1.5) % SCALE_NOTES.chord.length;
-  const chord = SCALE_NOTES.chord[chordIdx];
+// Punchy kick drum with click transient
+function playKick(vol = 0.1) {
+  if (!musicEnabled) return;
+  // Body
+  const o = audioCtx.createOscillator();
+  const g = audioCtx.createGain();
+  o.frequency.setValueAtTime(180, audioCtx.currentTime);
+  o.frequency.exponentialRampToValueAtTime(35, audioCtx.currentTime + 0.08);
+  g.gain.setValueAtTime(vol, audioCtx.currentTime);
+  g.gain.setValueAtTime(vol * 0.8, audioCtx.currentTime + 0.02);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+  o.connect(g); g.connect(musicGain);
+  o.start(); o.stop(audioCtx.currentTime + 0.2);
+  // Click transient
+  const cl = audioCtx.createOscillator();
+  cl.type = 'square'; cl.frequency.value = 3000;
+  const cg = audioCtx.createGain();
+  cg.gain.setValueAtTime(vol * 0.3, audioCtx.currentTime);
+  cg.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.01);
+  cl.connect(cg); cg.connect(musicGain);
+  cl.start(); cl.stop(audioCtx.currentTime + 0.02);
+}
 
-  // --- KICK DRUM (beat 0, 4, 8, 12) ---
-  if (beat % 4 === 0) {
-    const o = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    o.frequency.setValueAtTime(150, audioCtx.currentTime);
-    o.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.12);
-    g.gain.setValueAtTime(0.06, audioCtx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
-    o.connect(g); g.connect(musicGain);
-    o.start(); o.stop(audioCtx.currentTime + 0.15);
-  }
+// Snare with noise + tone
+function playSnare(vol = 0.06) {
+  if (!musicEnabled) return;
+  // Noise body
+  const bufLen = audioCtx.sampleRate * 0.12;
+  const buf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < bufLen; i++) d[i] = Math.random() * 2 - 1;
+  const src = audioCtx.createBufferSource(); src.buffer = buf;
+  const ng = audioCtx.createGain();
+  ng.gain.setValueAtTime(vol, audioCtx.currentTime);
+  ng.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.12);
+  const bp = audioCtx.createBiquadFilter();
+  bp.type = 'bandpass'; bp.frequency.value = 3000; bp.Q.value = 0.8;
+  src.connect(bp); bp.connect(ng); ng.connect(musicGain);
+  src.start(); src.stop(audioCtx.currentTime + 0.13);
+  // Tone body
+  const o = audioCtx.createOscillator();
+  o.type = 'triangle'; o.frequency.value = 200;
+  const og = audioCtx.createGain();
+  og.gain.setValueAtTime(vol * 0.6, audioCtx.currentTime);
+  og.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.06);
+  o.connect(og); og.connect(musicGain);
+  o.start(); o.stop(audioCtx.currentTime + 0.07);
+}
 
-  // --- HI-HAT (8th notes, quieter on off-beats) ---
-  if (beat % 2 === 0) {
-    const vol = beat % 4 === 0 ? 0.02 : 0.012;
-    const bufLen = audioCtx.sampleRate * 0.04;
+// Clap (layered noise bursts)
+function playClap(vol = 0.04) {
+  if (!musicEnabled) return;
+  for (let n = 0; n < 3; n++) {
+    const delay = n * 0.008;
+    const bufLen = audioCtx.sampleRate * 0.03;
     const buf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
     const d = buf.getChannelData(0);
     for (let i = 0; i < bufLen; i++) d[i] = Math.random() * 2 - 1;
-    const src = audioCtx.createBufferSource();
-    src.buffer = buf;
-    const gn = audioCtx.createGain();
-    gn.gain.setValueAtTime(vol, audioCtx.currentTime);
-    gn.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+    const src = audioCtx.createBufferSource(); src.buffer = buf;
+    const g = audioCtx.createGain();
+    g.gain.setValueAtTime(vol, audioCtx.currentTime + delay);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + 0.08);
     const hp = audioCtx.createBiquadFilter();
-    hp.type = 'highpass'; hp.frequency.value = 7000;
-    src.connect(hp); hp.connect(gn); gn.connect(musicGain);
-    src.start(); src.stop(audioCtx.currentTime + 0.05);
+    hp.type = 'highpass'; hp.frequency.value = 1200;
+    src.connect(hp); hp.connect(g); g.connect(musicGain);
+    src.start(audioCtx.currentTime + delay); src.stop(audioCtx.currentTime + delay + 0.1);
   }
+}
 
-  // --- BASS LINE (every 4 beats, follows chord root) ---
-  if (beat % 4 === 0) {
-    const bassNote = chord[0] / 2;
-    musicNote(bassNote, 0.3, 'sawtooth', 0.035);
-  }
-  // Syncopated bass hit
-  if (beat === 6 || beat === 14) {
-    const bassNote = chord[0] / 2 * 1.25;
-    musicNote(bassNote, 0.15, 'sawtooth', 0.025);
-  }
+// Hi-hat (closed and open)
+function playHiHat(open = false, vol = 0.025) {
+  if (!musicEnabled) return;
+  const dur = open ? 0.12 : 0.04;
+  const bufLen = audioCtx.sampleRate * dur;
+  const buf = audioCtx.createBuffer(1, bufLen, audioCtx.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < bufLen; i++) d[i] = Math.random() * 2 - 1;
+  const src = audioCtx.createBufferSource(); src.buffer = buf;
+  const g = audioCtx.createGain();
+  g.gain.setValueAtTime(vol, audioCtx.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+  const hp = audioCtx.createBiquadFilter();
+  hp.type = 'highpass'; hp.frequency.value = open ? 6000 : 8000;
+  const bp = audioCtx.createBiquadFilter();
+  bp.type = 'peaking'; bp.frequency.value = 10000; bp.gain.value = 4;
+  src.connect(hp); hp.connect(bp); bp.connect(g); g.connect(musicGain);
+  src.start(); src.stop(audioCtx.currentTime + dur + 0.01);
+}
 
-  // --- CHORDS (sustained pad, changes each bar) ---
-  if (beat === 0) {
-    chord.forEach(f => {
-      musicNote(f, BEAT_MS * 14 / 1000, 'triangle', 0.015);
+// Warm pad chord
+function playPad(freqs, duration, vol = 0.012) {
+  if (!musicEnabled) return;
+  freqs.forEach(f => {
+    ['sine', 'triangle'].forEach((type, i) => {
+      const o = audioCtx.createOscillator();
+      o.type = type;
+      o.frequency.value = f * (1 + (i * 0.003)); // slight detune for width
+      const g = audioCtx.createGain();
+      g.gain.setValueAtTime(0, audioCtx.currentTime);
+      g.gain.linearRampToValueAtTime(vol / (i + 1), audioCtx.currentTime + 0.1);
+      g.gain.setValueAtTime(vol / (i + 1), audioCtx.currentTime + duration - 0.2);
+      g.gain.linearRampToValueAtTime(0, audioCtx.currentTime + duration);
+      const flt = audioCtx.createBiquadFilter();
+      flt.type = 'lowpass'; flt.frequency.value = 2000;
+      o.connect(flt); flt.connect(g); g.connect(musicGain);
+      o.start(); o.stop(audioCtx.currentTime + duration);
     });
-  }
+  });
+}
 
-  // --- MELODY (procedural pattern based on bar/beat) ---
-  const melodyPatterns = [
-    [0, null, 4, null, 2, null, 3, null, 1, null, null, null, 4, null, 2, null],
-    [2, null, null, 3, null, 1, null, null, 4, null, 0, null, null, 2, null, null],
-    [null, null, 3, null, 4, null, null, 2, null, null, 1, null, 3, null, null, null],
-    [0, null, 2, null, null, null, 4, null, 3, null, null, 1, null, null, 2, null],
-    [4, null, null, null, 3, null, 2, null, null, null, 1, null, null, 0, null, null],
-    [null, 2, null, 3, null, null, 4, null, null, 2, null, null, 1, null, 0, null],
-    [3, null, 4, null, 2, null, null, null, 0, null, 1, null, null, 3, null, null],
-    [null, null, null, 4, null, 3, null, 2, null, 1, null, null, 0, null, null, null],
-  ];
-  const melPattern = melodyPatterns[bar % melodyPatterns.length];
-  const melIdx = melPattern[beat];
-  if (melIdx !== null && melIdx !== undefined) {
-    const noteFreq = SCALE_NOTES.melody[melIdx % SCALE_NOTES.melody.length];
-    musicNote(noteFreq, 0.18, 'square', 0.02);
-    // Add shimmer octave up occasionally
-    if (bar >= 4 && beat % 4 === 0) {
-      musicNote(noteFreq * 2, 0.12, 'sine', 0.008);
+function musicTick() {
+  if (!musicEnabled || !musicPlaying) { musicBeat++; return; }
+
+  const G = currentGenre;
+  const bar = Math.floor(musicBeat / 16) % 8;
+  const beat = musicBeat % 16;
+  const chordIdx = Math.floor(bar / 2) % G.chords.length;
+  const chord = G.chords[chordIdx];
+  const beatDur = BEAT_MS / 1000;
+  const barDur = beatDur * 16;
+
+  switch (G.style) {
+
+  // --- REGGAETON (Mom) - dembow rhythm ---
+  case 'reggaeton': {
+    // Dembow kick pattern: 1, &2, 3, &4
+    if (beat === 0 || beat === 3 || beat === 8 || beat === 11) playKick(0.1);
+    // Snare on 2 and 4
+    if (beat === 4 || beat === 12) playSnare(0.06);
+    // Clap layered with snare
+    if (beat === 4 || beat === 12) playClap(0.035);
+    // Hi-hats: 8th notes with open hat on &
+    if (beat % 2 === 0) playHiHat(false, 0.02);
+    if (beat % 4 === 2) playHiHat(true, 0.015);
+    // Reggaeton bass - bouncy
+    if (beat === 0 || beat === 8) playBass(chord[0] / 2, beatDur * 3, 0.05);
+    if (beat === 6 || beat === 14) playBass(chord[0] / 2 * 1.25, beatDur * 1.5, 0.035);
+    // Stab chord on off-beats
+    if (beat === 2 || beat === 10) {
+      chord.forEach(f => musicNote(f, 0.08, 'sawtooth', 0.015));
     }
+    // Pad
+    if (beat === 0) playPad(chord, barDur, 0.008);
+    // Melody lead
+    const regMel = [0,null,2,null,4,null,3,null,2,null,null,1,null,0,null,null];
+    if (regMel[beat] !== null && regMel[beat] !== undefined) {
+      const f = G.scale[regMel[beat] % G.scale.length] * 2;
+      musicNote(f, beatDur * 1.5, 'square', 0.015);
+    }
+    break;
   }
 
-  // --- ARPEGGIOS (bars 2-3 and 6-7 for variation) ---
-  if ((bar >= 2 && bar <= 3) || (bar >= 6 && bar <= 7)) {
+  // --- BATTLE (Alice) - intense, driving ---
+  case 'battle': {
+    // Four on the floor kick
+    if (beat % 4 === 0) playKick(0.12);
+    // Double kick hits
+    if (beat === 6 || beat === 14) playKick(0.08);
+    // Snare on 2 and 4
+    if (beat === 4 || beat === 12) { playSnare(0.07); playClap(0.04); }
+    // Hi-hats: every 16th for intensity
+    playHiHat(false, beat % 4 === 0 ? 0.025 : 0.015);
+    if (beat === 6 || beat === 14) playHiHat(true, 0.02);
+    // Aggressive bass
+    if (beat % 4 === 0) playBass(chord[0] / 2, beatDur * 3, 0.05);
+    if (beat === 2 || beat === 10) playBass(chord[0] / 2 * 1.5, beatDur, 0.035);
+    // Power chords (distorted feel)
+    if (beat === 0) {
+      chord.forEach(f => musicNote(f, barDur * 0.8, 'sawtooth', 0.012));
+    }
+    // Fast arpeggio
     if (beat % 2 === 0) {
-      const arpNote = chord[beat % chord.length] * 2;
-      musicNote(arpNote, 0.1, 'sine', 0.015);
+      const f = G.scale[(beat / 2) % G.scale.length] * 2;
+      musicNote(f, beatDur, 'square', 0.018);
     }
+    break;
+  }
+
+  // --- MYSTERY (Bryson/Angelina) - ambient, eerie ---
+  case 'mystery': {
+    // Sparse kick
+    if (beat === 0 || beat === 10) playKick(0.06);
+    // Rimshot snare
+    if (beat === 8) playSnare(0.035);
+    // Gentle hi-hat
+    if (beat % 4 === 0) playHiHat(false, 0.012);
+    if (beat === 12) playHiHat(true, 0.01);
+    // Deep ambient bass
+    if (beat === 0) playBass(chord[0] / 4, barDur * 0.9, 0.04);
+    // Lush pad
+    if (beat === 0) playPad(chord, barDur, 0.015);
+    // Mysterious melody - sparse and haunting
+    const mysMel = [0,null,null,null,null,null,3,null,null,null,2,null,null,null,null,null];
+    if (bar % 2 === 0 && mysMel[beat] !== null && mysMel[beat] !== undefined) {
+      const f = G.scale[mysMel[beat] % G.scale.length] * 2;
+      musicNote(f, beatDur * 4, 'sine', 0.02);
+      musicNote(f * 2.01, beatDur * 3, 'sine', 0.006); // shimmer
+    }
+    // Ambient texture on some bars
+    if (bar % 4 === 2 && beat === 0) {
+      for (let i = 0; i < 3; i++) {
+        const f = G.scale[Math.floor(Math.random() * G.scale.length)] * 4;
+        musicNote(f, barDur * 0.5, 'sine', 0.004);
+      }
+    }
+    break;
+  }
+
+  // --- LO-FI (Dad) - chill hop beats ---
+  case 'lofi': {
+    // Boom-bap kick
+    if (beat === 0 || beat === 5 || beat === 8) playKick(0.08);
+    // Snare
+    if (beat === 4 || beat === 12) playSnare(0.045);
+    // Swing hi-hats
+    if (beat % 2 === 0) playHiHat(false, 0.018);
+    if (beat === 6 || beat === 14) playHiHat(false, 0.012);
+    if (beat === 3 || beat === 11) playHiHat(true, 0.01);
+    // Warm bass
+    if (beat === 0) playBass(chord[0] / 2, beatDur * 6, 0.04);
+    if (beat === 10) playBass(chord[2] / 2, beatDur * 3, 0.03);
+    // Rhodes-style chord stabs
+    if (beat === 0 || beat === 6) {
+      chord.forEach(f => musicNote(f, beatDur * 3, 'sine', 0.012));
+      chord.forEach(f => musicNote(f * 2.005, beatDur * 3, 'sine', 0.004)); // detuned shimmer
+    }
+    // Pad
+    if (beat === 0) playPad(chord, barDur, 0.006);
+    // Chill melody
+    const lofiMel = [0,null,null,2,null,null,3,null,null,null,4,null,null,2,null,null];
+    if (lofiMel[beat] !== null && lofiMel[beat] !== undefined) {
+      const f = G.scale[lofiMel[beat] % G.scale.length] * 2;
+      musicNote(f, beatDur * 2, 'triangle', 0.015);
+    }
+    break;
+  }
+
+  // --- FUNK (Copper) - bouncy, playful ---
+  case 'funk': {
+    // Funky kick
+    if (beat === 0 || beat === 4 || beat === 10) playKick(0.09);
+    // Snare on 2 and 4
+    if (beat === 4 || beat === 12) playSnare(0.05);
+    // Clap accent
+    if (beat === 12) playClap(0.03);
+    // Shuffled hats
+    if (beat % 2 === 0) playHiHat(false, 0.02);
+    if (beat % 4 === 3) playHiHat(false, 0.012);
+    if (beat === 7 || beat === 15) playHiHat(true, 0.015);
+    // Slap bass
+    if (beat === 0) playBass(chord[0] / 2, beatDur * 2, 0.05);
+    if (beat === 6) playBass(chord[0] / 2 * 1.5, beatDur, 0.04);
+    if (beat === 10) playBass(chord[2] / 2, beatDur * 2, 0.04);
+    // Wah chord stabs
+    if (beat === 2 || beat === 8 || beat === 14) {
+      chord.forEach(f => musicNote(f, 0.1, 'sawtooth', 0.012));
+    }
+    // Bouncy melody
+    const funkMel = [0,null,2,null,4,3,null,null,2,null,0,null,null,4,null,null];
+    if (funkMel[beat] !== null && funkMel[beat] !== undefined) {
+      const f = G.scale[funkMel[beat] % G.scale.length] * 2;
+      musicNote(f, beatDur * 1.5, 'square', 0.016);
+    }
+    break;
+  }
+
+  // --- SYNTHWAVE (default) - retro driving ---
+  default: {
+    // Four on the floor
+    if (beat % 4 === 0) playKick(0.09);
+    // Snare on 2 and 4
+    if (beat === 4 || beat === 12) playSnare(0.055);
+    // Clap with snare
+    if (beat === 4 || beat === 12) playClap(0.03);
+    // Hi-hats: 8ths with open on &
+    if (beat % 2 === 0) playHiHat(false, 0.02);
+    if (beat % 4 === 2) playHiHat(true, 0.012);
+    // Synth bass
+    if (beat % 4 === 0) playBass(chord[0] / 2, beatDur * 3.5, 0.045);
+    if (beat === 6 || beat === 14) playBass(chord[0] / 2 * 1.25, beatDur * 1.5, 0.03);
+    // Pad
+    if (beat === 0) playPad(chord, barDur, 0.01);
+    // Arpeggio
+    if (beat % 2 === 0 && (bar >= 2 && bar <= 3 || bar >= 6)) {
+      const f = chord[beat % chord.length] * 2;
+      musicNote(f, beatDur * 1.5, 'sawtooth', 0.012);
+    }
+    // Lead melody
+    const swMel = [0,null,4,null,2,null,3,null,1,null,null,null,4,null,2,null];
+    const mi = swMel[beat];
+    if (mi !== null && mi !== undefined) {
+      const f = G.scale[mi % G.scale.length] * 2;
+      musicNote(f, beatDur * 2, 'square', 0.018);
+      if (bar >= 4 && beat % 4 === 0) musicNote(f * 2, beatDur, 'sine', 0.006);
+    }
+    break;
+  }
   }
 
   musicBeat++;
