@@ -1613,6 +1613,268 @@
     80% { opacity: 1; }
     100% { transform: translateY(-30px); opacity: 0; }
   }
+
+  /* ============================================================
+     PALABRA BLASTER (ZType Space Shooter Mode)
+     ============================================================ */
+  .ztype-screen { position: relative; padding: 0 !important; overflow: hidden; }
+  .ztype-arena {
+    position: relative; width: 100%; height: 100vh;
+    overflow: hidden; cursor: crosshair;
+    background: radial-gradient(ellipse at 50% 120%, rgba(0,30,80,0.4) 0%, transparent 60%);
+  }
+  .ztype-starfield {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+  }
+  .ztype-hud {
+    position: absolute; top: 0; left: 0; right: 0;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1rem 1.5rem; z-index: 10;
+    background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 100%);
+  }
+  .ztype-hud-left, .ztype-hud-right { display: flex; gap: 1.5rem; align-items: center; }
+  .ztype-hud-center { text-align: center; }
+  .ztype-stat {
+    text-align: center;
+  }
+  .ztype-stat-label {
+    font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px;
+    color: rgba(255,255,255,0.4); font-weight: 700;
+  }
+  .ztype-stat-val {
+    font-family: 'Fredoka One', cursive; font-size: 1.4rem;
+  }
+  .ztype-lives { display: flex; gap: 4px; }
+  .ztype-heart {
+    font-size: 1.5rem; transition: all 0.3s;
+    filter: drop-shadow(0 0 8px rgba(255,45,149,0.5));
+  }
+  .ztype-heart.lost {
+    opacity: 0.15; filter: none; transform: scale(0.7);
+  }
+  .ztype-wave-label {
+    font-family: 'Fredoka One', cursive; font-size: 1.1rem;
+    color: var(--neon-blue);
+    text-shadow: 0 0 15px rgba(0,212,255,0.4);
+  }
+  .ztype-combo-label {
+    font-family: 'Fredoka One', cursive; font-size: 1.3rem;
+    transition: all 0.3s;
+  }
+  .ztype-combo-1x { color: rgba(255,255,255,0.5); }
+  .ztype-combo-2x { color: var(--neon-yellow); text-shadow: 0 0 10px rgba(255,247,0,0.4); }
+  .ztype-combo-3x { color: var(--neon-orange); text-shadow: 0 0 15px rgba(255,110,0,0.5); font-size: 1.5rem; }
+  .ztype-combo-5x { color: var(--neon-pink); text-shadow: 0 0 20px rgba(255,45,149,0.6); font-size: 1.7rem; }
+  .ztype-combo-10x { color: var(--neon-purple); text-shadow: 0 0 25px rgba(176,38,255,0.7); font-size: 1.9rem;
+    animation: comboGodPulse 0.5s ease infinite alternate; }
+  @keyframes comboGodPulse {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.15); }
+  }
+
+  /* Word enemies */
+  .ztype-word {
+    position: absolute; z-index: 5;
+    font-family: 'Nunito', sans-serif; font-weight: 800;
+    font-size: 1.1rem; letter-spacing: 1px;
+    color: rgba(255,255,255,0.7);
+    text-shadow: 0 0 8px rgba(255,255,255,0.15);
+    white-space: nowrap;
+    transition: color 0.2s;
+    pointer-events: none;
+    user-select: none;
+  }
+  .ztype-word.locked {
+    color: #fff;
+    filter: drop-shadow(0 0 12px var(--neon-blue));
+  }
+  .ztype-word .typed-part {
+    color: var(--neon-green);
+    text-shadow: 0 0 10px rgba(57,255,20,0.6);
+  }
+  .ztype-word .remaining-part {
+    color: rgba(255,255,255,0.6);
+  }
+  .ztype-word.locked .remaining-part {
+    color: var(--neon-blue);
+    text-shadow: 0 0 8px rgba(0,212,255,0.3);
+  }
+  .ztype-word.boss-word {
+    font-size: 1.3rem;
+    color: var(--neon-pink);
+    text-shadow: 0 0 15px rgba(255,45,149,0.5);
+  }
+  .ztype-word.boss-word .remaining-part {
+    color: var(--neon-pink);
+  }
+
+  /* Laser beam */
+  .ztype-laser {
+    position: absolute; z-index: 3;
+    width: 2px; background: linear-gradient(to top, var(--neon-blue), transparent);
+    transform-origin: bottom center;
+    pointer-events: none;
+    opacity: 0.6;
+    box-shadow: 0 0 8px var(--neon-blue), 0 0 20px rgba(0,212,255,0.3);
+  }
+
+  /* Ship */
+  .ztype-ship {
+    position: absolute; bottom: 30px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.5rem; z-index: 6;
+    filter: drop-shadow(0 0 15px rgba(0,212,255,0.5));
+    transition: filter 0.3s;
+  }
+  .ztype-ship.firing {
+    filter: drop-shadow(0 0 25px rgba(57,255,20,0.8)) drop-shadow(0 0 40px rgba(0,212,255,0.5));
+  }
+
+  /* Explosion particles */
+  .ztype-explosion {
+    position: absolute; z-index: 8; pointer-events: none;
+  }
+  .ztype-explosion-particle {
+    position: absolute; border-radius: 50%;
+    animation: ztypeExplode 0.6s ease-out forwards;
+  }
+  @keyframes ztypeExplode {
+    0% { transform: translate(0, 0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+  }
+
+  /* Translation flash */
+  .ztype-translation {
+    position: absolute; z-index: 9; pointer-events: none;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.9rem; color: var(--neon-yellow);
+    text-shadow: 0 0 10px rgba(255,247,0,0.4);
+    animation: ztypeTranslation 1.5s ease-out forwards;
+    white-space: nowrap;
+  }
+  @keyframes ztypeTranslation {
+    0% { transform: translateY(0); opacity: 1; }
+    70% { opacity: 1; }
+    100% { transform: translateY(-40px); opacity: 0; }
+  }
+
+  /* Wave announcement */
+  .ztype-wave-announce {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    z-index: 20; pointer-events: none;
+    font-family: 'Fredoka One', cursive;
+    font-size: 3rem; color: var(--neon-blue);
+    text-shadow: 0 0 30px rgba(0,212,255,0.5);
+    animation: waveAnnounce 2s ease-out forwards;
+  }
+  .ztype-wave-announce.boss-announce {
+    color: var(--neon-pink);
+    text-shadow: 0 0 30px rgba(255,45,149,0.5);
+    font-size: 3.5rem;
+  }
+  @keyframes waveAnnounce {
+    0% { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+    15% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    30% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    75% { opacity: 1; }
+    100% { transform: translate(-50%, -50%) translateY(-30px); opacity: 0; }
+  }
+
+  /* Game over overlay */
+  .ztype-gameover {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 30; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.8);
+    animation: screenFadeIn 0.5s ease forwards;
+  }
+  .ztype-gameover-title {
+    font-family: 'Fredoka One', cursive; font-size: 4rem;
+    color: var(--neon-pink);
+    text-shadow: 0 0 40px rgba(255,45,149,0.5);
+    margin-bottom: 0.5rem;
+  }
+  .ztype-gameover-sub {
+    font-size: 1.1rem; color: rgba(255,255,255,0.5);
+    margin-bottom: 2rem;
+  }
+
+  /* Damage flash */
+  .ztype-damage-flash {
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 15; pointer-events: none;
+    background: radial-gradient(ellipse at 50% 100%, rgba(255,45,149,0.4) 0%, transparent 70%);
+    animation: damageFlash 0.5s ease-out forwards;
+  }
+  @keyframes damageFlash {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* Starfield */
+  .ztype-star {
+    position: absolute; background: #fff; border-radius: 50%;
+    animation: starDrift linear infinite;
+  }
+  @keyframes starDrift {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(100vh); }
+  }
+
+  /* ESC hint */
+  .ztype-esc-hint {
+    position: absolute; bottom: 10px; right: 15px; z-index: 10;
+    font-size: 0.7rem; color: rgba(255,255,255,0.2);
+  }
+
+  /* Input area for ZType */
+  .ztype-input-area {
+    position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+    z-index: 10;
+  }
+  .ztype-typed-display {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.2rem; color: var(--neon-green);
+    text-shadow: 0 0 10px rgba(57,255,20,0.4);
+    text-align: center; min-height: 1.5em;
+    letter-spacing: 2px;
+  }
+
+  /* ============================================================
+     HIGH SCORE BOARD
+     ============================================================ */
+  .high-scores {
+    margin-top: 1rem; padding: 1rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    max-width: 400px; width: 100%;
+  }
+  .high-scores h3 {
+    font-family: 'Fredoka One', cursive; font-size: 1rem;
+    color: var(--neon-yellow); margin-bottom: 0.8rem;
+    text-align: center;
+  }
+  .hs-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.4rem 0.6rem; border-radius: 8px;
+    font-size: 0.85rem;
+  }
+  .hs-row:nth-child(even) { background: rgba(255,255,255,0.02); }
+  .hs-row.hs-new {
+    background: rgba(57,255,20,0.08);
+    border: 1px solid rgba(57,255,20,0.2);
+    animation: hsGlow 1s ease infinite alternate;
+  }
+  @keyframes hsGlow {
+    0% { box-shadow: 0 0 5px rgba(57,255,20,0.1); }
+    100% { box-shadow: 0 0 15px rgba(57,255,20,0.2); }
+  }
+  .hs-rank { font-weight: 800; color: rgba(255,255,255,0.4); width: 2rem; }
+  .hs-name { flex: 1; font-weight: 700; }
+  .hs-score { font-family: 'Fredoka One', cursive; color: var(--neon-yellow); }
+  .hs-wpm { font-size: 0.75rem; color: rgba(255,255,255,0.3); margin-left: 0.5rem; }
 </style>
 </head>
 <body>
@@ -1729,6 +1991,12 @@
       <div class="mode-title">Story Mode</div>
       <div class="mode-desc">Type through a bilingual adventure! New story each time!</div>
       <div class="diff-badge medium">Adventure</div>
+    </div>
+    <div class="mode-card" onclick="startZType()" style="border-color:rgba(0,212,255,0.15);background:rgba(0,212,255,0.03);">
+      <div class="mode-icon">🚀</div>
+      <div class="mode-title">Palabra Blaster</div>
+      <div class="mode-desc">ZType-style space shooter! Destroy words before they reach you! Lives + combos + boss waves!</div>
+      <div class="diff-badge boss" style="background:rgba(0,212,255,0.12);color:var(--neon-blue);border-color:rgba(0,212,255,0.3);">NEW!</div>
     </div>
   </div>
 
@@ -2056,6 +2324,47 @@
 </div>
 
 <!-- ==================== RESULTS SCREEN ==================== -->
+<!-- ==================== PALABRA BLASTER (ZTYPE) ==================== -->
+<div id="screen-ztype" class="screen ztype-screen">
+  <div class="ztype-arena" id="ztype-arena">
+    <div class="ztype-starfield" id="ztype-starfield"></div>
+    <div class="ztype-hud">
+      <div class="ztype-hud-left">
+        <div class="ztype-stat">
+          <div class="ztype-stat-label">Score</div>
+          <div class="ztype-stat-val score" id="ztype-score">0</div>
+        </div>
+        <div class="ztype-stat">
+          <div class="ztype-stat-label">WPM</div>
+          <div class="ztype-stat-val wpm" id="ztype-wpm">0</div>
+        </div>
+      </div>
+      <div class="ztype-hud-center">
+        <div class="ztype-wave-label" id="ztype-wave">Wave 1</div>
+        <div class="ztype-combo-label ztype-combo-1x" id="ztype-combo">1x</div>
+      </div>
+      <div class="ztype-hud-right">
+        <div class="ztype-stat">
+          <div class="ztype-stat-label">Words</div>
+          <div class="ztype-stat-val" id="ztype-destroyed" style="color:var(--neon-green)">0</div>
+        </div>
+        <div class="ztype-lives" id="ztype-lives">
+          <span class="ztype-heart">❤️</span>
+          <span class="ztype-heart">❤️</span>
+          <span class="ztype-heart">❤️</span>
+        </div>
+      </div>
+    </div>
+    <div class="ztype-ship" id="ztype-ship">🚀</div>
+    <div class="ztype-laser" id="ztype-laser" style="display:none;"></div>
+    <div class="ztype-input-area">
+      <div class="ztype-typed-display" id="ztype-typed"></div>
+    </div>
+    <input type="text" class="hidden-input" id="ztype-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <div class="ztype-esc-hint">ESC to quit</div>
+  </div>
+</div>
+
 <div id="screen-results" class="screen">
   <div class="results-card">
     <div class="results-rank" id="results-rank">🏆</div>
@@ -2090,8 +2399,13 @@
       <div class="word-list" id="words-learned"></div>
     </div>
 
+    <div class="high-scores" id="high-scores" style="display:none;">
+      <h3>🏆 High Scores</h3>
+      <div id="high-scores-list"></div>
+    </div>
+
     <div class="results-actions">
-      <button class="btn btn-play" onclick="startGame(currentMode)">Play Again</button>
+      <button class="btn btn-play" id="results-play-again" onclick="startGame(currentMode)">Play Again</button>
       <button class="btn btn-secondary" onclick="showModeSelect()">Change Mode</button>
       <button class="btn btn-secondary" onclick="showScreen('screen-title')">Home</button>
     </div>
@@ -6344,6 +6658,700 @@ function endCopperGame() {
   showScreen('screen-results');
   setTimeout(() => launchConfetti(), 300);
 }
+
+// ============================================================
+//  HIGH SCORE SYSTEM
+// ============================================================
+function getHighScores(mode) {
+  try {
+    return JSON.parse(localStorage.getItem(`typingFiesta_hs_${mode}`) || '[]');
+  } catch { return []; }
+}
+
+function saveHighScore(mode, score, wpm, player, extra) {
+  const scores = getHighScores(mode);
+  const entry = { score, wpm, player, date: Date.now(), ...extra };
+  scores.push(entry);
+  scores.sort((a, b) => b.score - a.score);
+  const top10 = scores.slice(0, 10);
+  localStorage.setItem(`typingFiesta_hs_${mode}`, JSON.stringify(top10));
+  // Return rank (0-indexed), or -1 if not in top 10
+  return top10.findIndex(e => e.date === entry.date);
+}
+
+function showHighScores(mode, currentScore) {
+  const container = document.getElementById('high-scores');
+  const list = document.getElementById('high-scores-list');
+  const scores = getHighScores(mode);
+  if (scores.length === 0) { container.style.display = 'none'; return; }
+  container.style.display = 'block';
+  list.innerHTML = '';
+  const medals = ['🥇', '🥈', '🥉'];
+  scores.slice(0, 5).forEach((s, i) => {
+    const row = document.createElement('div');
+    const isNew = s.score === currentScore && Math.abs(s.date - Date.now()) < 5000;
+    row.className = `hs-row${isNew ? ' hs-new' : ''}`;
+    row.innerHTML = `
+      <span class="hs-rank">${medals[i] || (i + 1)}</span>
+      <span class="hs-name">${s.player}</span>
+      <span class="hs-score">${typeof s.score === 'number' && s.score % 1 !== 0 ? '$' + s.score.toFixed(2) : s.score}</span>
+      <span class="hs-wpm">${s.wpm ? s.wpm + ' WPM' : ''}</span>
+    `;
+    list.appendChild(row);
+  });
+}
+
+// ============================================================
+//  PALABRA BLASTER — ZType Space Shooter Mode  🚀
+// ============================================================
+let ztypeState = null;
+
+// Word pool for ZType - organized by difficulty
+const ZTYPE_WORDS = {
+  easy: [
+    { es: 'gato', en: 'cat' }, { es: 'perro', en: 'dog' }, { es: 'sol', en: 'sun' },
+    { es: 'luna', en: 'moon' }, { es: 'agua', en: 'water' }, { es: 'pan', en: 'bread' },
+    { es: 'rojo', en: 'red' }, { es: 'azul', en: 'blue' }, { es: 'casa', en: 'house' },
+    { es: 'pez', en: 'fish' }, { es: 'oso', en: 'bear' }, { es: 'rio', en: 'river' },
+    { es: 'dia', en: 'day' }, { es: 'luz', en: 'light' }, { es: 'mar', en: 'sea' },
+    { es: 'flor', en: 'flower' }, { es: 'rey', en: 'king' }, { es: 'pie', en: 'foot' },
+    { es: 'voz', en: 'voice' }, { es: 'hoja', en: 'leaf' }, { es: 'nube', en: 'cloud' },
+    { es: 'oro', en: 'gold' }, { es: 'paz', en: 'peace' }, { es: 'sal', en: 'salt' },
+  ],
+  medium: [
+    { es: 'caballo', en: 'horse' }, { es: 'estrella', en: 'star' }, { es: 'mariposa', en: 'butterfly' },
+    { es: 'tortuga', en: 'turtle' }, { es: 'escuela', en: 'school' }, { es: 'ventana', en: 'window' },
+    { es: 'hermano', en: 'brother' }, { es: 'amigo', en: 'friend' }, { es: 'comida', en: 'food' },
+    { es: 'familia', en: 'family' }, { es: 'musica', en: 'music' }, { es: 'campeon', en: 'champion' },
+    { es: 'batalla', en: 'battle' }, { es: 'fuerte', en: 'strong' }, { es: 'rapido', en: 'fast' },
+    { es: 'bonito', en: 'pretty' }, { es: 'grande', en: 'big' }, { es: 'helado', en: 'ice cream' },
+    { es: 'cielo', en: 'sky' }, { es: 'tierra', en: 'earth' }, { es: 'fuego', en: 'fire' },
+    { es: 'bosque', en: 'forest' }, { es: 'playa', en: 'beach' }, { es: 'ciudad', en: 'city' },
+  ],
+  hard: [
+    { es: 'mariposa', en: 'butterfly' }, { es: 'matematicas', en: 'math' }, { es: 'estudiante', en: 'student' },
+    { es: 'restaurante', en: 'restaurant' }, { es: 'chocolate', en: 'chocolate' }, { es: 'biblioteca', en: 'library' },
+    { es: 'aventura', en: 'adventure' }, { es: 'dinosaurio', en: 'dinosaur' }, { es: 'helicoptero', en: 'helicopter' },
+    { es: 'computadora', en: 'computer' }, { es: 'universo', en: 'universe' }, { es: 'mochila', en: 'backpack' },
+    { es: 'videojuego', en: 'video game' }, { es: 'campeonato', en: 'championship' },
+    { es: 'resplandor', en: 'glow' }, { es: 'relampago', en: 'lightning' },
+  ],
+  boss: [
+    { es: 'yo quiero jugar contigo', en: 'I want to play with you' },
+    { es: 'el gato es muy bonito', en: 'the cat is very pretty' },
+    { es: 'vamos a la playa hoy', en: "let's go to the beach today" },
+    { es: 'me gusta mucho la musica', en: 'I really like music' },
+    { es: 'el cielo esta muy azul', en: 'the sky is very blue' },
+    { es: 'mi familia es lo mejor', en: 'my family is the best' },
+    { es: 'quiero helado de fresa', en: 'I want strawberry ice cream' },
+    { es: 'los animales son bonitos', en: 'the animals are pretty' },
+  ],
+};
+
+function initZTypeStarfield() {
+  const container = document.getElementById('ztype-starfield');
+  container.innerHTML = '';
+  for (let i = 0; i < 80; i++) {
+    const star = document.createElement('div');
+    star.className = 'ztype-star';
+    const size = Math.random() * 2.5 + 0.5;
+    star.style.width = size + 'px';
+    star.style.height = size + 'px';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.opacity = Math.random() * 0.6 + 0.1;
+    star.style.animationDuration = (Math.random() * 8 + 4) + 's';
+    star.style.animationDelay = -(Math.random() * 12) + 's';
+    container.appendChild(star);
+  }
+}
+
+function getComboMultiplier(streak) {
+  if (streak >= 30) return 10;
+  if (streak >= 20) return 5;
+  if (streak >= 10) return 3;
+  if (streak >= 5) return 2;
+  return 1;
+}
+
+function getComboClass(mult) {
+  if (mult >= 10) return 'ztype-combo-10x';
+  if (mult >= 5) return 'ztype-combo-5x';
+  if (mult >= 3) return 'ztype-combo-3x';
+  if (mult >= 2) return 'ztype-combo-2x';
+  return 'ztype-combo-1x';
+}
+
+function startZType() {
+  ensureAudio();
+  sfxGameStart();
+  initZTypeStarfield();
+
+  ztypeState = {
+    active: true,
+    wave: 1, maxWaves: 12,
+    lives: 3, maxLives: 3,
+    score: 0, wordsDestroyed: 0,
+    streak: 0, bestStreak: 0,
+    totalCorrect: 0, totalTyped: 0,
+    startTime: Date.now(),
+    words: [], // active word objects on screen
+    lockedWord: null, // currently locked word
+    typedSoFar: '',
+    wordIdCounter: 0,
+    spawnTimer: null,
+    animFrame: null,
+    waveWordCount: 0, // words spawned this wave
+    waveWordsNeeded: 6, // words to clear per wave
+    waveDelay: 2200, // ms between spawns
+    wordSpeed: 0.4, // pixels per frame (~60fps)
+    spanishWordsLearned: [],
+    bossActive: false,
+  };
+
+  // Reset HUD
+  document.getElementById('ztype-score').textContent = '0';
+  document.getElementById('ztype-wpm').textContent = '0';
+  document.getElementById('ztype-wave').textContent = 'Wave 1';
+  document.getElementById('ztype-combo').textContent = '1x';
+  document.getElementById('ztype-combo').className = 'ztype-combo-label ztype-combo-1x';
+  document.getElementById('ztype-destroyed').textContent = '0';
+  document.getElementById('ztype-typed').textContent = '';
+  updateZTypeLives();
+
+  // Clear old words
+  document.querySelectorAll('.ztype-word, .ztype-explosion, .ztype-translation, .ztype-wave-announce, .ztype-gameover, .ztype-damage-flash').forEach(e => e.remove());
+  document.getElementById('ztype-laser').style.display = 'none';
+  document.getElementById('ztype-ship').className = 'ztype-ship';
+
+  showScreen('screen-ztype');
+  startMusic();
+
+  // Focus input
+  const input = document.getElementById('ztype-input');
+  input.value = '';
+  input.focus();
+  document.getElementById('ztype-arena').onclick = () => input.focus();
+
+  // Announce wave
+  announceZTypeWave(1);
+
+  // Start spawning after announcement
+  setTimeout(() => {
+    if (!ztypeState || !ztypeState.active) return;
+    ztypeState.spawnTimer = setInterval(() => spawnZTypeWord(), ztypeState.waveDelay);
+    ztypeState.animFrame = requestAnimationFrame(zTypeGameLoop);
+  }, 1500);
+}
+
+function announceZTypeWave(wave) {
+  const arena = document.getElementById('ztype-arena');
+  const el = document.createElement('div');
+  const isBoss = wave % 4 === 0;
+  el.className = `ztype-wave-announce${isBoss ? ' boss-announce' : ''}`;
+  el.textContent = isBoss ? `BOSS WAVE ${wave}!` : `Wave ${wave}`;
+  arena.appendChild(el);
+  if (isBoss) sfxLevelUp();
+  setTimeout(() => el.remove(), 2200);
+}
+
+function getZTypeWordPool() {
+  const wave = ztypeState.wave;
+  if (wave % 4 === 0) return ZTYPE_WORDS.boss; // boss wave
+  if (wave <= 3) return ZTYPE_WORDS.easy;
+  if (wave <= 6) return [...ZTYPE_WORDS.easy, ...ZTYPE_WORDS.medium];
+  if (wave <= 9) return [...ZTYPE_WORDS.medium, ...ZTYPE_WORDS.hard];
+  return [...ZTYPE_WORDS.medium, ...ZTYPE_WORDS.hard];
+}
+
+function spawnZTypeWord() {
+  if (!ztypeState || !ztypeState.active) return;
+
+  // Check if wave is complete
+  if (ztypeState.waveWordCount >= ztypeState.waveWordsNeeded) {
+    clearInterval(ztypeState.spawnTimer);
+    // Wait for all words to be cleared or lost before advancing
+    if (ztypeState.words.length === 0) {
+      advanceZTypeWave();
+    }
+    return;
+  }
+
+  const pool = getZTypeWordPool();
+  const wordData = pool[Math.floor(Math.random() * pool.length)];
+  const text = wordData.es;
+  const isBoss = ztypeState.wave % 4 === 0;
+
+  // Avoid duplicate first-letter conflicts with locked word
+  const arena = document.getElementById('ztype-arena');
+  const arenaW = arena.offsetWidth;
+
+  const el = document.createElement('div');
+  el.className = `ztype-word${isBoss ? ' boss-word' : ''}`;
+  el.innerHTML = `<span class="remaining-part">${text}</span>`;
+
+  // Random X position, start above top
+  const xMin = 60, xMax = arenaW - 60;
+  const x = xMin + Math.random() * (xMax - xMin);
+  el.style.left = x + 'px';
+  el.style.top = '-30px';
+
+  arena.appendChild(el);
+
+  const wordObj = {
+    id: ztypeState.wordIdCounter++,
+    text, translation: wordData.en,
+    el, x, y: -30,
+    speed: ztypeState.wordSpeed * (0.8 + Math.random() * 0.4) * (isBoss ? 0.6 : 1),
+    typedCount: 0,
+    isBoss,
+  };
+
+  ztypeState.words.push(wordObj);
+  ztypeState.waveWordCount++;
+}
+
+function zTypeGameLoop() {
+  if (!ztypeState || !ztypeState.active) return;
+
+  const arena = document.getElementById('ztype-arena');
+  const arenaH = arena.offsetHeight;
+  const shipY = arenaH - 70;
+
+  // Move words down
+  for (const w of ztypeState.words) {
+    w.y += w.speed;
+    w.el.style.top = w.y + 'px';
+
+    // Check if word reached the bottom
+    if (w.y >= shipY) {
+      zTypeWordReachedBottom(w);
+    }
+  }
+
+  // Remove dead words
+  ztypeState.words = ztypeState.words.filter(w => w.el.parentNode);
+
+  // Update laser position
+  if (ztypeState.lockedWord && ztypeState.lockedWord.el.parentNode) {
+    updateZTypeLaser(ztypeState.lockedWord);
+  }
+
+  // Update WPM
+  const elapsed = (Date.now() - ztypeState.startTime) / 60000;
+  if (elapsed > 0.05) {
+    document.getElementById('ztype-wpm').textContent = Math.round(ztypeState.wordsDestroyed / elapsed);
+  }
+
+  // Check if wave should advance (all words spawned and cleared)
+  if (ztypeState.waveWordCount >= ztypeState.waveWordsNeeded && ztypeState.words.length === 0) {
+    advanceZTypeWave();
+  }
+
+  ztypeState.animFrame = requestAnimationFrame(zTypeGameLoop);
+}
+
+function zTypeWordReachedBottom(word) {
+  // Lose a life
+  ztypeState.lives--;
+  ztypeState.streak = 0;
+  updateZTypeCombo();
+  updateZTypeLives();
+
+  // If this was the locked word, unlock
+  if (ztypeState.lockedWord === word) {
+    ztypeState.lockedWord = null;
+    ztypeState.typedSoFar = '';
+    document.getElementById('ztype-typed').textContent = '';
+    document.getElementById('ztype-laser').style.display = 'none';
+  }
+
+  // Damage flash
+  const arena = document.getElementById('ztype-arena');
+  const flash = document.createElement('div');
+  flash.className = 'ztype-damage-flash';
+  arena.appendChild(flash);
+  setTimeout(() => flash.remove(), 600);
+
+  // Screen shake
+  arena.style.transform = 'translateX(5px)';
+  setTimeout(() => { arena.style.transform = 'translateX(-5px)'; }, 50);
+  setTimeout(() => { arena.style.transform = 'translateX(3px)'; }, 100);
+  setTimeout(() => { arena.style.transform = ''; }, 150);
+
+  sfxWrong();
+  word.el.remove();
+
+  if (ztypeState.lives <= 0) {
+    endZType();
+  }
+}
+
+function updateZTypeLives() {
+  const container = document.getElementById('ztype-lives');
+  container.innerHTML = '';
+  for (let i = 0; i < ztypeState.maxLives; i++) {
+    const h = document.createElement('span');
+    h.className = `ztype-heart${i >= ztypeState.lives ? ' lost' : ''}`;
+    h.textContent = '❤️';
+    container.appendChild(h);
+  }
+}
+
+function updateZTypeCombo() {
+  const mult = getComboMultiplier(ztypeState.streak);
+  const el = document.getElementById('ztype-combo');
+  el.textContent = mult + 'x';
+  el.className = 'ztype-combo-label ' + getComboClass(mult);
+}
+
+function updateZTypeLaser(word) {
+  const arena = document.getElementById('ztype-arena');
+  const laser = document.getElementById('ztype-laser');
+  const ship = document.getElementById('ztype-ship');
+
+  const shipRect = ship.getBoundingClientRect();
+  const arenaRect = arena.getBoundingClientRect();
+  const wordRect = word.el.getBoundingClientRect();
+
+  const sx = shipRect.left + shipRect.width / 2 - arenaRect.left;
+  const sy = shipRect.top - arenaRect.top;
+  const wx = wordRect.left + wordRect.width / 2 - arenaRect.left;
+  const wy = wordRect.top + wordRect.height / 2 - arenaRect.top;
+
+  const dx = wx - sx;
+  const dy = wy - sy;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+  const angle = Math.atan2(dx, -dy);
+
+  laser.style.display = 'block';
+  laser.style.left = sx + 'px';
+  laser.style.top = sy + 'px';
+  laser.style.height = dist + 'px';
+  laser.style.transform = `rotate(${angle}rad)`;
+}
+
+function spawnZTypeExplosion(x, y, color) {
+  const arena = document.getElementById('ztype-arena');
+  const explosion = document.createElement('div');
+  explosion.className = 'ztype-explosion';
+  explosion.style.left = x + 'px';
+  explosion.style.top = y + 'px';
+
+  const colors = [color, 'var(--neon-yellow)', '#fff', 'var(--neon-green)'];
+  for (let i = 0; i < 12; i++) {
+    const p = document.createElement('div');
+    p.className = 'ztype-explosion-particle';
+    const angle = (Math.PI * 2 / 12) * i + Math.random() * 0.5;
+    const dist = 30 + Math.random() * 50;
+    const dx = Math.cos(angle) * dist;
+    const dy = Math.sin(angle) * dist;
+    p.style.setProperty('--dx', dx + 'px');
+    p.style.setProperty('--dy', dy + 'px');
+    const size = 3 + Math.random() * 5;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.background = colors[Math.floor(Math.random() * colors.length)];
+    p.style.boxShadow = `0 0 6px ${colors[Math.floor(Math.random() * colors.length)]}`;
+    explosion.appendChild(p);
+  }
+
+  arena.appendChild(explosion);
+  setTimeout(() => explosion.remove(), 700);
+}
+
+function showZTypeTranslation(x, y, es, en) {
+  const arena = document.getElementById('ztype-arena');
+  const el = document.createElement('div');
+  el.className = 'ztype-translation';
+  el.textContent = `${es} = ${en}`;
+  el.style.left = x + 'px';
+  el.style.top = (y - 20) + 'px';
+  arena.appendChild(el);
+  setTimeout(() => el.remove(), 1600);
+}
+
+function destroyZTypeWord(word) {
+  const mult = getComboMultiplier(ztypeState.streak);
+  const points = word.text.length * 10 * mult * (word.isBoss ? 3 : 1);
+  ztypeState.score += points;
+  ztypeState.wordsDestroyed++;
+  ztypeState.streak++;
+  if (ztypeState.streak > ztypeState.bestStreak) ztypeState.bestStreak = ztypeState.streak;
+
+  // Track Spanish words
+  if (word.translation) {
+    ztypeState.spanishWordsLearned.push({ es: word.text, en: word.translation });
+  }
+
+  // HUD updates
+  document.getElementById('ztype-score').textContent = ztypeState.score;
+  document.getElementById('ztype-destroyed').textContent = ztypeState.wordsDestroyed;
+  updateZTypeCombo();
+
+  // Explosion
+  const rect = word.el.getBoundingClientRect();
+  const arena = document.getElementById('ztype-arena');
+  const arenaRect = arena.getBoundingClientRect();
+  const ex = rect.left + rect.width / 2 - arenaRect.left;
+  const ey = rect.top + rect.height / 2 - arenaRect.top;
+  spawnZTypeExplosion(ex, ey, word.isBoss ? 'var(--neon-pink)' : 'var(--neon-blue)');
+  showZTypeTranslation(ex - 40, ey, word.text, word.translation);
+
+  // Float points
+  showFloatPoints('+' + points, ex, ey - 30);
+
+  // Sound
+  if (word.isBoss) { sfxPerfect(); } else { sfxCombo(); }
+
+  // Combo milestones
+  if (ztypeState.streak === 5) showCombo('5x COMBO!', 'var(--neon-yellow)');
+  if (ztypeState.streak === 10) showCombo('10x COMBO! FIRE!', 'var(--neon-orange)');
+  if (ztypeState.streak === 20) showCombo('20x STREAK! INSANE!', 'var(--neon-pink)');
+  if (ztypeState.streak === 30) showCombo('30x GOD MODE!', 'var(--neon-purple)');
+
+  // Ship fire effect
+  const ship = document.getElementById('ztype-ship');
+  ship.classList.add('firing');
+  setTimeout(() => ship.classList.remove('firing'), 300);
+
+  // Remove word
+  word.el.remove();
+
+  // Unlock
+  ztypeState.lockedWord = null;
+  ztypeState.typedSoFar = '';
+  document.getElementById('ztype-typed').textContent = '';
+  document.getElementById('ztype-laser').style.display = 'none';
+}
+
+function advanceZTypeWave() {
+  if (!ztypeState || !ztypeState.active) return;
+  if (ztypeState.wave >= ztypeState.maxWaves) {
+    // Victory!
+    endZType(true);
+    return;
+  }
+
+  ztypeState.wave++;
+  ztypeState.waveWordCount = 0;
+
+  // Scale difficulty
+  ztypeState.waveWordsNeeded = Math.min(12, 6 + ztypeState.wave);
+  ztypeState.waveDelay = Math.max(800, 2200 - ztypeState.wave * 120);
+  ztypeState.wordSpeed = Math.min(1.5, 0.4 + ztypeState.wave * 0.08);
+
+  // Award bonus life every 4 waves (if below max)
+  if (ztypeState.wave % 4 === 1 && ztypeState.wave > 1 && ztypeState.lives < ztypeState.maxLives) {
+    ztypeState.lives++;
+    updateZTypeLives();
+    showCombo('EXTRA LIFE! ❤️', 'var(--neon-pink)');
+  }
+
+  document.getElementById('ztype-wave').textContent = 'Wave ' + ztypeState.wave;
+  announceZTypeWave(ztypeState.wave);
+  sfxLevelUp();
+
+  // Restart spawning after delay
+  setTimeout(() => {
+    if (!ztypeState || !ztypeState.active) return;
+    ztypeState.spawnTimer = setInterval(() => spawnZTypeWord(), ztypeState.waveDelay);
+  }, 1800);
+}
+
+function endZType(victory) {
+  if (!ztypeState) return;
+  ztypeState.active = false;
+  if (ztypeState.spawnTimer) clearInterval(ztypeState.spawnTimer);
+  if (ztypeState.animFrame) cancelAnimationFrame(ztypeState.animFrame);
+  stopMusic();
+
+  const elapsed = (Date.now() - ztypeState.startTime) / 60000;
+  const wpm = elapsed > 0 ? Math.round(ztypeState.wordsDestroyed / elapsed) : 0;
+  const accuracy = ztypeState.totalTyped > 0 ? Math.round((ztypeState.totalCorrect / ztypeState.totalTyped) * 100) : 100;
+
+  if (victory) {
+    sfxPerfect();
+    launchConfetti();
+  } else {
+    sfxComplete();
+  }
+
+  // Show game over in the arena
+  const arena = document.getElementById('ztype-arena');
+  const overlay = document.createElement('div');
+  overlay.className = 'ztype-gameover';
+  overlay.innerHTML = `
+    <div class="ztype-gameover-title">${victory ? 'VICTORY!' : 'GAME OVER'}</div>
+    <div class="ztype-gameover-sub">${victory ? 'You survived all waves!' : 'Wave ' + ztypeState.wave + ' was too much!'}</div>
+    <div class="results-stats" style="margin-bottom:1.5rem;">
+      <div class="stat-box">
+        <div class="stat-val score">${ztypeState.score}</div>
+        <div class="stat-label">Score</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val wpm">${wpm}</div>
+        <div class="stat-label">WPM</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" style="color:var(--neon-green)">${accuracy}%</div>
+        <div class="stat-label">Accuracy</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val streak">${ztypeState.bestStreak}</div>
+        <div class="stat-label">Best Streak</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;">
+      <button class="btn btn-play" onclick="document.querySelector('.ztype-gameover').remove();startZType();">Play Again</button>
+      <button class="btn btn-secondary" onclick="showScreen('screen-modes');document.querySelector('.ztype-gameover')?.remove();">Change Mode</button>
+      <button class="btn btn-secondary" onclick="showScreen('screen-title');document.querySelector('.ztype-gameover')?.remove();">Home</button>
+    </div>
+  `;
+  arena.appendChild(overlay);
+
+  // Save high score
+  saveHighScore('ztype', ztypeState.score, wpm, currentPlayer || 'Player', {
+    wave: ztypeState.wave, destroyed: ztypeState.wordsDestroyed
+  });
+
+  if (victory) setTimeout(() => launchConfetti(), 1500);
+}
+
+// ZType input handling
+document.getElementById('ztype-input').addEventListener('input', function(e) {
+  if (!ztypeState || !ztypeState.active) return;
+  const typed = e.data;
+  if (!typed) return;
+
+  ztypeState.totalTyped++;
+
+  if (ztypeState.lockedWord) {
+    // Already locked onto a word — continue typing it
+    const expected = ztypeState.lockedWord.text[ztypeState.lockedWord.typedCount];
+    if (typed === expected) {
+      ztypeState.totalCorrect++;
+      ztypeState.lockedWord.typedCount++;
+      ztypeState.typedSoFar += typed;
+      sfxCorrect();
+
+      // Update word display
+      const w = ztypeState.lockedWord;
+      w.el.innerHTML = `<span class="typed-part">${w.text.slice(0, w.typedCount)}</span><span class="remaining-part">${w.text.slice(w.typedCount)}</span>`;
+
+      // Check if word is complete
+      if (w.typedCount >= w.text.length) {
+        destroyZTypeWord(w);
+      } else {
+        document.getElementById('ztype-typed').textContent = ztypeState.typedSoFar;
+      }
+    } else {
+      // Wrong letter
+      sfxWrong();
+      ztypeState.streak = 0;
+      updateZTypeCombo();
+      screenShake();
+    }
+  } else {
+    // Not locked — try to lock onto a word that starts with this letter
+    const matchingWords = ztypeState.words.filter(w => w.typedCount === 0 && w.text[0] === typed);
+    if (matchingWords.length > 0) {
+      // Lock onto the lowest (closest to bottom) matching word
+      matchingWords.sort((a, b) => b.y - a.y);
+      const target = matchingWords[0];
+      ztypeState.lockedWord = target;
+      target.typedCount = 1;
+      ztypeState.typedSoFar = typed;
+      ztypeState.totalCorrect++;
+      target.el.classList.add('locked');
+      target.el.innerHTML = `<span class="typed-part">${typed}</span><span class="remaining-part">${target.text.slice(1)}</span>`;
+      document.getElementById('ztype-typed').textContent = typed;
+      sfxCorrect();
+
+      // Check if single-char word
+      if (target.typedCount >= target.text.length) {
+        destroyZTypeWord(target);
+      }
+    } else {
+      // No matching word
+      sfxWrong();
+      ztypeState.streak = 0;
+      updateZTypeCombo();
+    }
+  }
+
+  this.value = '';
+});
+
+document.getElementById('ztype-input').addEventListener('keydown', function(e) {
+  if (!ztypeState || !ztypeState.active) return;
+
+  if (e.key === 'Escape') {
+    ztypeState.active = false;
+    if (ztypeState.spawnTimer) clearInterval(ztypeState.spawnTimer);
+    if (ztypeState.animFrame) cancelAnimationFrame(ztypeState.animFrame);
+    stopMusic();
+    showScreen('screen-title');
+    return;
+  }
+
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    // Unlock current word
+    if (ztypeState.lockedWord) {
+      ztypeState.lockedWord.el.classList.remove('locked');
+      ztypeState.lockedWord.el.innerHTML = `<span class="remaining-part">${ztypeState.lockedWord.text}</span>`;
+      ztypeState.lockedWord.typedCount = 0;
+      ztypeState.lockedWord = null;
+      ztypeState.typedSoFar = '';
+      document.getElementById('ztype-typed').textContent = '';
+      document.getElementById('ztype-laser').style.display = 'none';
+    }
+  }
+});
+
+// Keep ZType input focused
+document.addEventListener('keydown', function(e) {
+  const ztypeScreen = document.getElementById('screen-ztype');
+  if (ztypeScreen && ztypeScreen.classList.contains('active')) {
+    document.getElementById('ztype-input').focus();
+  }
+});
+
+// ============================================================
+//  PATCH: Save high scores from existing endGame()
+// ============================================================
+const _origEndGame = endGame;
+endGame = function() {
+  _origEndGame();
+
+  // After original endGame runs, save high score and show leaderboard
+  const elapsed = gameState.startTime ? (Date.now() - gameState.startTime) / 1000 / 60 : 1;
+  const wpm = elapsed > 0 ? Math.round(gameState.wordsCompleted / elapsed) : 0;
+  const mode = currentMode || 'unknown';
+  saveHighScore(mode, gameState.score, wpm, currentPlayer || 'Player');
+  showHighScores(mode, gameState.score);
+
+  // Update play again button for ZType
+  const btn = document.getElementById('results-play-again');
+  if (btn) btn.onclick = () => startGame(currentMode);
+};
+
+// Patch Dad endGame to save high scores
+const _origEndDadGame = endDadGame;
+endDadGame = function() {
+  _origEndDadGame();
+  saveHighScore('dad', Math.round(dadState.money * 100) / 100, parseInt(document.getElementById('dad-wpm').textContent) || 0, 'Dad');
+  showHighScores('dad', Math.round(dadState.money * 100) / 100);
+};
+
+// Patch Mom endGame
+const _origEndMomGame = endMomGame;
+endMomGame = function() {
+  _origEndMomGame();
+  saveHighScore('mom', danceState.score, 0, 'Mom');
+  showHighScores('mom', danceState.score);
+};
 </script>
 </body>
 </html>
